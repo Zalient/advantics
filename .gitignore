@@ -1,0 +1,24 @@
+# Project Specific File Settings
+.idea/
+*.ipr
+*.iws
+*.iml
+
+# Maven Build Output
+target/
+out/
+
+# OS Specific Files
+.DS_Store
+Thumbs.db
+
+# Compiled Package Files
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs and Temp Files
+*.log
+*.tmp
+hs_err_pid*
