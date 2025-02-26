@@ -26,12 +26,12 @@
                      <children>
                         <Button fx:id="impressionUpload" mnemonicParsing="false" onAction="#handleImpressionUpload" prefHeight="25.0" prefWidth="100.0" text="Upload" />
                         <Button fx:id="clickUpload" mnemonicParsing="false" onAction="#handleClickUpload" prefHeight="25.0" prefWidth="100.0" text="Upload" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Upload" />
+                        <Button fx:id="serverUpload" mnemonicParsing="false" onAction="#handleServerUpload" prefHeight="25.0" prefWidth="100.0" text="Upload" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Next">
+            <Button fx:id="next" mnemonicParsing="false" onAction="#handleNext" text="Next">
                <font>
                   <Font size="20.0" />
                </font>
