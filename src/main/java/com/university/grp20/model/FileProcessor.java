@@ -30,4 +30,8 @@ public class FileProcessor
       return (false);
     }
   }
+
+  public void calcNumberOfImpressions() {
+
+  }
 }
