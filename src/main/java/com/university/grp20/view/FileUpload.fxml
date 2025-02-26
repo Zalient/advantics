@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.university.grp20.controller.FileUpload"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileUpload">
+   <children>
+      <VBox alignment="CENTER" layoutX="173.0" layoutY="54.0" prefHeight="200.0" prefWidth="255.0" spacing="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="File Upload">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="122.0" prefWidth="94.0" spacing="30.0">
+                     <children>
+                        <Label prefWidth="84.0" text="Impression Log" />
+                        <Label text="Click Log" />
+                        <Label text="Server Log" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="115.0" prefWidth="65.0" spacing="20.0">
+                     <children>
+                        <Button fx:id="impressionUpload" mnemonicParsing="false" onAction="#handleImpressionUpload" prefHeight="25.0" prefWidth="100.0" text="Upload" />
+                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Upload" />
+                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Upload" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" text="Next">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
