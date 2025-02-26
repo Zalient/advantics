@@ -1,5 +1,6 @@
 package com.university.grp20.controller;
 
+import com.university.grp20.model.FileProcessor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
@@ -12,22 +13,81 @@ import java.io.File;
 public class FileUpload {
   private static final Logger logger = LogManager.getLogger(FileUpload.class);
 
+  private FileProcessor fileProcessor = new FileProcessor();
+
+  private FileChooser fileChooser = new FileChooser();
+
   @FXML
   private Button impressionUpload;
 
   @FXML
+  private Button clickUpload;
+
+  @FXML
+  private Button serverUpload;
+
+  @FXML
+  private Button next;
+
+  @FXML
   private void handleImpressionUpload() {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Impression Upload");
+    fileChooser.setTitle("Impression Log File Upload");
     File impressionFile = fileChooser.showOpenDialog(impressionUpload.getScene().getWindow());
 
     if (impressionFile != null) {
-      logger.info("Impression file selected at" + impressionFile.getPath());
+      logger.info("Impression Log File selected with path " + impressionFile.getPath());
+      fileProcessor.setImpressionLog(impressionFile);
     }
     else {
       logger.info("File upload aborted");
     }
-
-
   }
+
+  @FXML
+  private void handleClickUpload() {
+    fileChooser.setTitle("Click Log File Upload");
+    File clickFile = fileChooser.showOpenDialog(impressionUpload.getScene().getWindow());
+
+    if (clickFile != null) {
+      logger.info("Click Log File selected with path " + clickFile.getPath());
+      fileProcessor.setClickLog(clickFile);
+    }
+    else {
+      logger.info("File upload aborted");
+    }
+  }
+
+  @FXML
+  private void handleServerUpload() {
+    fileChooser.setTitle("Server Log File Upload");
+    File serverFile = fileChooser.showOpenDialog(impressionUpload.getScene().getWindow());
+
+    if (serverFile != null) {
+      logger.info("Server Log File selected with path " + serverFile.getPath());
+      fileProcessor.setServerLog(serverFile);
+    }
+    else {
+      logger.info("File upload aborted");
+    }
+  }
+
+  @FXML
+  private void handleNext() {
+    logger.info("next clicked");
+
+    Boolean ready = fileProcessor.isReady();
+
+    if (ready) {
+      logger.info ("3 file paths done");
+    }
+    else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("You have not upload all 3 files.");
+      alert.showAndWait();
+    }
+  }
+
+
 }

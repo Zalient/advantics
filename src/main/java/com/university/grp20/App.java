@@ -30,13 +30,13 @@ public class App extends Application {
     public void start(Stage stage) {
         logger.info("Starting application");
         try {
-            FXMLLoader loader = new FXMLLoader(new File("src/main/java/com/university/grp20/view/FileUpload.fxml").toURI().toURL());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FileUpload.fxml"));
             Parent root = loader.load();
             stage.setScene(new Scene(root));
             stage.setTitle("Advertising Dashboard");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("Error reading FXML file") ;
         }
 
 
