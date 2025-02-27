@@ -42,6 +42,14 @@ public class DashChartController {
         stage.show();
     }
 
+    public void displayUpload(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/FileUpload.fxml")));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void displayChart(){
         SwingNode swingNode = new SwingNode();
         SwingUtilities.invokeLater(() -> {

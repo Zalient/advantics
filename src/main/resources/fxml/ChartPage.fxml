@@ -15,7 +15,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" layoutX="246.0" prefHeight="41.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Button mnemonicParsing="false" text="Back" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#displayUpload" text="Back" />
             <Region HBox.hgrow="ALWAYS" />
             <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics" />
             <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts" />

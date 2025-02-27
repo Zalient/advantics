@@ -63,6 +63,7 @@ public class FileProcessor
       // Skip the first line that just has column names
       bufferedReader.readLine();
 
+      conn.setAutoCommit(false);
 
       while ((line = bufferedReader.readLine()) != null) {
         columnData = line.split(",");
@@ -76,11 +77,18 @@ public class FileProcessor
         statement.setString(7, columnData[5]); // Context
         statement.setDouble(8, Double.parseDouble(columnData[6])); // Impression Cost
 
-        statement.executeUpdate();
-        logger.info("Inserted row");
-
+        statement.addBatch();
         columnCounter++;
+
+        if (columnCounter % 15000 == 0){
+          statement.executeBatch();
+          conn.commit();
+          logger.info("Inserted rows in impression log");
+        }
       }
+      statement.executeBatch();
+      conn.commit();
+      conn.setAutoCommit(true);
 
 
     } catch (SQLException | IOException e) {
