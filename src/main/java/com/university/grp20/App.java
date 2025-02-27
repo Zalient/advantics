@@ -25,6 +25,7 @@ public class App extends Application {
 
     /**
      * Starts JavaFX app by setting up page with intro message and 3 buttons
+     *
      */
     @Override
     public void start(Stage stage) {
@@ -36,7 +37,7 @@ public class App extends Application {
             stage.setTitle("Advertising Dashboard");
             stage.show();
         } catch (IOException e) {
-            logger.info("Error reading FXML file") ;
+            logger.info("Error reading FXML file");
         }
 
 
@@ -44,8 +45,7 @@ public class App extends Application {
 
     /**
      * Main method launches the application
-     */
+     * */
     public static void main(String[] args) {
-        launch();
-    }
+        launch();}
 }
