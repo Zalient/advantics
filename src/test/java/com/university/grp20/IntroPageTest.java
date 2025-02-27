@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import java.io.IOException;
+
 import static org.testfx.api.FxAssert.verifyThat;
 
 class IntroPageTest extends ApplicationTest {
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         new App().start(stage);
     }
 
