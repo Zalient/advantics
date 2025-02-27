@@ -99,6 +99,7 @@
 
     <build>
         <plugins>
+
             <!-- JavaFX Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
