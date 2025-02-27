@@ -77,6 +77,7 @@ public class FileProcessor
         statement.setDouble(8, Double.parseDouble(columnData[6])); // Impression Cost
 
         statement.executeUpdate();
+        logger.info("Inserted row");
 
         columnCounter++;
       }

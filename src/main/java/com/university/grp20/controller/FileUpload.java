@@ -84,11 +84,11 @@ public class FileUpload {
     Boolean ready = fileProcessor.isReady();
 
     if (true) { //replace true w/ ready
-      fileProcessor.connect();
+      //fileProcessor.connect();
       logger.info ("3 file paths done");
 
       try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DashboardPage.fxml"));
         Parent root = loader.load();
         Stage stage = (Stage) next.getScene().getWindow();
         stage.setScene(new Scene(root));
