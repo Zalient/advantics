@@ -1,11 +1,14 @@
 package com.university.grp20.model;
 
 import com.university.grp20.controller.FileUpload;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import java.io.*;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class FileProcessor
@@ -34,16 +37,71 @@ public class FileProcessor
     return impressionLog != null && clickLog != null && serverLog != null;
   }
 
-  public static void connect() {
+  public void connect() {
     logger.info("Attempting connection") ;
 
-    // connection string
+    Connection conn = null;
     var url = "jdbc:sqlite:" + new File("databases/test.db").getAbsolutePath();
+    BufferedReader bufferedReader = null;
+    String line;
+    String[] columnData;
+    PreparedStatement statement;
+    int columnCounter = 1;
 
-    try (var conn = DriverManager.getConnection(url)) {
-      System.out.println("Connection to SQLite has been established.");
-    } catch (SQLException e) {
+    try {
+      conn = DriverManager.getConnection(url);
+
+      logger.info("Connection to SQLite has been established.");
+
+      statement = conn.prepareStatement("DELETE FROM impressionLog");
+      statement.executeUpdate();
+      logger.info("Deleted existing rows in impression log");
+
+      statement = conn.prepareStatement("INSERT INTO impressionLog (impressionID, Date, ID, Gender, Age, Income, Context, ImpressionCost) values (?, ?, ?, ?, ?, ?, ?, ?)");
+      bufferedReader = new BufferedReader(new FileReader(impressionLog));
+
+      // Skip the first line that just has column names
+      bufferedReader.readLine();
+
+
+      while ((line = bufferedReader.readLine()) != null) {
+        columnData = line.split(",");
+
+        statement.setInt(1, columnCounter); // PRIMARY KEY
+        statement.setString(2, columnData[0]); // Date
+        statement.setLong(3, Long.parseLong(columnData[1])); // ID
+        statement.setString(4, columnData[2]); // Gender
+        statement.setString(5, columnData[3]); // Age
+        statement.setString(6, columnData[4]); // Income
+        statement.setString(7, columnData[5]); // Context
+        statement.setDouble(8, Double.parseDouble(columnData[6])); // Impression Cost
+
+        statement.executeUpdate();
+
+        columnCounter++;
+      }
+
+
+    } catch (SQLException | IOException e) {
       System.out.println(e.getMessage());
+    } finally {
+      if (bufferedReader != null) {
+        try {
+          bufferedReader.close();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
     }
   }
+
 }
