@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.view.ChartPage">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="246.0" prefHeight="41.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <Button mnemonicParsing="false" text="Back" />
+            <Region HBox.hgrow="ALWAYS" />
+            <ToggleButton mnemonicParsing="false" text="Metrics" />
+            <ToggleButton mnemonicParsing="false" text="Charts " />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="Add" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
