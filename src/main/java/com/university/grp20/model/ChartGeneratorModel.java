@@ -54,10 +54,10 @@ public class ChartGeneratorModel {
 
     public JFreeChart bouncesChart() {
         DefaultCategoryDataset bouncesDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, " +
+                "SELECT strftime('%Y-%m-%d', \"EntryDate\") AS day, " +
                         "COUNT(*) AS clicks_by_day " +
                         "FROM serverLog " +
-                        "WHERE \"Pages Viewed\" = 1 " +
+                        "WHERE \"PagesViewed\" = 1 " +
                         "GROUP BY day " +
                         "ORDER BY day",
                 "Bounces"
@@ -70,7 +70,7 @@ public class ChartGeneratorModel {
 
     public JFreeChart conversionsChart() {
         DefaultCategoryDataset conversionsDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, " +
+                "SELECT strftime('%Y-%m-%d', \"EntryDate\") AS day, " +
                         "COUNT(*) AS clicks_by_day " +
                         "FROM serverLog " +
                         "WHERE \"Conversion\" = 'Yes' " +

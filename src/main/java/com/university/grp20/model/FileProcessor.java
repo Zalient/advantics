@@ -96,7 +96,6 @@ public class FileProcessor
       }
       statement.executeBatch();
       conn.commit();
-      conn.setAutoCommit(true);
 
       // impression end
 
