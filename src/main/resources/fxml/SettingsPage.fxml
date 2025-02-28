@@ -87,7 +87,7 @@
                 </HBox>
             </GridPane>
         </VBox>
-        <HBox prefHeight="100.0" prefWidth="200.0">
+        <HBox prefHeight="50.0" prefWidth="200.0">
             <Label style="-fx-font-weight: bold;" text="Accessibility">
                 <font>
                     <Font size="18.0" />
