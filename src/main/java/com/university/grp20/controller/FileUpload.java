@@ -84,7 +84,7 @@ public class FileUpload {
     Boolean ready = fileProcessor.isReady();
 
     if (true) { //replace true w/ ready
-      //fileProcessor.connect();
+      fileProcessor.connect();
       logger.info ("3 file paths done");
 
       try {

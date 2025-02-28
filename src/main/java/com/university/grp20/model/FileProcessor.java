@@ -63,6 +63,7 @@ public class FileProcessor
       // Skip the first line that just has column names
       bufferedReader.readLine();
 
+      conn.setAutoCommit(false);
 
       while ((line = bufferedReader.readLine()) != null) {
         columnData = line.split(",");
@@ -76,23 +77,113 @@ public class FileProcessor
         statement.setString(7, columnData[5]); // Context
         statement.setDouble(8, Double.parseDouble(columnData[6])); // Impression Cost
 
-        statement.executeUpdate();
-        logger.info("Inserted row");
-
+        statement.addBatch();
         columnCounter++;
+
+        if (columnCounter % 15000 == 0) {
+          statement.executeBatch();
+          conn.commit();
+          logger.info("Inserted batch of impression log rows");
+        }
+      }
+      statement.executeBatch();
+      conn.commit();
+
+      try {
+        bufferedReader.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
 
+      // impression end
+
+      columnCounter = 1;
+
+      statement = conn.prepareStatement("DELETE FROM clickLog");
+      statement.executeUpdate();
+      logger.info("Deleted existing rows in click log");
+
+      statement = conn.prepareStatement("INSERT INTO clickLog (clickID, Date, ID, ClickCost) values (?, ?, ?, ?)");
+      bufferedReader = new BufferedReader(new FileReader(clickLog));
+
+      // Skip the first line that just has column names
+      bufferedReader.readLine();
+
+      while ((line = bufferedReader.readLine()) != null) {
+        columnData = line.split(",");
+
+        statement.setInt(1, columnCounter); // PRIMARY KEY
+        statement.setString(2, columnData[0]); // Date
+        statement.setLong(3, Long.parseLong(columnData[1])); // ID
+        statement.setDouble(4, Double.parseDouble(columnData[2])); // ClickCost
+
+        statement.addBatch();
+        columnCounter++;
+
+        if (columnCounter % 15000 == 0) {
+          statement.executeBatch();
+          conn.commit();
+          logger.info("Inserted batch of click log rows");
+        }
+      }
+      statement.executeBatch();
+      conn.commit();
+
+      try {
+        bufferedReader.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      // click end
+
+      columnCounter = 1;
+
+      statement = conn.prepareStatement("DELETE FROM serverLog");
+      statement.executeUpdate();
+      logger.info("Deleted existing rows in server log");
+
+      statement = conn.prepareStatement("INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, Conversion) values (?, ?, ?, ?, ?, ?)");
+      bufferedReader = new BufferedReader(new FileReader(serverLog));
+
+      // Skip the first line that just has column names
+      bufferedReader.readLine();
+
+      while ((line = bufferedReader.readLine()) != null) {
+        columnData = line.split(",");
+
+        statement.setInt(1, columnCounter); // PRIMARY KEY
+        statement.setString(2, columnData[0]); // EntryDate
+        statement.setLong(3, Long.parseLong(columnData[1])); // ID
+        statement.setString(4, columnData[2]); // ExitDate
+        statement.setInt(5, Integer.parseInt(columnData[3])); // PagesViewed
+        statement.setString(6, columnData[4]); // Conversion
+
+
+
+        statement.addBatch();
+        columnCounter++;
+
+        if (columnCounter % 15000 == 0) {
+          statement.executeBatch();
+          conn.commit();
+          logger.info("Inserted batch of server log rows");
+        }
+      }
+      statement.executeBatch();
+      conn.commit();
+
+      try {
+        bufferedReader.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      conn.setAutoCommit(true);
 
     } catch (SQLException | IOException e) {
       System.out.println(e.getMessage());
     } finally {
-      if (bufferedReader != null) {
-        try {
-          bufferedReader.close();
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      }
       if (conn != null) {
         try {
           //Attempt to close the connection to the database
@@ -102,7 +193,9 @@ public class FileProcessor
           System.out.println(e.getMessage());
         }
       }
+      }
+
     }
   }
 
-}
+
