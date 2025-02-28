@@ -157,7 +157,7 @@ public class FileProcessor
         statement.setLong(3, Long.parseLong(columnData[1])); // ID
         statement.setString(4, columnData[2]); // ExitDate
         statement.setInt(5, Integer.parseInt(columnData[3])); // PagesViewed
-        statement.setString(5, columnData[4]); // Conversion
+        statement.setString(6, columnData[4]); // Conversion
 
 
 
