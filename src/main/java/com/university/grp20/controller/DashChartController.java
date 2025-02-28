@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.embed.swing.SwingNode;
@@ -19,12 +20,18 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class DashChartController {
+    @FXML
+    public MenuItem impressionsChart, clicksChart, uniquesChart, bouncesChart, conversionsChart, totalCostChart, ctrChart, cpaChart, cpcChart, cpmChart, bounceRateChart;
+
+    @FXML
+    private GridPane chartDisplayGrid;
+
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    @FXML
-    private GridPane chartDisplayGrid;
+    ChartGeneratorModel generateChart = new ChartGeneratorModel();
+    private int numOfCharts = 0;
 
     public void showDashboard(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/DashboardPage.fxml")));
@@ -50,14 +57,73 @@ public class DashChartController {
         stage.show();
     }
 
-    public void displayChart(){
+    public void displayImpressionsChart(){
         SwingNode swingNode = new SwingNode();
         SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = ChartGeneratorModel.createChart();
+            JFreeChart chart = generateChart.impressionsChart();
             ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
             swingNode.setContent(chartPanel);
         });
-        chartDisplayGrid.add(swingNode, 0, 0);
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(swingNode, col, row);
+        numOfCharts++;
+    }
+
+    public void displayClicksChart(){
+        SwingNode swingNode = new SwingNode();
+        SwingUtilities.invokeLater(() -> {
+            JFreeChart chart = generateChart.clicksChart();
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+            swingNode.setContent(chartPanel);
+        });
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(swingNode, col, row);
+        numOfCharts++;
+    }
+
+    public void displayUniquesChart(){
+        SwingNode swingNode = new SwingNode();
+        SwingUtilities.invokeLater(() -> {
+            JFreeChart chart = generateChart.uniquesChart();
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+            swingNode.setContent(chartPanel);
+        });
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(swingNode, col, row);
+        numOfCharts++;
+    }
+
+    public void displayBouncesChart(){
+        SwingNode swingNode = new SwingNode();
+        SwingUtilities.invokeLater(() -> {
+            JFreeChart chart = generateChart.bouncesChart();
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+            swingNode.setContent(chartPanel);
+        });
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(swingNode, col, row);
+        numOfCharts++;
+    }
+
+    public void displayConversionsChart(){
+        SwingNode swingNode = new SwingNode();
+        SwingUtilities.invokeLater(() -> {
+            JFreeChart chart = generateChart.conversionsChart();
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+            swingNode.setContent(chartPanel);
+        });
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(swingNode, col, row);
+        numOfCharts++;
     }
 }

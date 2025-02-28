@@ -10,47 +10,52 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashChartController">
    <children>
-      <HBox alignment="CENTER_LEFT" layoutX="246.0" prefHeight="41.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+      <VBox layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#displayUpload" text="Back" />
-            <Region HBox.hgrow="ALWAYS" />
-            <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics" />
-            <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Add">
-               <contextMenu>
-                  <ContextMenu>
-                    <items>
-                       <MenuItem fx:id="impressionsChart" mnemonicParsing="false" onAction="#displayChart" text="No Of Impressions" />
-                       <MenuItem mnemonicParsing="false" text="No Of Clicks" />
-                       <MenuItem mnemonicParsing="false" text="No Of Uniques" />
-                       <MenuItem mnemonicParsing="false" text="No Of Bounces" />
-                       <MenuItem mnemonicParsing="false" text="No Of Conversions" />
-                       <MenuItem mnemonicParsing="false" text="Total" />
-                       <MenuItem mnemonicParsing="false" text="CTR" />
-                       <MenuItem mnemonicParsing="false" text="CPA" />
-                       <MenuItem mnemonicParsing="false" text="CPC" />
-                       <MenuItem mnemonicParsing="false" text="CPM" />
-                       <MenuItem mnemonicParsing="false" text="Bounce Rate" />
-
-                    </items>
-                  </ContextMenu>
-               </contextMenu>
-            </Button>
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0">
+               <children>
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#displayUpload" text="Back" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics" />
+                  <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" text="Add">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                             <MenuItem fx:id="impressionsChart" mnemonicParsing="false" onAction="#displayImpressionsChart" text="No Of Impressions" />
+                             <MenuItem fx:id="clicksChart" mnemonicParsing="false" onAction="#displayClicksChart" text="No Of Clicks" />
+                             <MenuItem fx:id="uniquesChart" mnemonicParsing="false" onAction="#displayUniquesChart" text="No Of Uniques" />
+                             <MenuItem fx:id="bouncesChart" mnemonicParsing="false" onAction="#displayBouncesChart" text="No Of Bounces" />
+                             <MenuItem fx:id="conversionsChart" mnemonicParsing="false" onAction="#displayConversionsChart" text="No Of Conversions" />
+                             <MenuItem fx:id="totalCostChart" mnemonicParsing="false" text="Total" />
+                             <MenuItem fx:id="ctrChart" mnemonicParsing="false" text="CTR" />
+                             <MenuItem fx:id="cpaChart" mnemonicParsing="false" text="CPA" />
+                             <MenuItem fx:id="cpcChart" mnemonicParsing="false" text="CPC" />
+                             <MenuItem fx:id="cpmChart" mnemonicParsing="false" text="CPM" />
+                             <MenuItem fx:id="bounceRateChart" mnemonicParsing="false" text="Bounce Rate" />
+      
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </Button>
+               </children>
+            </HBox>
+            <GridPane fx:id="chartDisplayGrid" prefHeight="349.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
          </children>
-      </HBox>
-      <GridPane fx:id="chartDisplayGrid" layoutY="51.0" prefHeight="349.0" prefWidth="600.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
+      </VBox>
    </children>
 </AnchorPane>
