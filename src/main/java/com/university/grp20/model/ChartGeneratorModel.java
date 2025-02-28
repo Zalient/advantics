@@ -9,7 +9,11 @@ public class ChartGeneratorModel {
 
     public JFreeChart impressionsChart() {
         DefaultCategoryDataset impressionsDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, COUNT(*) AS impressions_by_day FROM impressionLog GROUP BY day ORDER BY day",
+                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                        "COUNT(*) AS impressions_by_day " +
+                        "FROM impressionLog " +
+                        "GROUP BY day " +
+                        "ORDER BY day",
                 "Impressions By Day"
         );
         return ChartFactory.createLineChart("Impressions Per Day",
@@ -20,7 +24,11 @@ public class ChartGeneratorModel {
 
     public JFreeChart clicksChart() {
         DefaultCategoryDataset clicksDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, COUNT(*) AS clicks_by_day FROM clickLog GROUP BY day ORDER BY day",
+                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                        "COUNT(*) AS clicks_by_day " +
+                        "FROM clickLog " +
+                        "GROUP BY day " +
+                        "ORDER BY day",
                 "Clicks"
         );
         return ChartFactory.createLineChart("Clicks Per Day",
@@ -31,7 +39,11 @@ public class ChartGeneratorModel {
 
     public JFreeChart uniquesChart() {
         DefaultCategoryDataset uniquesDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, COUNT(DISTINCT ID) AS uniques_by_day FROM impressionLog GROUP BY day ORDER BY day",
+                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                        "COUNT(DISTINCT ID) AS uniques_by_day " +
+                        "FROM impressionLog " +
+                        "GROUP BY day " +
+                        "ORDER BY day",
                 "Uniques"
         );
         return ChartFactory.createLineChart("Uniques Per Day",
@@ -42,7 +54,12 @@ public class ChartGeneratorModel {
 
     public JFreeChart bouncesChart() {
         DefaultCategoryDataset bouncesDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, COUNT(*) AS clicks_by_day FROM serverLog WHERE \"Pages Viewed\" = 1 GROUP BY day ORDER BY day",
+                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, " +
+                        "COUNT(*) AS clicks_by_day " +
+                        "FROM serverLog " +
+                        "WHERE \"Pages Viewed\" = 1 " +
+                        "GROUP BY day " +
+                        "ORDER BY day",
                 "Bounces"
         );
         return ChartFactory.createLineChart("Bounces Per Day",
@@ -53,7 +70,12 @@ public class ChartGeneratorModel {
 
     public JFreeChart conversionsChart() {
         DefaultCategoryDataset conversionsDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, COUNT(*) AS clicks_by_day FROM serverLog WHERE \"Conversion\" = 'Yes' GROUP BY day ORDER BY day",
+                "SELECT strftime('%Y-%m-%d', \"Entry Date\") AS day, " +
+                        "COUNT(*) AS clicks_by_day " +
+                        "FROM serverLog " +
+                        "WHERE \"Conversion\" = 'Yes' " +
+                        "GROUP BY day " +
+                        "ORDER BY day",
                 ""
         );
         return ChartFactory.createLineChart("Conversions Per Day",
