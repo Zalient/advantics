@@ -94,6 +94,8 @@ public class FileProcessor
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
+      statement.executeBatch();
+      conn.commit();
 
       // impression end
 
