@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.embed.swing.SwingNode;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.fx.ChartViewer;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -58,72 +59,65 @@ public class DashChartController {
     }
 
     public void displayImpressionsChart(){
-        SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = generateChart.impressionsChart();
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-            swingNode.setContent(chartPanel);
-        });
+        JFreeChart chart = generateChart.impressionsChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
         int col = numOfCharts % 2;
         int row = numOfCharts / 2;
-        chartDisplayGrid.add(swingNode, col, row);
+        chartDisplayGrid.add(chartViewer, col, row);
         numOfCharts++;
     }
 
     public void displayClicksChart(){
-        SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = generateChart.clicksChart();
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-            swingNode.setContent(chartPanel);
-        });
+        JFreeChart chart = generateChart.clicksChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
         int col = numOfCharts % 2;
         int row = numOfCharts / 2;
-        chartDisplayGrid.add(swingNode, col, row);
+        chartDisplayGrid.add(chartViewer, col, row);
         numOfCharts++;
     }
 
     public void displayUniquesChart(){
-        SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = generateChart.uniquesChart();
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-            swingNode.setContent(chartPanel);
-        });
+        JFreeChart chart = generateChart.uniquesChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
         int col = numOfCharts % 2;
         int row = numOfCharts / 2;
-        chartDisplayGrid.add(swingNode, col, row);
+        chartDisplayGrid.add(chartViewer, col, row);
         numOfCharts++;
     }
 
     public void displayBouncesChart(){
-        SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = generateChart.bouncesChart();
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-            swingNode.setContent(chartPanel);
-        });
+        JFreeChart chart = generateChart.bouncesChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
         int col = numOfCharts % 2;
         int row = numOfCharts / 2;
-        chartDisplayGrid.add(swingNode, col, row);
+        chartDisplayGrid.add(chartViewer, col, row);
         numOfCharts++;
     }
 
     public void displayConversionsChart(){
-        SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(() -> {
-            JFreeChart chart = generateChart.conversionsChart();
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-            swingNode.setContent(chartPanel);
-        });
+        JFreeChart chart = generateChart.conversionsChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
         int col = numOfCharts % 2;
         int row = numOfCharts / 2;
-        chartDisplayGrid.add(swingNode, col, row);
+        chartDisplayGrid.add(chartViewer, col, row);
+        numOfCharts++;
+    }
+
+    public void displayTotalCostChart(){
+        JFreeChart chart = generateChart.totalCostChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(chartViewer, col, row);
+        numOfCharts++;
+    }
+
+    public void displayCTRChart(){
+        JFreeChart chart = generateChart.ctrChart();
+        ChartViewer chartViewer = new ChartViewer(chart);
+        int col = numOfCharts % 2;
+        int row = numOfCharts / 2;
+        chartDisplayGrid.add(chartViewer, col, row);
         numOfCharts++;
     }
 }

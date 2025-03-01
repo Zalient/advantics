@@ -32,8 +32,8 @@
                              <MenuItem fx:id="uniquesChart" mnemonicParsing="false" onAction="#displayUniquesChart" text="No Of Uniques" />
                              <MenuItem fx:id="bouncesChart" mnemonicParsing="false" onAction="#displayBouncesChart" text="No Of Bounces" />
                              <MenuItem fx:id="conversionsChart" mnemonicParsing="false" onAction="#displayConversionsChart" text="No Of Conversions" />
-                             <MenuItem fx:id="totalCostChart" mnemonicParsing="false" text="Total" />
-                             <MenuItem fx:id="ctrChart" mnemonicParsing="false" text="CTR" />
+                             <MenuItem fx:id="totalCostChart" mnemonicParsing="false" onAction="#displayTotalCostChart" text="Total" />
+                             <MenuItem fx:id="ctrChart" mnemonicParsing="false" onAction="#displayCTRChart" text="CTR" />
                              <MenuItem fx:id="cpaChart" mnemonicParsing="false" text="CPA" />
                              <MenuItem fx:id="cpcChart" mnemonicParsing="false" text="CPC" />
                              <MenuItem fx:id="cpmChart" mnemonicParsing="false" text="CPM" />

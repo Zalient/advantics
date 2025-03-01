@@ -9,7 +9,7 @@ public class ChartGeneratorModel {
 
     public JFreeChart impressionsChart() {
         DefaultCategoryDataset impressionsDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                "SELECT strftime('%d', Date) AS day, " +
                         "COUNT(*) AS impressions_by_day " +
                         "FROM impressionLog " +
                         "GROUP BY day " +
@@ -24,7 +24,7 @@ public class ChartGeneratorModel {
 
     public JFreeChart clicksChart() {
         DefaultCategoryDataset clicksDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                "SELECT STRFTIME('%d', Date) AS day, " +
                         "COUNT(*) AS clicks_by_day " +
                         "FROM clickLog " +
                         "GROUP BY day " +
@@ -39,7 +39,7 @@ public class ChartGeneratorModel {
 
     public JFreeChart uniquesChart() {
         DefaultCategoryDataset uniquesDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', Date) AS day, " +
+                "SELECT STRFTIME('%d', Date) AS day, " +
                         "COUNT(DISTINCT ID) AS uniques_by_day " +
                         "FROM impressionLog " +
                         "GROUP BY day " +
@@ -54,7 +54,7 @@ public class ChartGeneratorModel {
 
     public JFreeChart bouncesChart() {
         DefaultCategoryDataset bouncesDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"EntryDate\") AS day, " +
+                "SELECT STRFTIME('%d', \"EntryDate\") AS day, " +
                         "COUNT(*) AS clicks_by_day " +
                         "FROM serverLog " +
                         "WHERE \"PagesViewed\" = 1 " +
@@ -70,13 +70,13 @@ public class ChartGeneratorModel {
 
     public JFreeChart conversionsChart() {
         DefaultCategoryDataset conversionsDataset = new ChartDatasetGetter().getDataset(
-                "SELECT strftime('%Y-%m-%d', \"EntryDate\") AS day, " +
-                        "COUNT(*) AS clicks_by_day " +
-                        "FROM serverLog " +
-                        "WHERE \"Conversion\" = 'Yes' " +
-                        "GROUP BY day " +
-                        "ORDER BY day",
-                ""
+                    "SELECT STRFTIME('%d', \"EntryDate\") AS day, " +
+                            "COUNT(*) AS clicks_by_day " +
+                            "FROM serverLog " +
+                            "WHERE \"Conversion\" = 'Yes' " +
+                            "GROUP BY day " +
+                            "ORDER BY day",
+                "Conversions"
         );
         return ChartFactory.createLineChart("Conversions Per Day",
                 "Day",
@@ -86,8 +86,19 @@ public class ChartGeneratorModel {
 
     public JFreeChart totalCostChart() {
         DefaultCategoryDataset totalCostDataset = new ChartDatasetGetter().getDataset(
-                "",
-                ""
+                "SELECT day, SUM(total_amount) AS combined_total " +
+                        "FROM (" +
+                            "SELECT STRFTIME('%d', Date) AS day, SUM(ImpressionCost) AS total_amount " +
+                            "FROM impressionLog " +
+                            "GROUP BY day " +
+                            "UNION ALL " +
+                            "SELECT STRFTIME('%d', Date) AS day, SUM(clickCost) AS total_amount " +
+                            "FROM clickLog " +
+                            "GROUP BY day " +
+                        ") AS daily_total_cost " +
+                        "GROUP BY day " +
+                        "ORDER by day ",
+                "Total Cost"
         );
         return ChartFactory.createLineChart("Total Cost Per Day",
                 "Day",
@@ -97,8 +108,19 @@ public class ChartGeneratorModel {
 
     public JFreeChart ctrChart() {
         DefaultCategoryDataset ctrDataset = new ChartDatasetGetter().getDataset(
-                "",
-                ""
+                "SELECT imp.Day, " +
+                        "(cli.Num_Of_Clicks / imp.Num_Of_Imp) * 100.0 AS ctr " +
+                        "FROM (" +
+                            "SELECT STRFTIME('%d', Date) AS Day, COUNT(*) AS Num_Of_Imp " +
+                            "FROM impressionLog " +
+                            "GROUP BY Day) imp " +
+                        "INNER JOIN (" +
+                            "SELECT STRFTIME('%d', Date) AS Day, " +
+                            "COUNT(*) AS Num_Of_Clicks " +
+                            "FROM clickLog GROUP BY Day) cli " +
+                        "ON imp.Day = cli.Day " +
+                        "ORDER BY imp.Day;",
+                "CTR"
         );
         return ChartFactory.createLineChart("CTR Per Day",
                 "Day",
