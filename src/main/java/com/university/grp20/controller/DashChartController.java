@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,6 +25,7 @@ import java.util.Objects;
 public class DashChartController {
     @FXML
     public MenuItem impressionsChart, clicksChart, uniquesChart, bouncesChart, conversionsChart, totalCostChart, ctrChart, cpaChart, cpcChart, cpmChart, bounceRateChart, ccHistogram;
+    public FlowPane chartDisplayFlowPane;
 
     private Stage stage;
     private Scene scene;
@@ -76,17 +78,13 @@ public class DashChartController {
     public void displayChart (JFreeChart chart){
         ChartViewer chartViewer = new ChartViewer(chart);
         chartViewer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        chartViewer.prefWidthProperty().bind(chartDisplayGrid.widthProperty().divide(2).subtract(15));
-        chartViewer.prefHeightProperty().bind(chartDisplayGrid.widthProperty().divide(2).subtract(15));
-
+        chartViewer.prefWidthProperty().bind(chartDisplayFlowPane.widthProperty().divide(2).subtract(15));
+        chartViewer.prefHeightProperty().bind(chartDisplayFlowPane.widthProperty().divide(2).subtract(15));
         Button settingsButton = new Button("Settings");
         settingsButton.setOnAction(e -> displaySettings());
         VBox chartBox = new VBox();
         chartBox.getChildren().addAll(settingsButton, chartViewer);
-
-        int col = numOfCharts % 2;
-        int row = numOfCharts / 2;
-        chartDisplayGrid.add(chartBox, col, row);
+        chartDisplayFlowPane.getChildren().add(chartBox);
         numOfCharts++;
     }
 

@@ -11,26 +11,39 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashChartController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashChartController">
    <children>
-      <HBox alignment="CENTER" layoutY="6.0" prefHeight="32.0" prefWidth="600.0" AnchorPane.topAnchor="10.0">
+      <HBox alignment="CENTER" layoutY="6.0" prefHeight="100.0" prefWidth="1600.0" AnchorPane.topAnchor="10.0">
          <children>
             <Button fx:id="backButton" mnemonicParsing="false" onAction="#displayUpload" text="Back ">
                <HBox.margin>
                   <Insets left="10.0" />
-               </HBox.margin></Button>
+               </HBox.margin>
+               <font>
+                  <Font size="24.0" />
+               </font></Button>
             <Region prefHeight="32.0" prefWidth="13.0" HBox.hgrow="ALWAYS" />
-            <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics" />
-            <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts" />
+            <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics">
+               <font>
+                  <Font size="24.0" />
+               </font></ToggleButton>
+            <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts">
+               <font>
+                  <Font size="24.0" />
+               </font></ToggleButton>
             <Region prefHeight="32.0" prefWidth="16.0" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" text="Edit">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
+               <font>
+                  <Font size="24.0" />
+               </font>
             </Button>
          </children></HBox>
-      <GridPane hgap="10.0" layoutX="87.0" layoutY="87.0" prefHeight="225.0" prefWidth="426.0" vgap="10.0">
+      <GridPane hgap="10.0" layoutX="280.0" layoutY="119.0" prefHeight="713.0" prefWidth="1040.0" vgap="10.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -45,58 +58,124 @@
          <children>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css">
                <children>
-                  <Label text="Number of Impressions" />
-                  <Label text="1" />
+                  <Label text="Number of Impressions">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                  <Label text="1">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1">
                <children>
-                  <Label text="Number of Clicks" />
-                  <Label text="2" />
+                  <Label text="Number of Clicks">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                  <Label text="2">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="2">
                 <children>
-                    <Label text="Number of Uniques" />
-                    <Label text="3" />
+                    <Label text="Number of Uniques">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="3">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="1">
                 <children>
-                    <Label text="Number of Bounces" />
-                    <Label text="4" />
+                    <Label text="Number of Bounces">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="4">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <children>
-                    <Label text="Number of Conversions" />
-                    <Label text="5" />
+                    <Label text="Number of Conversions">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="5">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
                 <children>
-                    <Label text="Total" />
-                    <Label text="6" />
+                    <Label text="Total">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="6">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="2">
                 <children>
-                    <Label text="CTR" />
-                    <Label text="7" />
+                    <Label text="CTR">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="7">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
-                    <Label text="CPA" />
-                    <Label text="8" />
+                    <Label text="CPA">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="8">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
                 <children>
-                    <Label text="CPC" />
-                    <Label text="9" />
+                    <Label text="CPC">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="9">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="3">
                 <children>
-                    <Label text="CPM" />
-                    <Label text="10" />
+                    <Label text="CPM">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="10">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
             <VBox style="-fx-border-color: black;" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
-                    <Label text="Bounce Rate" />
-                    <Label text="11" />
+                    <Label text="Bounce Rate">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                    <Label text="11">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
                 </children></VBox>
          </children>
       </GridPane>
