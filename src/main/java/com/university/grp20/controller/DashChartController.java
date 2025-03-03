@@ -26,7 +26,6 @@ import java.util.Objects;
 public class DashChartController {
     @FXML
     public MenuItem impressionsChart, clicksChart, uniquesChart, bouncesChart, conversionsChart, totalCostChart, ctrChart, cpaChart, cpcChart, cpmChart, bounceRateChart, ccHistogram;
-    public FlowPane chartDisplayFlowPane;
 
     @FXML
     private FlowPane chartDisplayFlowPane;
@@ -95,50 +94,32 @@ public class DashChartController {
 
     public void displayClicksChart(){
         JFreeChart chart = generateChart.clicksChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayUniquesChart(){
         JFreeChart chart = generateChart.uniquesChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayBouncesChart(){
         JFreeChart chart = generateChart.bouncesChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayConversionsChart(){
         JFreeChart chart = generateChart.conversionsChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayTotalCostChart(){
         JFreeChart chart = generateChart.totalCostChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayCTRChart(){
         JFreeChart chart = generateChart.ctrChart();
-        ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setPrefSize(755, 400);
-        chartDisplayFlowPane.getChildren().add(chartViewer);
-        numOfCharts++;
+        displayChart(chart);
     }
 
     public void displayHistogram(){}
