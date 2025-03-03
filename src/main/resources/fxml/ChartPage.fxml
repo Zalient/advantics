@@ -38,14 +38,14 @@
                              <MenuItem fx:id="cpcChart" mnemonicParsing="false" text="CPC" />
                              <MenuItem fx:id="cpmChart" mnemonicParsing="false" text="CPM" />
                              <MenuItem fx:id="bounceRateChart" mnemonicParsing="false" text="Bounce Rate" />
-      
+                              <MenuItem fx:id="ccHistogram" mnemonicParsing="false" text="Click Cost Histogram" />
                           </items>
                         </ContextMenu>
                      </contextMenu>
                   </Button>
                </children>
             </HBox>
-            <GridPane fx:id="chartDisplayGrid" prefHeight="349.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <GridPane fx:id="chartDisplayGrid" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
