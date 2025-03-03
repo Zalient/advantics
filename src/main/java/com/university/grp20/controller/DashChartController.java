@@ -8,16 +8,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.embed.swing.SwingNode;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -27,10 +28,12 @@ public class DashChartController {
 
     @FXML
     private FlowPane chartDisplayFlowPane;
-
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    @FXML
+    private GridPane chartDisplayGrid;
 
     ChartGeneratorModel generateChart = new ChartGeneratorModel();
     private int numOfCharts = 0;
@@ -59,12 +62,30 @@ public class DashChartController {
         stage.show();
     }
 
-    public void displayImpressionsChart(){
-        JFreeChart chart = generateChart.impressionsChart();
+    public void displaySettings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChartSettings.fxml"));
+            Parent root = loader.load();
+
+            Stage settingsStage = new Stage();
+            settingsStage.setTitle("Chart Settings");
+            settingsStage.setScene(new Scene(root));
+            settingsStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void displayChart (JFreeChart chart){
         ChartViewer chartViewer = new ChartViewer(chart);
         chartViewer.setPrefSize(755, 400);
         chartDisplayFlowPane.getChildren().add(chartViewer);
         numOfCharts++;
+    }
+
+    public void displayImpressionsChart(){
+        JFreeChart chart = generateChart.impressionsChart();
+        displayChart(chart);
     }
 
     public void displayClicksChart(){
@@ -114,4 +135,6 @@ public class DashChartController {
         chartDisplayFlowPane.getChildren().add(chartViewer);
         numOfCharts++;
     }
+
+    public void displayHistogram(){}
 }
