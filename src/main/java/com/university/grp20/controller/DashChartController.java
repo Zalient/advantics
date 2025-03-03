@@ -31,9 +31,6 @@ public class DashChartController {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    private GridPane chartDisplayGrid;
-
     ChartGeneratorModel generateChart = new ChartGeneratorModel();
     private int numOfCharts = 0;
 
