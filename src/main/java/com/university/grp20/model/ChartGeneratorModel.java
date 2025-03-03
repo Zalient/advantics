@@ -109,7 +109,7 @@ public class ChartGeneratorModel {
     public JFreeChart ctrChart() {
         DefaultCategoryDataset ctrDataset = new ChartDatasetGetter().getDataset(
                 "SELECT imp.Day, " +
-                        "(cli.Num_Of_Clicks / imp.Num_Of_Imp) * 100.0 AS ctr " +
+                        "(cli.Num_Of_Clicks * 100.0 / imp.Num_Of_Imp) AS ctr " +
                         "FROM (" +
                             "SELECT STRFTIME('%d', Date) AS Day, COUNT(*) AS Num_Of_Imp " +
                             "FROM impressionLog " +
@@ -170,5 +170,9 @@ public class ChartGeneratorModel {
                 "Day",
                 "Bounce Rate",
                 bounceRateDataset);
+    }
+
+    public JFreeChart clickCostHistogram() {
+        return null;
     }
 }

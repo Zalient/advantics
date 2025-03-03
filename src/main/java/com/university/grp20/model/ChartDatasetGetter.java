@@ -23,4 +23,8 @@ public class ChartDatasetGetter {
         }
         return dataset;
     }
+
+    public DefaultCategoryDataset getHistogramDataset(String query, String metricLine){
+        return null;
+    }
 }
