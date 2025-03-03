@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,8 +24,10 @@ import java.util.Objects;
 
 public class DashChartController {
     @FXML
-    public MenuItem impressionsChart, clicksChart, uniquesChart, bouncesChart, conversionsChart, totalCostChart, ctrChart, cpaChart, cpcChart, cpmChart, bounceRateChart, ccHistogram;
+    public MenuItem impressionsChart, clicksChart, uniquesChart, bouncesChart, conversionsChart, totalCostChart, ctrChart, cpaChart, cpcChart, cpmChart, bounceRateChart;
 
+    @FXML
+    private FlowPane chartDisplayFlowPane;
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -75,18 +78,8 @@ public class DashChartController {
 
     public void displayChart (JFreeChart chart){
         ChartViewer chartViewer = new ChartViewer(chart);
-        chartViewer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        chartViewer.prefWidthProperty().bind(chartDisplayGrid.widthProperty().divide(2).subtract(15));
-        chartViewer.prefHeightProperty().bind(chartDisplayGrid.widthProperty().divide(2).subtract(15));
-
-        Button settingsButton = new Button("Settings");
-        settingsButton.setOnAction(e -> displaySettings());
-        VBox chartBox = new VBox();
-        chartBox.getChildren().addAll(settingsButton, chartViewer);
-
-        int col = numOfCharts % 2;
-        int row = numOfCharts / 2;
-        chartDisplayGrid.add(chartBox, col, row);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
         numOfCharts++;
     }
 
@@ -97,32 +90,50 @@ public class DashChartController {
 
     public void displayClicksChart(){
         JFreeChart chart = generateChart.clicksChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayUniquesChart(){
         JFreeChart chart = generateChart.uniquesChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayBouncesChart(){
         JFreeChart chart = generateChart.bouncesChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayConversionsChart(){
         JFreeChart chart = generateChart.conversionsChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayTotalCostChart(){
         JFreeChart chart = generateChart.totalCostChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayCTRChart(){
         JFreeChart chart = generateChart.ctrChart();
-        displayChart(chart);
+        ChartViewer chartViewer = new ChartViewer(chart);
+        chartViewer.setPrefSize(755, 400);
+        chartDisplayFlowPane.getChildren().add(chartViewer);
+        numOfCharts++;
     }
 
     public void displayHistogram(){}
