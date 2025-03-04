@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -23,15 +24,24 @@
                         <Label prefHeight="35.0" prefWidth="170.0" text="Impression Log">
                            <font>
                               <Font size="24.0" />
-                           </font></Label>
+                           </font>
+                           <padding>
+                              <Insets top="9.0" />
+                           </padding></Label>
                         <Label text="Click Log">
                            <font>
                               <Font size="24.0" />
-                           </font></Label>
+                           </font>
+                           <padding>
+                              <Insets top="7.0" />
+                           </padding></Label>
                         <Label text="Server Log">
                            <font>
                               <Font size="24.0" />
-                           </font></Label>
+                           </font>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding></Label>
                      </children>
                   </VBox>
                   <VBox alignment="TOP_CENTER" prefHeight="193.0" prefWidth="186.0" spacing="20.0">

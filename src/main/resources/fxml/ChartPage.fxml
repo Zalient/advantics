@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashChartController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartController">
    <children>
         <VBox fx:id="chartContainer" prefHeight="900.0" prefWidth="1600.0" spacing="10">
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="1600.0">
@@ -30,7 +30,7 @@
                   <font>
                      <Font size="24.0" />
                   </font></ToggleButton>
-                    <ToggleButton fx:id="chartsButton" mnemonicParsing="false" onAction="#showChartsPage" text="Charts">
+                    <ToggleButton fx:id="chartsButton" mnemonicParsing="false" text="Charts">
                   <font>
                      <Font size="24.0" />
                   </font></ToggleButton>
@@ -46,10 +46,11 @@
                                     <MenuItem fx:id="conversionsChart" mnemonicParsing="false" onAction="#displayConversionsChart" text="No Of Conversions" />
                                     <MenuItem fx:id="totalCostChart" mnemonicParsing="false" onAction="#displayTotalCostChart" text="Total" />
                                     <MenuItem fx:id="ctrChart" mnemonicParsing="false" onAction="#displayCTRChart" text="CTR" />
-                                    <MenuItem fx:id="cpaChart" mnemonicParsing="false" text="CPA" />
-                                    <MenuItem fx:id="cpcChart" mnemonicParsing="false" text="CPC" />
-                                    <MenuItem fx:id="cpmChart" mnemonicParsing="false" text="CPM" />
-                                    <MenuItem fx:id="bounceRateChart" mnemonicParsing="false" text="Bounce Rate" />
+                                    <MenuItem fx:id="cpaChart" mnemonicParsing="false" onAction="#displayCPAChart" text="CPA" />
+                                    <MenuItem fx:id="cpcChart" mnemonicParsing="false" onAction="#displayCPCChart" text="CPC" />
+                                    <MenuItem fx:id="cpmChart" mnemonicParsing="false" onAction="#displayCPMChart" text="CPM" />
+                                    <MenuItem fx:id="bounceRateChart" mnemonicParsing="false" onAction="#displayBounceRateChart" text="Bounce Rate" />
+                                    <MenuItem fx:id="ccHistogram" mnemonicParsing="false" onAction="#binSizePrompt" text="Click Cost Histogram" />
                                 </items>
                             </ContextMenu>
                         </contextMenu>

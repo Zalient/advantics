@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashChartController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.DashController">
    <children>
       <HBox alignment="CENTER" layoutY="6.0" prefHeight="100.0" prefWidth="1600.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -25,7 +25,7 @@
                   <Font size="24.0" />
                </font></Button>
             <Region prefHeight="32.0" prefWidth="13.0" HBox.hgrow="ALWAYS" />
-            <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showDashboard" text="Metrics">
+            <ToggleButton fx:id="metricsButton" mnemonicParsing="false" text="Metrics">
                <font>
                   <Font size="24.0" />
                </font></ToggleButton>
@@ -62,7 +62,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                  <Label text="1">
+                  <Label fx:id="impressionsLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -73,7 +73,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                  <Label text="2">
+                  <Label fx:id="clicksLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -84,7 +84,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="3">
+                    <Label fx:id="uniquesLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -95,7 +95,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="4">
+                    <Label fx:id="bouncesLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -106,7 +106,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="5">
+                    <Label fx:id="conversionsLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -117,7 +117,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="6">
+                    <Label fx:id="totalLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -128,7 +128,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="7">
+                    <Label fx:id="ctrLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -139,7 +139,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="8">
+                    <Label fx:id="cpaLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -150,7 +150,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="9">
+                    <Label fx:id="cpcLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -161,7 +161,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="10">
+                    <Label fx:id="cpmLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
@@ -172,7 +172,7 @@
                      <font>
                         <Font size="24.0" />
                      </font></Label>
-                    <Label text="11">
+                    <Label fx:id="bounceRateLabel" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font></Label>
