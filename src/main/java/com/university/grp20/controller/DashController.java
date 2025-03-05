@@ -53,7 +53,7 @@ public class DashController {
         conversionsLabel.setText(String.format( "%.2f", conversions) + " conversions");
         double total = dashModel.rawMetricGetter("SELECT (SELECT SUM(ImpressionCost) FROM impressionLog) + (SELECT SUM(ClickCost) FROM clickLog)");
         totalLabel.setText(String.format( "%.2f", total) + " pence");
-        ctrLabel.setText((clicks * 100.0) / impressions + "%");
+        ctrLabel.setText(String.format("%.2f", ((clicks * 100.0) / impressions)) + "%");
         cpaLabel.setText(String.format( "%.2f", total/conversions) + " pence per conversion");
         cpcLabel.setText(String.format( "%.2f", total/clicks) + " pence per click");
         cpmLabel.setText(String.format( "%.2f", (total/impressions) * 1000) + " pence per 1000 impressions");

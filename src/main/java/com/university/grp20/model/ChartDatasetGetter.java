@@ -11,7 +11,7 @@ public class ChartDatasetGetter {
     public DefaultCategoryDataset getDataset(String query, String metricLine){
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + new File("databases/test.db").getAbsolutePath());
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet queryRes = statement.executeQuery();
 
@@ -29,7 +29,7 @@ public class ChartDatasetGetter {
     public HistogramDataset getHistogramDataset(String query, String metricLine, int binSize){
         List<Double> clickCosts = new ArrayList<>();
         try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + new File("databases/test.db").getAbsolutePath());
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet queryRes = statement.executeQuery();
 
