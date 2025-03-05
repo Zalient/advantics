@@ -24,3 +24,4 @@ Thumbs.db
 hs_err_pid*
 
 databases/test.db
+dependency-reduced-pom.xml

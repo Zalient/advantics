@@ -56,7 +56,7 @@ public class DashController {
         ctrLabel.setText((clicks * 100.0) / impressions + "%");
         cpaLabel.setText(String.format( "%.2f", total/conversions) + " pence per conversion");
         cpcLabel.setText(String.format( "%.2f", total/clicks) + " pence per click");
-        cpmLabel.setText(String.format( "%.2f", total/impressions) + " pence per impression");
+        cpmLabel.setText(String.format( "%.2f", (total/impressions) * 1000) + " pence per 1000 impressions");
         bounceRateLabel.setText(String.format( "%.2f", bounces/clicks) + " bounce per click");
     }
 
