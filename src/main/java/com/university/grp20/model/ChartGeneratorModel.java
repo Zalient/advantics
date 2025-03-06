@@ -1,11 +1,14 @@
 package com.university.grp20.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.HistogramDataset;
 
 public class ChartGeneratorModel {
+    private final Logger logger = LogManager.getLogger(ChartGeneratorModel.class);
 
     private String applyCommonFilter(String baseSQL, ChartFilterDTO filterDTO, String dateAlias, String dateColumn, String impressionAlias, boolean hasImpression)
     {
@@ -30,7 +33,14 @@ public class ChartGeneratorModel {
             if (filterDTO.getAgeRanges() != null && !filterDTO.getAgeRanges().isEmpty()) {
                 sb.append(" AND ").append(impressionAlias).append(".Age IN (");
                 for (int i = 0; i < filterDTO.getAgeRanges().size(); i++) {
-                    sb.append("'").append(filterDTO.getAgeRanges().get(i)).append("'");
+                    String age = filterDTO.getAgeRanges().get(i);
+                    if (age.equals("Below 25")) {
+                        age = "<25";
+                    } else if (age.equals("Above 54")) {
+                        age = ">54";
+                    }
+                    sb.append("'").append(age).append("'");
+
                     if (i < filterDTO.getAgeRanges().size() - 1) {
                         sb.append(",");
                     }
@@ -57,6 +67,13 @@ public class ChartGeneratorModel {
                 }
                 sb.append(")");
             }
+            if (filterDTO.getTimeGranularity() == null || filterDTO.getTimeGranularity().isEmpty()) {
+                sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ").append(dateAlias).append(".").append(dateColumn).append(") ");
+            } else if (filterDTO.getTimeGranularity().equals("Per Day")) {
+                sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ").append(dateAlias).append(".").append(dateColumn).append(") ");
+            } else if (filterDTO.getTimeGranularity().equals("Per Week")) {
+                sb.append(" GROUP BY STRFTIME('%Y-%W', ").append(dateAlias).append(".").append(dateColumn).append(") ");
+            }
         } return sb.toString();
     }
 
@@ -82,77 +99,73 @@ public class ChartGeneratorModel {
 
     public JFreeChart filteredImpressionsChart(ChartFilterDTO filterDTO) {
         String baseSQL =
-                "SELECT STRFTIME('%d', Date) AS day, COUNT(*) AS impressions_by_day " +
+                "SELECT strftime('%Y-%m-%d', Date) AS day, COUNT(*) AS impressions_by_day " +
                         "FROM impressionLog i " +
                         "WHERE 1=1 ";
         String finalSQL = applyCommonFilter(baseSQL, filterDTO,
                 "i", "Date",
                 "i", true);
-        finalSQL += "GROUP BY day ORDER BY day";
-
+        finalSQL += "ORDER BY day";
+        logger.info(finalSQL);
         DefaultCategoryDataset dataset = new ChartDatasetGetter().getDataset(finalSQL, "Impressions");
         return ChartFactory.createLineChart("Impressions Per Day", "Day", "Impressions", dataset);
     }
 
     public JFreeChart filteredClicksChart(ChartFilterDTO filterDTO) {
         String baseSQL =
-                "SELECT STRFTIME('%d', c.Date) AS day, COUNT(*) AS clicks_by_day " +
+                "SELECT strftime('%Y-%m-%d', c.Date) AS day, COUNT(*) AS clicks_by_day " +
                         "FROM clickLog c " +
                         "JOIN impressionLog i ON c.ID = i.ID " +
                         "WHERE 1=1 ";
         String finalSQL = applyCommonFilter(baseSQL, filterDTO,
                 "c", "Date",
                 "i", true);
-        finalSQL += "GROUP BY day ORDER BY day";
-
+        finalSQL += "ORDER BY day";
+        logger.info(finalSQL);
         DefaultCategoryDataset dataset = new ChartDatasetGetter().getDataset(finalSQL, "Clicks");
-
-        return ChartFactory.createLineChart("Clicks Per Day",
-                "Day",
-                "Clicks",
-                dataset);
+        return ChartFactory.createLineChart("Clicks Per Day", "Day", "Clicks", dataset);
     }
 
     public JFreeChart filteredUniquesChart(ChartFilterDTO filterDTO) {
         String baseSQL =
-                "SELECT STRFTIME('%d', i.Date) AS day, COUNT(DISTINCT i.ID) AS uniques_by_day " +
+                "SELECT strftime('%Y-%m-%d', Date) AS day, COUNT(DISTINCT i.ID) AS uniques_by_day " +
                         "FROM impressionLog i " +
                         "WHERE 1=1 ";
         String finalSQL = applyCommonFilter(baseSQL, filterDTO,
                 "i", "Date",
                 "i", true);
-        finalSQL += "GROUP BY day ORDER BY day";
-
+        finalSQL += "ORDER BY day";
+        logger.info(finalSQL);
         DefaultCategoryDataset dataset = new ChartDatasetGetter().getDataset(finalSQL, "Uniques");
         return ChartFactory.createLineChart("Uniques Per Day", "Day", "Uniques", dataset);
     }
 
     public JFreeChart filteredBouncesChart(ChartFilterDTO filterDTO) {
         String baseSQL =
-                "SELECT STRFTIME('%d', EntryDate) AS day, COUNT(*) AS bounces_by_day " +
+                "SELECT strftime('%Y-%m-%d', EntryDate) AS day, COUNT(*) AS bounces_by_day " +
                         "FROM serverLog s " +
                         "JOIN impressionLog i ON s.ID = i.ID " +
                         "WHERE s.PagesViewed = 1 ";
         String finalSQL = applyCommonFilter(baseSQL, filterDTO,
                 "s", "EntryDate",
                 "i", true);
-        finalSQL += "GROUP BY day ORDER BY day";
-
+        finalSQL += "ORDER BY day";
+        logger.info(finalSQL);
         DefaultCategoryDataset dataset = new ChartDatasetGetter().getDataset(finalSQL, "Bounces");
         return ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
     }
 
     public JFreeChart filteredConversionsChart(ChartFilterDTO filterDTO) {
         String baseSQL =
-                "SELECT STRFTIME('%d', EntryDate) AS day, COUNT(*) AS clicks_by_day " +
+                "SELECT strftime('%Y-%m-%d', EntryDate) AS day, COUNT(*) AS clicks_by_day " +
                         "FROM serverLog s " +
                         "JOIN impressionLog i ON s.ID = i.ID " +
                         "WHERE s.Conversion = 'Yes' ";
         String finalSQL = applyCommonFilter(baseSQL, filterDTO,
                 "s", "EntryDate",
                 "i", true);
-        finalSQL += "GROUP BY day ORDER BY day";
-
+        finalSQL += "ORDER BY day";
+        logger.info(finalSQL);
         DefaultCategoryDataset dataset = new ChartDatasetGetter().getDataset(finalSQL, "Conversions");
         return ChartFactory.createLineChart("Conversions Per Day", "Day", "Conversions", dataset);
     }

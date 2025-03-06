@@ -43,13 +43,14 @@ public class ChartSettingsController {
         maleOpt.setUserData("Male");
         femaleOpt.setUserData("Female");
 
-        ageRangeChooser.getItems().addAll("Below 25", "25-34","35-44", "45-55", "Above 55");
+        ageRangeChooser.getItems().addAll("Below 25", "25-34","35-44", "45-54", "Above 54");
         incomeChooser.getItems().addAll("Low","Medium","High");
         contextChooser.getItems().addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
 
         applyChangeButton.setOnAction(event -> {
             ChartFilterDTO filterDTO = new ChartFilterDTO();
 
+            filterDTO.setTimeGranularity((String) granularityChooser.getValue());
             filterDTO.setAgeRanges(ageRangeChooser.getCheckModel().getCheckedItems());
             filterDTO.setIncomes(incomeChooser.getCheckModel().getCheckedItems());
             filterDTO.setContexts(contextChooser.getCheckModel().getCheckedItems());

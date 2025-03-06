@@ -34,7 +34,7 @@
                   <Font size="24.0" />
                </font></ToggleButton>
             <Region prefHeight="32.0" prefWidth="16.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Edit">
+            <Button mnemonicParsing="false" onAction="#displayMetricsEditor" text="Edit">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
