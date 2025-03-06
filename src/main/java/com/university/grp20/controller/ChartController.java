@@ -3,7 +3,6 @@ package com.university.grp20.controller;
 import com.university.grp20.model.ChartGeneratorModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -55,10 +54,13 @@ public class ChartController {
         stage.show();
     }
 
-    public void displaySettings() {
+    public void displaySettings(ChartViewer chartViewer) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChartSettings.fxml"));
             Parent root = loader.load();
+
+            ChartSettingsController controller = loader.getController();
+            controller.initChartViewer(chartViewer, this);
 
             Stage settingsStage = new Stage();
             settingsStage.setTitle("Chart Settings");
@@ -69,13 +71,17 @@ public class ChartController {
         }
     }
 
-    public void displayChart (JFreeChart chart){
+    public void displayChart (JFreeChart chart, String metricType){
         ChartViewer chartViewer = new ChartViewer(chart);
         chartViewer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         chartViewer.prefWidthProperty().bind(chartDisplayFlowPane.widthProperty().divide(2).subtract(15));
         chartViewer.prefHeightProperty().bind(chartDisplayFlowPane.widthProperty().divide(2).subtract(15));
+
+        chartViewer.setUserData(metricType);
+
         Button settingsButton = new Button("Settings");
-        settingsButton.setOnAction(e -> displaySettings());
+        settingsButton.setOnAction(e -> displaySettings(chartViewer));
+
         VBox chartBox = new VBox();
         chartBox.getChildren().addAll(settingsButton, chartViewer);
         chartDisplayFlowPane.getChildren().add(chartBox);
@@ -83,57 +89,57 @@ public class ChartController {
 
     public void displayImpressionsChart(){
         JFreeChart chart = generateChart.impressionsChart();
-        displayChart(chart);
+        displayChart(chart, "Impressions");
     }
 
     public void displayClicksChart(){
         JFreeChart chart = generateChart.clicksChart();
-        displayChart(chart);
+        displayChart(chart, "Clicks");
     }
 
     public void displayUniquesChart(){
         JFreeChart chart = generateChart.uniquesChart();
-        displayChart(chart);
+        displayChart(chart, "Uniques");
     }
 
     public void displayBouncesChart(){
         JFreeChart chart = generateChart.bouncesChart();
-        displayChart(chart);
+        displayChart(chart, "Bounces");
     }
 
     public void displayConversionsChart(){
         JFreeChart chart = generateChart.conversionsChart();
-        displayChart(chart);
+        displayChart(chart, "Conversions");
     }
 
     public void displayTotalCostChart(){
         JFreeChart chart = generateChart.totalCostChart();
-        displayChart(chart);
+        displayChart(chart, "Total Cost");
     }
 
     public void displayCTRChart(){
         JFreeChart chart = generateChart.ctrChart();
-        displayChart(chart);
+        displayChart(chart, "CTR");
     }
 
     public void displayCPAChart(){
         JFreeChart chart = generateChart.cpaChart();
-        displayChart(chart);
+        displayChart(chart, "CPA");
     }
 
     public void displayCPCChart(){
         JFreeChart chart = generateChart.cpcChart();
-        displayChart(chart);
+        displayChart(chart, "CPC");
     }
 
     public void displayCPMChart(){
         JFreeChart chart = generateChart.cpmChart();
-        displayChart(chart);
+        displayChart(chart, "CPM");
     }
 
     public void displayBounceRateChart(){
         JFreeChart chart = generateChart.bounceRateChart();
-        displayChart(chart);
+        displayChart(chart, "Bounce Rate");
     }
 
     public void binSizePrompt(){
@@ -168,7 +174,7 @@ public class ChartController {
 
     public void displayHistogram(int numBins){
         JFreeChart chart = generateChart.clickCostHistogram(numBins);
-        displayChart(chart);
+        displayChart(chart, "Click Cost Histogram");
 
         XYPlot plot = (XYPlot) chart.getPlot();
         XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
