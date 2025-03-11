@@ -9,7 +9,7 @@ public class DashboardModel {
     public double rawMetricGetter(String query) {
         double result = 0.0;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + new File("databases/test.db").getAbsolutePath());
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
              PreparedStatement statement = conn.prepareStatement(query);
              ResultSet queryRes = statement.executeQuery()) {
 

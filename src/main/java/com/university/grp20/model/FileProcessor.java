@@ -1,10 +1,9 @@
 package com.university.grp20.model;
 
-import com.university.grp20.controller.FileUpload;
-import javafx.application.Platform;
+import com.university.grp20.controller.FileProgressBarListener;
+import com.university.grp20.controller.FileProgressLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +18,11 @@ public class FileProcessor
   private File clickLog ;
   private File serverLog ;
 
+  private int batchCount = 15000;
 
+  private FileProgressBarListener fileProgressBarListener;
+
+  private FileProgressLabel fileProgressLabel;
 
   public void setImpressionLog(File newImpressionLog) {
     this.impressionLog = newImpressionLog;
@@ -37,33 +40,89 @@ public class FileProcessor
     return impressionLog != null && clickLog != null && serverLog != null;
   }
 
-  public void connect() {
-    logger.info("Attempting connection") ;
-
+  public Connection connectDatabase() {
     Connection conn = null;
-    var url = "jdbc:sqlite:" + new File("databases/test.db").getAbsolutePath();
-    BufferedReader bufferedReader = null;
-    String line;
-    String[] columnData;
-    PreparedStatement statement;
-    int columnCounter = 1;
-
     try {
-      conn = DriverManager.getConnection(url);
+      conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
+      setupDatabase(conn);
+      logger.info("Database connected");
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return conn;
+  }
 
-      logger.info("Connection to SQLite has been established.");
+  public void setupDatabase (Connection conn) {
+    try {
+      PreparedStatement statement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS impressionLog (" +
+              "impressionID INTEGER, " +
+              "Date DATETIME, " +
+              "ID LONG, " +
+              "Gender TEXT, " +
+              "Age TEXT, " +
+              "Income TEXT, " +
+              "Context TEXT, " +
+              "ImpressionCost REAL);");
+      statement.executeUpdate();
+      logger.info("Created impressionLog table");
 
-      statement = conn.prepareStatement("DELETE FROM impressionLog");
+      statement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS clickLog (" +
+              "clickID INTEGER, " +
+              "Date DATETIME, " +
+              "ID LONG, " +
+              "ClickCost REAL);");
+      statement.executeUpdate();
+      logger.info("Created clickLog table");
+
+      statement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS serverLog (" +
+              "serverID INTEGER, " +
+              "EntryDate DATETIME, " +
+              "ID LONG, " +
+              "ExitDate DATETIME, " +
+              "PagesViewed INTEGER, " +
+              "Conversion TEXT);");
+      statement.executeUpdate();
+      logger.info("Created serverLog table");
+
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+
+  public void insertImpression(Connection conn) {
+    try {
+      int lineCount = 0;
+      int columnCounter = 1;
+      String line = "";
+      String[] columnData;
+
+      fileProgressLabel.labelText("Uploading impression file");
+
+      PreparedStatement statement = conn.prepareStatement("DELETE FROM impressionLog");
       statement.executeUpdate();
       logger.info("Deleted existing rows in impression log");
+
+      BufferedReader bufferedReader = new BufferedReader(new FileReader(impressionLog));
+
+      while ((line = bufferedReader.readLine()) != null) {
+        lineCount++;
+      }
+
+      logger.info(lineCount + " lines found in impression file");
+
+      try {
+        bufferedReader.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
 
       statement = conn.prepareStatement("INSERT INTO impressionLog (impressionID, Date, ID, Gender, Age, Income, Context, ImpressionCost) values (?, ?, ?, ?, ?, ?, ?, ?)");
       bufferedReader = new BufferedReader(new FileReader(impressionLog));
 
       // Skip the first line that just has column names
       bufferedReader.readLine();
-
-      conn.setAutoCommit(false);
 
       while ((line = bufferedReader.readLine()) != null) {
         columnData = line.split(",");
@@ -80,7 +139,10 @@ public class FileProcessor
         statement.addBatch();
         columnCounter++;
 
-        if (columnCounter % 15000 == 0) {
+        if (columnCounter % batchCount == 0) {
+          //REMOVE IF ABANDON
+          fileProgressBarListener.FileProgressBar(((double) columnCounter / (double) lineCount));
+
           statement.executeBatch();
           conn.commit();
           logger.info("Inserted batch of impression log rows");
@@ -88,6 +150,7 @@ public class FileProcessor
       }
       statement.executeBatch();
       conn.commit();
+      fileProgressBarListener.FileProgressBar(1.0);
 
       try {
         bufferedReader.close();
@@ -96,90 +159,162 @@ public class FileProcessor
       }
       statement.executeBatch();
       conn.commit();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-      // impression end
+  public void insertClick(Connection conn) throws IOException, SQLException {
+    int lineCount = 0;
+    int columnCounter = 1;
+    String line = "";
+    String[] columnData;
 
-      columnCounter = 1;
+    fileProgressLabel.labelText("Uploading click file");
 
-      statement = conn.prepareStatement("DELETE FROM clickLog");
-      statement.executeUpdate();
-      logger.info("Deleted existing rows in click log");
+    PreparedStatement statement = conn.prepareStatement("DELETE FROM clickLog");
+    statement.executeUpdate();
+    logger.info("Deleted existing rows in click log");
 
-      statement = conn.prepareStatement("INSERT INTO clickLog (clickID, Date, ID, ClickCost) values (?, ?, ?, ?)");
-      bufferedReader = new BufferedReader(new FileReader(clickLog));
+    BufferedReader bufferedReader = new BufferedReader(new FileReader(clickLog));
 
-      // Skip the first line that just has column names
-      bufferedReader.readLine();
+    while ((line = bufferedReader.readLine()) != null) {
+      lineCount++;
+    }
 
-      while ((line = bufferedReader.readLine()) != null) {
-        columnData = line.split(",");
+    logger.info(lineCount + " lines found in click file");
 
-        statement.setInt(1, columnCounter); // PRIMARY KEY
-        statement.setString(2, columnData[0]); // Date
-        statement.setLong(3, Long.parseLong(columnData[1])); // ID
-        statement.setDouble(4, Double.parseDouble(columnData[2])); // ClickCost
+    try {
+      bufferedReader.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
-        statement.addBatch();
-        columnCounter++;
+    statement = conn.prepareStatement("INSERT INTO clickLog (clickID, Date, ID, ClickCost) values (?, ?, ?, ?)");
+    bufferedReader = new BufferedReader(new FileReader(clickLog));
 
-        if (columnCounter % 15000 == 0) {
-          statement.executeBatch();
-          conn.commit();
-          logger.info("Inserted batch of click log rows");
-        }
+    // Skip the first line that just has column names
+    bufferedReader.readLine();
+
+    while ((line = bufferedReader.readLine()) != null) {
+      columnData = line.split(",");
+
+      statement.setInt(1, columnCounter); // PRIMARY KEY
+      statement.setString(2, columnData[0]); // Date
+      statement.setLong(3, Long.parseLong(columnData[1])); // ID
+      statement.setDouble(4, Double.parseDouble(columnData[2])); // ClickCost
+
+      statement.addBatch();
+      columnCounter++;
+
+      if (columnCounter % batchCount == 0) {
+        fileProgressBarListener.FileProgressBar(((double) columnCounter / (double) lineCount));
+
+        statement.executeBatch();
+        conn.commit();
+        logger.info("Inserted batch of click log rows");
       }
-      statement.executeBatch();
-      conn.commit();
+    }
+    statement.executeBatch();
+    conn.commit();
+    fileProgressBarListener.FileProgressBar(1.0);
 
-      try {
-        bufferedReader.close();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+    try {
+      bufferedReader.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void insertServer(Connection conn) throws SQLException, IOException {
+    int lineCount = 0;
+    int columnCounter = 1;
+    String line = "";
+    String[] columnData;
+
+    fileProgressLabel.labelText("Uploading server file");
+
+    PreparedStatement statement = conn.prepareStatement("DELETE FROM serverLog");
+    statement.executeUpdate();
+    logger.info("Deleted existing rows in server log");
+
+    BufferedReader bufferedReader = new BufferedReader(new FileReader(serverLog));
+
+    while ((line = bufferedReader.readLine()) != null) {
+      lineCount++;
+    }
+
+    logger.info(lineCount + " lines found in click file");
+
+    try {
+      bufferedReader.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    statement = conn.prepareStatement("INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, Conversion) values (?, ?, ?, ?, ?, ?)");
+    bufferedReader = new BufferedReader(new FileReader(serverLog));
+
+    // Skip the first line that just has column names
+    bufferedReader.readLine();
+
+    while ((line = bufferedReader.readLine()) != null) {
+      columnData = line.split(",");
+
+      statement.setInt(1, columnCounter); // PRIMARY KEY
+      statement.setString(2, columnData[0]); // EntryDate
+      statement.setLong(3, Long.parseLong(columnData[1])); // ID
+      statement.setString(4, columnData[2]); // ExitDate
+      statement.setInt(5, Integer.parseInt(columnData[3])); // PagesViewed
+      statement.setString(6, columnData[4]); // Conversion
+
+      statement.addBatch();
+      columnCounter++;
+
+      if (columnCounter % batchCount == 0) {
+        fileProgressBarListener.FileProgressBar(((double) columnCounter / (double) lineCount));
+
+        statement.executeBatch();
+        conn.commit();
+        logger.info("Inserted batch of server log rows");
       }
+    }
+    statement.executeBatch();
+    conn.commit();
+    fileProgressBarListener.FileProgressBar(1.0);
 
-      // click end
+    try {
+      bufferedReader.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-      columnCounter = 1;
+  public void insertAllData() {
+    logger.info("Attempting connection") ;
 
-      statement = conn.prepareStatement("DELETE FROM serverLog");
-      statement.executeUpdate();
-      logger.info("Deleted existing rows in server log");
+    Connection conn = null;
+    BufferedReader bufferedReader = null;
+    String line;
+    String[] columnData;
+    PreparedStatement statement;
+    int columnCounter = 1;
 
-      statement = conn.prepareStatement("INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, Conversion) values (?, ?, ?, ?, ?, ?)");
-      bufferedReader = new BufferedReader(new FileReader(serverLog));
+    try {
 
-      // Skip the first line that just has column names
-      bufferedReader.readLine();
+      conn = connectDatabase();
 
-      while ((line = bufferedReader.readLine()) != null) {
-        columnData = line.split(",");
+      conn.setAutoCommit(false);
 
-        statement.setInt(1, columnCounter); // PRIMARY KEY
-        statement.setString(2, columnData[0]); // EntryDate
-        statement.setLong(3, Long.parseLong(columnData[1])); // ID
-        statement.setString(4, columnData[2]); // ExitDate
-        statement.setInt(5, Integer.parseInt(columnData[3])); // PagesViewed
-        statement.setString(6, columnData[4]); // Conversion
+      insertImpression(conn);
 
+      insertClick(conn);
 
-
-        statement.addBatch();
-        columnCounter++;
-
-        if (columnCounter % 15000 == 0) {
-          statement.executeBatch();
-          conn.commit();
-          logger.info("Inserted batch of server log rows");
-        }
-      }
-      statement.executeBatch();
-      conn.commit();
-
-      try {
-        bufferedReader.close();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      insertServer(conn);
 
       conn.setAutoCommit(true);
 
@@ -195,9 +330,15 @@ public class FileProcessor
           System.out.println(e.getMessage());
         }
       }
-      }
-
     }
+
   }
 
+  public void setOnUploadStart(FileProgressBarListener listener) {
+    this.fileProgressBarListener = listener;
+  }
 
+  public void setOnUploadLabelStart(FileProgressLabel listener) {
+    this.fileProgressLabel = listener;
+  }
+}
