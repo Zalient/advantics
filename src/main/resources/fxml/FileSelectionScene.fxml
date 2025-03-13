@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.university.grp20.controller.FileSelectionController">
+    <children>
+        <VBox alignment="CENTER" layoutX="173.0" layoutY="54.0" prefHeight="200.0" prefWidth="255.0" spacing="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label alignment="CENTER" contentDisplay="CENTER" text="File Import">
+                    <font>
+                        <Font size="48.0" />
+                    </font>
+                </Label>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="193.0" prefWidth="181.0" spacing="20.0">
+                            <children>
+                                <Label text="Impression Log">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Click Log">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Server Log">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="193.0" prefWidth="186.0" spacing="20.0">
+                            <children>
+                                <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefHeight="50.0" prefWidth="110.0" stylesheets="@../styles/styles.css" text="Select">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="clickLogButton" mnemonicParsing="false" onAction="#handleClickUpload" prefHeight="50.0" prefWidth="110.0" stylesheets="@../styles/styles.css" text="Select">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="serverLogButton" mnemonicParsing="false" onAction="#handleServerUpload" prefHeight="50.0" prefWidth="110.0" stylesheets="@../styles/styles.css" text="Select">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Button>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#startImport" prefWidth="147.0" stylesheets="@../styles/styles.css" text="Next">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Button>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <ProgressBar fx:id="importProgressBar" prefHeight="20.0" prefWidth="529.0" progress="0.0" />
+                        <Label fx:id="importProgressLabel" alignment="CENTER" prefHeight="40.0" prefWidth="526.0">
+                            <padding>
+                                <Insets top="10.0" />
+                            </padding>
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
