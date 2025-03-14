@@ -1,5 +1,3 @@
 package com.university.grp20.controller;
 
-public class SettingsController {
-
-}
+public class SettingsController {}

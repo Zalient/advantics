@@ -8,7 +8,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class FileUploadTest extends ApplicationTest {
+public class FileSelectionControllerTest extends ApplicationTest {
 
     public void start(Stage stage) {
         new App().start(stage);
@@ -30,38 +30,38 @@ public class FileUploadTest extends ApplicationTest {
     }
 
     @Test
-    void testImpressionUploadButton() {
-        verifyThat("#impressionUpload", LabeledMatchers.hasText("Upload"));
+    void testImpressionLogButton() {
+        verifyThat("#impressionLogButton", LabeledMatchers.hasText("Select"));
     }
 
     @Test
-    void testClickUploadButton() {
-        verifyThat("#clickUpload", LabeledMatchers.hasText("Upload"));
+    void testClickLogButton() {
+        verifyThat("#clickLogButton", LabeledMatchers.hasText("Select"));
     }
 
     @Test
-    void testServerUploadButton() {
-        verifyThat("#serverUpload", LabeledMatchers.hasText("Upload"));
+    void testServerLogButton() {
+        verifyThat("#serverLogButton", LabeledMatchers.hasText("Select"));
     }
 
     @Test
     void testNextButton() {
-        verifyThat("Next", LabeledMatchers.hasText("Next"));
+        verifyThat("#nextButton", LabeledMatchers.hasText("Next"));
     }
 
     @Test
     void testTitle() {
-        verifyThat("File Upload", LabeledMatchers.hasText("File Upload"));
+        verifyThat("File Import", LabeledMatchers.hasText("File Import"));
     }
 
     @Test
-    void testProgressBar() {
-        verifyThat("#fileProgressBar", NodeMatchers.isVisible());
+    void testProgressBarVisibility() {
+        verifyThat("#importProgressBar", NodeMatchers.isVisible());
     }
 
     @Test
-    void testProgressBarLabel() {
-        verifyThat("#progressLabel", NodeMatchers.isVisible());
+    void testProgressBarLabelVisibility() {
+        verifyThat("#importProgressLabel", NodeMatchers.isVisible());
     }
 
 

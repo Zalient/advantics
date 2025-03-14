@@ -3,3 +3,16 @@
     -fx-border-width: 3px;
     -fx-padding: 5px;
 }
+.button, .menu-button, .toggle-button {
+    -fx-alignment: center;
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: black;
+    -fx-font-size: 20px;
+    -fx-padding: 3px 7px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-pref-height: 60px;
+    -fx-pref-width: 140px;
+}
