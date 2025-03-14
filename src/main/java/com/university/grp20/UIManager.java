@@ -54,14 +54,11 @@ public class UIManager {
       }
       Scene currentScene = primaryStage.getScene();
       if (currentScene == null) {
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        currentScene = new Scene(root, screenWidth, screenHeight);
+        currentScene = new Scene(root);
         primaryStage.setScene(currentScene);
       } else {
         currentScene.setRoot(root);
       }
-      primaryStage.setTitle(loader.getLocation() != null ? loader.getLocation().toString() : "App");
       primaryStage.show();
     } catch (IOException e) {
       String loaderLocation =

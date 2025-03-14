@@ -83,7 +83,7 @@ public class FileSelectionController {
       logger.info(title + " aborted");
     }
     if (fileImportService.isReady()) {
-      startImport();
+      nextButton.setDisable(false);
     }
   }
 

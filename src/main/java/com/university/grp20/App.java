@@ -15,10 +15,10 @@ public class App extends Application {
     logger.info("Starting application");
     UIManager.setPrimaryStage(stage);
     stage.setTitle("Advertising Dashboard");
-    stage.setMaximized(true);
-    stage.setFullScreen(true);
-    stage.setFullScreenExitHint("");
-    stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    //stage.setMaximized(true);
+    //stage.setFullScreen(true);
+    //stage.setFullScreenExitHint("");
+    //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"));
   }
 
