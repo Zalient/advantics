@@ -29,6 +29,10 @@ public class FileSelectionController {
   @FXML private ProgressBar importProgressBar;
   @FXML private Label importProgressLabel;
   @FXML private Label roleLabel;
+  @FXML private Label impressionPathLabel;
+  @FXML private Label clickPathLabel;
+  @FXML private Label serverPathLabel;
+
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
@@ -121,6 +125,15 @@ public class FileSelectionController {
     if (file != null) {
       logger.info("Selected file path: " + file.getPath());
       fileSetter.accept(file);
+
+      if (sourceButton == impressionLogButton) {
+        impressionPathLabel.setText(file.getPath());
+      } else if (sourceButton == clickLogButton) {
+        clickPathLabel.setText(file.getPath());
+      } else if (sourceButton == serverLogButton) {
+        serverPathLabel.setText(file.getPath());
+      }
+
       sourceButton.setStyle("-fx-background-color: #40cf23;");
     } else {
       logger.info(title + " aborted");
