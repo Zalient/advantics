@@ -3,13 +3,20 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.FileImportService;
 import java.io.File;
+import java.io.IOException;
 import java.util.function.Consumer;
+
+import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,11 +25,27 @@ public class FileSelectionController {
   @FXML private Button clickLogButton;
   @FXML private Button serverLogButton;
   @FXML private Button nextButton;
+  @FXML private Button logoutButton;
   @FXML private ProgressBar importProgressBar;
   @FXML private Label importProgressLabel;
+  @FXML private Label roleLabel;
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
+
+  @FXML
+  public void initialize() {
+    Platform.runLater(() -> {
+      logger.info("Initialising file upload controller");
+
+      logger.info("Role is: " + User.getRole());
+      roleLabel.setText("Role: " + User.getRole());
+
+      fileImportService.setOnUploadStart(this::updateProgressBar);
+      fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
+
+    });
+  }
 
   @FXML
   private void startImport() {
@@ -32,6 +55,7 @@ public class FileSelectionController {
     impressionLogButton.setDisable(true);
     clickLogButton.setDisable(true);
     serverLogButton.setDisable(true);
+    logoutButton.setDisable(true);
     Thread importDataThread =
         new Thread(
             () -> {
@@ -72,6 +96,25 @@ public class FileSelectionController {
     selectFile("Select Server Log File", fileImportService::setServerLog, serverLogButton);
   }
 
+  @FXML
+  private void handleLogout() {
+    // Reset all the attributes of the user class
+    User.logOut();
+
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginScene.fxml"));
+      Parent root = loader.load();
+      Stage stage = (Stage) nextButton.getScene().getWindow();
+      stage.setScene(new Scene(root));
+      stage.setTitle("Advertising Dashboard");
+      stage.show();
+    } catch (IOException e) {
+      logger.info("Error reading FXML file");
+    }
+
+
+  }
+
   private void selectFile(String title, Consumer<File> fileSetter, Button sourceButton) {
     fileChooser.setTitle(title);
     File file = fileChooser.showOpenDialog(sourceButton.getScene().getWindow());
@@ -92,6 +135,7 @@ public class FileSelectionController {
     clickLogButton.setDisable(false);
     serverLogButton.setDisable(false);
     nextButton.setDisable(false);
+    logoutButton.setDisable(false);
     updateProgressBar(0.0);
     impressionLogButton.setStyle("-fx-background-color: #ffffff");
     clickLogButton.setStyle("-fx-background-color: #ffffff");

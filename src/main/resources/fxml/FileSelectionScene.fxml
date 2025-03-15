@@ -9,10 +9,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.university.grp20.controller.FileSelectionController">
+<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>
-        <VBox alignment="CENTER" layoutX="173.0" layoutY="54.0" prefHeight="200.0" prefWidth="255.0" spacing="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Button fx:id="logoutButton" layoutX="25.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="60.0" prefWidth="140.0" stylesheets="@../styles/styles.css" text="Logout">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Button>
+        <VBox alignment="CENTER" layoutY="95.0" prefHeight="505.0" prefWidth="1280.0" spacing="50.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="95.0">
             <children>
                 <Label alignment="CENTER" contentDisplay="CENTER" text="File Import">
                     <font>
@@ -21,19 +25,19 @@
                 </Label>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="193.0" prefWidth="181.0" spacing="20.0">
+                        <VBox alignment="CENTER" prefHeight="193.0" prefWidth="181.0" spacing="20.0">
                             <children>
-                                <Label text="Impression Log">
+                                <Label alignment="CENTER" prefHeight="50.0" text="Impression Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
                                 </Label>
-                                <Label text="Click Log">
+                                <Label alignment="CENTER" minHeight="50.0" minWidth="110.0" prefHeight="50.0" text="Click Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
                                 </Label>
-                                <Label text="Server Log">
+                                <Label alignment="CENTER" prefHeight="50.0" text="Server Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
@@ -66,7 +70,7 @@
                         <Font size="20.0" />
                     </font>
                 </Button>
-                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                <VBox alignment="CENTER" prefHeight="86.0" prefWidth="1280.0">
                     <children>
                         <ProgressBar fx:id="importProgressBar" prefHeight="20.0" prefWidth="529.0" progress="0.0" />
                         <Label fx:id="importProgressLabel" alignment="CENTER" prefHeight="40.0" prefWidth="526.0">
@@ -81,5 +85,10 @@
                 </VBox>
             </children>
         </VBox>
+      <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefHeight="28.0" prefWidth="234.0" text="Role:">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

@@ -19,7 +19,7 @@ public class App extends Application {
     //stage.setFullScreen(true);
     //stage.setFullScreenExitHint("");
     //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"));
+    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"));
   }
 
   public static void main(String[] args) {
