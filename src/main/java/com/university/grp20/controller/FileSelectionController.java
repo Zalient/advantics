@@ -150,9 +150,11 @@ public class FileSelectionController {
     nextButton.setDisable(false);
     logoutButton.setDisable(false);
     updateProgressBar(0.0);
-    impressionLogButton.setStyle("-fx-background-color: #ffffff");
-    clickLogButton.setStyle("-fx-background-color: #ffffff");
-    serverLogButton.setStyle("-fx-background-color: #ffffff");
+    impressionLogButton.setStyle("-fx-background-color: #D9D9D9");
+    clickLogButton.setStyle("-fx-background-color: #D9D9D9");
+    serverLogButton.setStyle("-fx-background-color: #D9D9D9");
+    importProgressLabel.setText("");
+    importProgressBar.setProgress(0);
   }
 
   public void updateProgressBar(Double progress) {

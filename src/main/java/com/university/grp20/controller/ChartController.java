@@ -1,9 +1,13 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
+import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.GenerateChartService;
 import java.io.IOException;
 import java.util.Optional;
+
+import com.university.grp20.model.User;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +32,20 @@ import java.awt.Color;
 public class ChartController {
 
   @FXML private FlowPane addChartFlowPane;
+  @FXML private Button backButton;
 
   private final Logger logger = LogManager.getLogger(ChartController.class);
+
+  @FXML
+  private void initialize() {
+
+    Platform.runLater(() -> {
+      if (User.getRole().equals("Viewer")) {
+        backButton.setVisible(false);
+      }
+    });
+
+  }
 
   @FXML
   private void showMetrics() {

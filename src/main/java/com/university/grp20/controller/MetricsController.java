@@ -4,8 +4,12 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.MetricsDTO;
 import java.io.IOException;
+
+import com.university.grp20.model.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,12 +26,20 @@ public class MetricsController {
   @FXML private Label cpcLabel;
   @FXML private Label cpmLabel;
   @FXML private Label bounceRateLabel;
+  @FXML private Button backButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
 
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     setMetrics(calculateMetricsService.getMetrics(null));
+
+    Platform.runLater(() -> {
+      if (User.getRole().equals("Viewer")) {
+        backButton.setVisible(false);
+      }
+    });
+
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
