@@ -106,6 +106,42 @@ public class ExportService {
 
     public static void dashboardToCSV(MetricsDTO metricsDTO) throws IOException {
 
+        String filePath = askUserForFilename();
+        if (filePath == null) return;
+
+        if (!filePath.endsWith(".csv")) {
+            filePath += ".csv";
+        }
+        File file = new File(filePath);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+
+            writer.write("Metric,Value");
+            writer.newLine();
+            writer.write("Impressions, " + metricsDTO.getImpressions());
+            writer.newLine();
+            writer.write("Clicks, " + metricsDTO.getClicks());
+            writer.newLine();
+            writer.write("Uniques, " + metricsDTO.getUniques());
+            writer.newLine();
+            writer.write("Bounces, " + metricsDTO.getBounces());
+            writer.newLine();
+            writer.write("Conversions, " + metricsDTO.getConversions());
+            writer.newLine();
+            writer.write("Total Cost, " + metricsDTO.getTotalCost());
+            writer.newLine();
+            writer.write("CTR, " + metricsDTO.getCtr());
+            writer.newLine();
+            writer.write("CPA, " + metricsDTO.getCpa());
+            writer.newLine();
+            writer.write("CPC, " + metricsDTO.getCpc());
+            writer.newLine();
+            writer.write("CPM, " + metricsDTO.getCpm());
+            writer.newLine();
+            writer.write("Bounce Rate, " + metricsDTO.getBounceRate());
+            writer.newLine();
+        }
+        System.out.println("Exported metrics to CSV: "+filePath);
     }
 
     private static void drawRow(PDPageContentStream contentStream, float x, float y,

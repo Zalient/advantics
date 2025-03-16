@@ -219,7 +219,8 @@
          <font>
             <Font size="10.0" />
          </font></Button>
-      <Button layoutX="1130.0" layoutY="170.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" stylesheets="@../styles/styles.css" text="Save as CSV">
+      <Button layoutX="1130.0" layoutY="170.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0"
+              onAction="#saveAsCSV" stylesheets="@../styles/styles.css" text="Save as CSV">
          <font>
             <Font size="10.0" />
          </font></Button>

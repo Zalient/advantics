@@ -78,6 +78,11 @@ public class MetricsController {
   }
 
   @FXML
+  private void saveAsCSV() throws IOException {
+    ExportService.dashboardToCSV(metricsDTO);
+  }
+
+  @FXML
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
   }
