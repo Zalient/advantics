@@ -34,9 +34,14 @@ public class MetricsController {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     setMetrics(calculateMetricsService.getMetrics(null));
 
+
     Platform.runLater(() -> {
+      logger.info("Detected role: " + User.getRole());
+
       if (User.getRole().equals("Viewer")) {
         backButton.setVisible(false);
+      } else {
+        backButton.setVisible(true);
       }
     });
 

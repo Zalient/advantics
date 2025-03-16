@@ -187,6 +187,7 @@ public class FileSelectionController {
     clickLogButton.setStyle("");
     serverLogButton.setStyle("");
 
+    fileImportService.deleteInsertedData();
     fileImportService.setImpressionLog(null);
     fileImportService.setServerLog(null);
     fileImportService.setClickLog(null);

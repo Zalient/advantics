@@ -231,6 +231,25 @@ public class FileImportService {
     }
   }
 
+  public void deleteInsertedData() {
+    try (Connection conn = DBHelper.getConnection()) {
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS impressionLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS clickLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS serverLog");
+      logger.info("Dropped all log database tables");
+    } catch (SQLException e) {
+      throw new RuntimeException("Error during import: " + e.getMessage(), e);
+    }
+  }
+
+
+
   public void setOnUploadStart(FileProgressBarListener listener) {
     this.fileProgressBarListener = listener;
   }
