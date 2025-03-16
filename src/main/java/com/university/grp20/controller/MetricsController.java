@@ -4,6 +4,8 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.MetricsDTO;
 import java.io.IOException;
+
+import com.university.grp20.model.OperationLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -23,6 +25,7 @@ public class MetricsController {
   @FXML private Label cpmLabel;
   @FXML private Label bounceRateLabel;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   private void initialize() {
@@ -49,10 +52,12 @@ public class MetricsController {
   @FXML
   private void showFileSelection() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+    operationLogger.log("Back button clicked, returned to file selection page");
   }
 
   @FXML
   private void showMetricsFilter() {
+    operationLogger.log("Metrics filter chosen, displaying filter options");
     try {
       logger.info("Filter button clicked");
       FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
@@ -71,5 +76,6 @@ public class MetricsController {
   @FXML
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
+    operationLogger.log("Charts page chosen, displaying charts page");
   }
 }
