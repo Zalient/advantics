@@ -19,6 +19,7 @@ public class FileImportService {
   private FileProgressBarListener fileProgressBarListener;
   private FileProgressLabel fileProgressLabel;
   private FileErrorListener fileErrorListener;
+  private String campaignStartDate = "";
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -68,12 +69,33 @@ public class FileImportService {
         bytesRead += header.length() + 1;
       }
 
+
       String line;
       while ((line = reader.readLine()) != null) {
         bytesRead += line.length() + 1;
         String[] columns = line.split(",");
         Object[] params = parser.parse(columns, counter);
         batchParams.add(params);
+
+        if (counter == 1) {
+          String[] column0Split = columns[0].split(" ");
+          logger.info("colums[0]: " + columns[0]);
+          logger.info("column1Split[0]: " + column0Split[0]);
+
+          if (!campaignStartDate.equals("") && !(column0Split[0].equals(campaignStartDate))) {
+            logger.info("Start data mismatch: " + file.getName() + " starts at " + columns[1] + ". Expected "
+                    + campaignStartDate);
+            fileErrorListener.fileReadError("File " + file.getName() + "'s start date does not match the " +
+                    "previously uploaded files. These files may not all be from the same campaign.");
+            throw new IOException(file.getName() + " has a start date that doesn't match the previous files");
+          } else {
+            campaignStartDate = column0Split[0];
+            logger.info("Start date set to " + column0Split[0]);
+          }
+
+        }
+
+
         counter++;
 
         if (batchParams.size() >= updateThreshold) {
@@ -231,5 +253,9 @@ public class FileImportService {
 
   public void setServerLog(File newServerLog) {
     this.serverLog = newServerLog;
+  }
+
+  public void setCampaignStartDate(String newCampaignStartDate) {
+    this.campaignStartDate = newCampaignStartDate;
   }
 }

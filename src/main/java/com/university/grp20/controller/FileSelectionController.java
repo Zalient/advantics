@@ -178,20 +178,19 @@ public class FileSelectionController {
     impressionPathLabel.setText("File Path");
     clickPathLabel.setText("File Path");
     serverPathLabel.setText("File Path");
-    fileImportService.setImpressionLog(null);
-    fileImportService.setServerLog(null);
-    fileImportService.setClickLog(null);
     updateProgressBar(0.0);
+    importProgressLabel.setText("");
+    importProgressBar.setProgress(0);
 
     // Resets the style of the buttons to use the css file (removes the green background)
     impressionLogButton.setStyle("");
     clickLogButton.setStyle("");
     serverLogButton.setStyle("");
 
-
-
-    importProgressLabel.setText("");
-    importProgressBar.setProgress(0);
+    fileImportService.setImpressionLog(null);
+    fileImportService.setServerLog(null);
+    fileImportService.setClickLog(null);
+    fileImportService.setCampaignStartDate("");
   }
 
   public void updateProgressBar(Double progress) {
