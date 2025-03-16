@@ -83,6 +83,7 @@ public class FilterSelectionController {
       task.setOnSucceeded(
           e -> {
             metricsController.setMetrics(task.getValue());
+            metricsController.metricsDTO = task.getValue();
             UIManager.closeModal();
             logger.info("Testing - clicks: " + task.getValue().getClicks());
           });

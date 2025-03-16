@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.ExportService;
 import com.university.grp20.model.MetricsDTO;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -24,10 +25,13 @@ public class MetricsController {
   @FXML private Label bounceRateLabel;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
 
+  public MetricsDTO metricsDTO;
+
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
-    setMetrics(calculateMetricsService.getMetrics(null));
+    metricsDTO = calculateMetricsService.getMetrics(null);
+    setMetrics(metricsDTO);
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
@@ -66,6 +70,11 @@ public class MetricsController {
     } catch (IOException e) {
       logger.error("Error loading metrics filter: " + e.getMessage());
     }
+  }
+
+  @FXML
+  private void saveAsPDF() throws IOException {
+    ExportService.dashboardToPDF(metricsDTO);
   }
 
   @FXML

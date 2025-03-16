@@ -4,6 +4,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1CFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -21,6 +23,108 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ExportService {
+
+    public static void dashboardToPDF(MetricsDTO metricsDTO) throws IOException {
+        String filePath = askUserForFilename();
+        if (filePath == null) return;
+        if (!filePath.endsWith(".pdf")) {
+            filePath += ".pdf";
+        }
+        File file = new File(filePath);
+
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                float margin = 50;
+                float yTop = page.getMediaBox().getHeight() - margin;
+
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.TIMES_BOLD_ITALIC, 18);
+                contentStream.newLineAtOffset(margin, yTop);
+                contentStream.showText("Metrics Dashboard");
+                contentStream.endText();
+
+                float tableTopY = yTop - 20;
+                float tableWidth = page.getMediaBox().getWidth() - 2*margin;
+                float rowHeight = 25;
+                float colWidth = tableWidth / 2;
+                float nextY = tableTopY;
+
+                drawRow(contentStream,margin,nextY,colWidth, "Metric","Value");
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Impressions", String.valueOf(metricsDTO.getImpressions()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Clicks", String.valueOf(metricsDTO.getClicks()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Uniques", String.valueOf(metricsDTO.getUniques()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Bounces", String.valueOf(metricsDTO.getBounces()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Conversions", String.valueOf(metricsDTO.getConversions()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Total Cost", String.valueOf(metricsDTO.getTotalCost()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "CTR", String.valueOf(metricsDTO.getCtr()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "CPA", String.valueOf(metricsDTO.getCpa()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "CPC", String.valueOf(metricsDTO.getCpc()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "CPM", String.valueOf(metricsDTO.getCpm()));
+                nextY -= rowHeight;
+
+                drawRow(contentStream, margin, nextY, colWidth,
+                        "Bounce Rate", String.valueOf(metricsDTO.getBounceRate()));
+            }
+            document.save(file);
+            System.out.println("Exported metrics to PDF: "+filePath);
+
+        }
+    }
+
+    public static void dashboardToCSV(MetricsDTO metricsDTO) throws IOException {
+
+    }
+
+    private static void drawRow(PDPageContentStream contentStream, float x, float y,
+                                      float colWidth, String name, String value) throws IOException
+    {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
+        contentStream.newLineAtOffset(x+5, y-14);
+        contentStream.showText(name);
+        contentStream.endText();
+
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
+        contentStream.newLineAtOffset(x+colWidth+5, y-14);
+        contentStream.showText(value);
+        contentStream.endText();
+
+    }
+
 
     public static void chartToPDF(JFreeChart chart) throws IOException {
 
