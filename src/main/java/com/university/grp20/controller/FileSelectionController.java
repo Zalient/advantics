@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -47,41 +48,51 @@ public class FileSelectionController {
 
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
+      fileImportService.setOnFileError(this::handleFileUploadError);
 
     });
   }
 
   @FXML
   private void startImport() {
-    fileImportService.setOnUploadStart(this::updateProgressBar);
-    fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
-    nextButton.setDisable(true);
-    impressionLogButton.setDisable(true);
-    clickLogButton.setDisable(true);
-    serverLogButton.setDisable(true);
-    logoutButton.setDisable(true);
-    Thread importDataThread =
-        new Thread(
-            () -> {
-              try {
-                fileImportService.runFullImport();
-                Platform.runLater(
-                    () -> {
-                      importProgressLabel.setText("Calculating Metrics...");
-                      importProgressBar.setProgress(1.0);
-                    });
-                Thread.sleep(100);
-                Platform.runLater(
-                    () ->
-                        UIManager.switchScene(
-                            UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
-              } catch (Exception e) {
-                Platform.runLater(this::resetUI);
-                throw new RuntimeException(
-                    "An error occurred during file processing: " + e.getMessage());
-              }
-            });
-    importDataThread.start();
+    if (fileImportService.isReady()) {
+      fileImportService.setOnUploadStart(this::updateProgressBar);
+      fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
+      nextButton.setDisable(true);
+      impressionLogButton.setDisable(true);
+      clickLogButton.setDisable(true);
+      serverLogButton.setDisable(true);
+      logoutButton.setDisable(true);
+      Thread importDataThread =
+              new Thread(
+                      () -> {
+                        try {
+                          fileImportService.runFullImport();
+                          Platform.runLater(
+                                  () -> {
+                                    importProgressLabel.setText("Calculating Metrics...");
+                                    importProgressBar.setProgress(1.0);
+                                  });
+                          Thread.sleep(100);
+                          Platform.runLater(
+                                  () ->
+                                          UIManager.switchScene(
+                                                  UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
+                        } catch (Exception e) {
+                          Platform.runLater(this::resetUI);
+                          throw new RuntimeException(
+                                  "An error occurred during file processing: " + e.getMessage());
+                        }
+                      });
+      importDataThread.start();
+    } else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("You have not uploaded the 3 required log files.");
+      alert.showAndWait();
+    }
+
   }
 
   @FXML
@@ -143,12 +154,33 @@ public class FileSelectionController {
     }
   }
 
+  /**
+   * Called via a listener in the FileProcessor class
+   * @param errorMessage The error message to be shown
+   */
+  private void handleFileUploadError(String errorMessage) {
+    Platform.runLater(() -> {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText(errorMessage);
+      alert.showAndWait();
+    });
+
+  }
+
   private void resetUI() {
     impressionLogButton.setDisable(false);
     clickLogButton.setDisable(false);
     serverLogButton.setDisable(false);
-    nextButton.setDisable(false);
+    nextButton.setDisable(true);
     logoutButton.setDisable(false);
+    impressionPathLabel.setText("File Path");
+    clickPathLabel.setText("File Path");
+    serverPathLabel.setText("File Path");
+    fileImportService.setImpressionLog(null);
+    fileImportService.setServerLog(null);
+    fileImportService.setClickLog(null);
     updateProgressBar(0.0);
     impressionLogButton.setStyle("-fx-background-color: #D9D9D9");
     clickLogButton.setStyle("-fx-background-color: #D9D9D9");

@@ -1,5 +1,6 @@
 package com.university.grp20.model;
 
+import com.university.grp20.controller.FileErrorListener;
 import com.university.grp20.controller.FileProgressBarListener;
 import com.university.grp20.controller.FileProgressLabel;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,7 @@ public class FileImportService {
   private File serverLog;
   private FileProgressBarListener fileProgressBarListener;
   private FileProgressLabel fileProgressLabel;
+  private FileErrorListener fileErrorListener;
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -53,6 +55,15 @@ public class FileImportService {
 
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
       String header = reader.readLine();
+
+      if (file == this.impressionLog && !header.trim().equals("Date,ID,Gender,Age,Income,Context,Impression Cost")) {
+        fileErrorListener.fileReadError("Impression Log File Header is Invalid");
+      } else if (file == this.clickLog && !header.trim().equals("Date,ID,Click Cost")) {
+        fileErrorListener.fileReadError("Click Log File Header is Invalid");
+      } else if (file == this.serverLog && !header.trim().equals("Entry Date,ID,Exit Date,Pages Viewed,Conversion")) {
+        fileErrorListener.fileReadError("Server Log File Header is Invalid");
+      }
+
       if (header != null) {
         bytesRead += header.length() + 1;
       }
@@ -103,6 +114,8 @@ public class FileImportService {
               Double.parseDouble(columns[6])
             },
         conn);
+
+
   }
 
   private void importClickLog(Connection conn) {
@@ -202,6 +215,10 @@ public class FileImportService {
 
   public void setOnUploadLabelStart(FileProgressLabel listener) {
     this.fileProgressLabel = listener;
+  }
+
+  public void setOnFileError(FileErrorListener listener) {
+    this.fileErrorListener = listener;
   }
 
   public void setImpressionLog(File newImpressionLog) {
