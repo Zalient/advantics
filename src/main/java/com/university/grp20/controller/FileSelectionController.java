@@ -182,9 +182,14 @@ public class FileSelectionController {
     fileImportService.setServerLog(null);
     fileImportService.setClickLog(null);
     updateProgressBar(0.0);
-    impressionLogButton.setStyle("-fx-background-color: #D9D9D9");
-    clickLogButton.setStyle("-fx-background-color: #D9D9D9");
-    serverLogButton.setStyle("-fx-background-color: #D9D9D9");
+
+    // Resets the style of the buttons to use the css file (removes the green background)
+    impressionLogButton.setStyle("");
+    clickLogButton.setStyle("");
+    serverLogButton.setStyle("");
+
+
+
     importProgressLabel.setText("");
     importProgressBar.setProgress(0);
   }
