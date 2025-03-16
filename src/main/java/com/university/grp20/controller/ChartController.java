@@ -1,6 +1,7 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
+import com.university.grp20.model.ExportService;
 import com.university.grp20.model.GenerateChartService;
 import java.io.IOException;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -167,7 +169,27 @@ public class ChartController {
     Button filterButton = new Button("Filter");
     filterButton.setOnAction(e -> showFilterSelection(chartViewer));
 
-    VBox chartBox = new VBox(filterButton, chartViewer);
+    Button exportPDFButton = new Button("Export as PDF");
+    exportPDFButton.setOnAction(e -> {
+        try{
+          ExportService.chartToPDF(chartViewer.getChart());
+        } catch (IOException ex){
+          ex.printStackTrace();
+        }
+    });
+
+    Button exportCSVButton = new Button("Export as CSV");
+    exportCSVButton.setOnAction(e -> {
+        try {
+            ExportService.chartToCSV(chartViewer.getChart());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    });
+
+    HBox buttonBox = new HBox(filterButton, exportPDFButton, exportCSVButton);
+    buttonBox.setSpacing(10);
+    VBox chartBox = new VBox(buttonBox, chartViewer);
     addChartFlowPane.getChildren().add(chartBox);
   }
 
