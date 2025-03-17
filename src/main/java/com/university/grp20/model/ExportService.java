@@ -2,6 +2,8 @@ package com.university.grp20.model;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -26,11 +28,17 @@ import java.io.IOException;
 
 public class ExportService {
 
+    private static final Logger logger = LogManager.getLogger(ExportService.class);
+
     public static void dashboardToPDF(MetricsDTO metricsDTO) throws IOException {
         String filePath = askForPDFFilename();
-        if (filePath == null) return;
+        if (filePath == null) {
+            logger.info("User cancelled export");
+            return;
+        }
 
         File file = new File(filePath);
+        logger.info("Save PDF to " + filePath);
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
@@ -107,9 +115,13 @@ public class ExportService {
     public static void dashboardToCSV(MetricsDTO metricsDTO) throws IOException {
 
         String filePath = askForCSVFilename();
-        if (filePath == null) return;
+        if (filePath == null) {
+            logger.info("User cancelled export");
+            return;
+        }
 
         File file = new File(filePath);
+        logger.info("Save CSV to " + filePath);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
@@ -162,7 +174,10 @@ public class ExportService {
     public static void chartToPDF(JFreeChart chart) throws IOException {
 
         String filePath = askForPDFFilename();
-        if (filePath == null) return;
+        if (filePath == null) {
+            logger.info("User cancelled export");
+            return;
+        }
 
         int width = 1050;
         int height = 700;
@@ -201,6 +216,8 @@ public class ExportService {
                 contentStream.drawImage(pdImageXObject, x, y,imageWidth, imageHeight);
             }
             document.save(filePath);
+            logger.info("Save PDF to " + filePath);
+
             document.close();
             tempImage.delete();
             System.out.println("Exported to PDF: " + tempImage.getAbsolutePath());
@@ -215,10 +232,13 @@ public class ExportService {
 
         String filePath = askForCSVFilename();
         if (filePath == null) {
+            logger.info("User cancelled export");
             return;
         }
 
         File file = new File(filePath);
+        logger.info("Save CSV to " + filePath);
+
         if (!(chart.getPlot() instanceof CategoryPlot)) {
             throw new IllegalArgumentException("chartToCSV only supports CategoryPlot");
         }
@@ -268,5 +288,5 @@ public class ExportService {
         }
         return null;
     }
-    
+
 }
