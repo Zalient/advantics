@@ -108,7 +108,6 @@ public class ExportService {
 
         String filePath = askUserForFilename();
         if (filePath == null) return;
-
         if (!filePath.endsWith(".csv")) {
             filePath += ".csv";
         }
@@ -171,8 +170,8 @@ public class ExportService {
         }
         String pdfPath = filename.endsWith(".pdf") ? filename : filename + ".pdf";
 
-        int width = 900;
-        int height = 600;
+        int width = 1050;
+        int height = 700;
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
@@ -190,14 +189,13 @@ public class ExportService {
 
             PDDocument document = new PDDocument();
             PDPage page = new PDPage();
-
             PDRectangle originalMediaBox = page.getMediaBox();
+
             float mediaWidth = originalMediaBox.getWidth();
             float mediaHeight = originalMediaBox.getHeight();
 
-            PDRectangle newMediaBox = new PDRectangle(mediaWidth * 1.5f, mediaHeight);
+            PDRectangle newMediaBox = new PDRectangle(mediaWidth * 1.8f, mediaHeight);
             page.setMediaBox(newMediaBox);
-
             document.addPage(page);
             PDImageXObject pdImageXObject = PDImageXObject.createFromFile(tempImage.getAbsolutePath(), document);
 
