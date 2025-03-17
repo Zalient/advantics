@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="558.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
-    <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <ScrollPane fx:id="settingsScrollPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <content>
             <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0">
                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
@@ -115,7 +115,7 @@
                   </Label>
                </children>
             </HBox>
-                <HBox prefHeight="50.0" prefWidth="200.0">
+                <HBox fx:id="userManagementTitleBox" prefHeight="50.0" prefWidth="200.0">
                     <Label style="-fx-font-weight: bold;" text="User Management {Admin Only}">
                         <font>
                             <Font size="18.0" />
@@ -125,7 +125,7 @@
                         </padding>
                     </Label>
                 </HBox>
-            <GridPane alignment="CENTER_LEFT" hgap="10" vgap="10">
+            <GridPane fx:id="userManagementGridPane" alignment="CENTER_LEFT" hgap="10" vgap="10">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />

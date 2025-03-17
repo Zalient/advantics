@@ -2,12 +2,13 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
+import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,12 +19,22 @@ public class SettingsController {
   @FXML private TextField addPasswordField;
   @FXML private ComboBox selectRoleMenu;
   @FXML private Button addUserButton;
+  @FXML private HBox userManagementTitleBox;
+  @FXML private GridPane userManagementGridPane;
+  @FXML private ScrollPane settingsScrollPane;
 
   private LoginService loginService = new LoginService();
 
   @FXML
   private void initialize() {
     selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+
+    if (!User.getRole().equals("Admin")) {
+
+        VBox content = (VBox) settingsScrollPane.getContent();
+        content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane);
+
+    }
   }
 
 
