@@ -1,5 +1,7 @@
 package com.university.grp20.model;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -25,11 +27,9 @@ import java.io.IOException;
 public class ExportService {
 
     public static void dashboardToPDF(MetricsDTO metricsDTO) throws IOException {
-        String filePath = askUserForFilename();
+        String filePath = askForPDFFilename();
         if (filePath == null) return;
-        if (!filePath.endsWith(".pdf")) {
-            filePath += ".pdf";
-        }
+
         File file = new File(filePath);
 
         try (PDDocument document = new PDDocument()) {
@@ -106,11 +106,9 @@ public class ExportService {
 
     public static void dashboardToCSV(MetricsDTO metricsDTO) throws IOException {
 
-        String filePath = askUserForFilename();
+        String filePath = askForCSVFilename();
         if (filePath == null) return;
-        if (!filePath.endsWith(".csv")) {
-            filePath += ".csv";
-        }
+
         File file = new File(filePath);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -163,12 +161,8 @@ public class ExportService {
 
     public static void chartToPDF(JFreeChart chart) throws IOException {
 
-        String filename = askUserForFilename();
-        if (filename == null || filename.trim().isEmpty()) {
-            System.out.println("No filename provided");
-            return;
-        }
-        String pdfPath = filename.endsWith(".pdf") ? filename : filename + ".pdf";
+        String filePath = askForPDFFilename();
+        if (filePath == null) return;
 
         int width = 1050;
         int height = 700;
@@ -206,7 +200,7 @@ public class ExportService {
                 float y = (page.getMediaBox().getHeight() - imageHeight) / 2;
                 contentStream.drawImage(pdImageXObject, x, y,imageWidth, imageHeight);
             }
-            document.save(pdfPath);
+            document.save(filePath);
             document.close();
             tempImage.delete();
             System.out.println("Exported to PDF: " + tempImage.getAbsolutePath());
@@ -219,13 +213,11 @@ public class ExportService {
 
     public static void chartToCSV(JFreeChart chart) throws IOException {
 
-        String filePath = askUserForFilename();
+        String filePath = askForCSVFilename();
         if (filePath == null) {
             return;
         }
-        if (!filePath.endsWith(".csv")) {
-            filePath += ".csv";
-        }
+
         File file = new File(filePath);
         if (!(chart.getPlot() instanceof CategoryPlot)) {
             throw new IllegalArgumentException("chartToCSV only supports CategoryPlot");
@@ -253,14 +245,28 @@ public class ExportService {
         System.out.println("Exported to CSV: " + file.getAbsolutePath());
     }
 
-    private static String askUserForFilename(){
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("save file");
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int userSelection = chooser.showSaveDialog(null);
-        if(userSelection == JFileChooser.APPROVE_OPTION){
-            return chooser.getSelectedFile().getAbsolutePath();
+    private static String askForPDFFilename(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF file", "*.pdf"));
+        Stage stage = new Stage();
+        File file = fileChooser.showSaveDialog(stage);
+        if(file != null){
+            return file.getAbsolutePath().endsWith(".pdf") ? file.getAbsolutePath() : file.getAbsolutePath() + ".pdf";
         }
         return null;
     }
+
+    private static String askForCSVFilename(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV file", "*.csv"));
+        Stage stage = new Stage();
+        File file = fileChooser.showSaveDialog(stage);
+        if(file != null){
+            return file.getAbsolutePath().endsWith(".csv") ? file.getAbsolutePath() : file.getAbsolutePath() + ".csv";
+        }
+        return null;
+    }
+    
 }
