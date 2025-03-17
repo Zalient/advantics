@@ -5,7 +5,6 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.scene.control.Alert;
-
 import java.io.*;
 
 public class ExportLogService {
@@ -16,11 +15,11 @@ public class ExportLogService {
             PdfWriter.getInstance(document, new FileOutputStream(outputPdfPath));
             document.open();
             document.add(new Paragraph("User Operation Log\n\n"));
-            // Reads the log file and adds contents to PDF
+            // Reads the log file and adds contents to PDF line by line
             try (BufferedReader br = new BufferedReader(new FileReader(logFileName))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    document.add(new Paragraph(line));
+                String currentLine;
+                while ((currentLine = br.readLine()) != null) {
+                    document.add(new Paragraph(currentLine));
                 }
             }
             document.close();
@@ -30,28 +29,20 @@ public class ExportLogService {
     }
 
     public void exportLogToCSV(String logFileName, String outputCsvPath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(logFileName));
-             FileWriter fw = new FileWriter(outputCsvPath);
-             PrintWriter pw = new PrintWriter(fw)) {
-
-            // Write CSV Header
+        try (BufferedReader br = new BufferedReader(new FileReader(logFileName)); FileWriter fw = new FileWriter(outputCsvPath); PrintWriter pw = new PrintWriter(fw)) {
             pw.println("Timestamp,Action");
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("[")) {  // Example log format: [YYYY-MM-DD HH:mm:ss] Action
-                    int firstBracket = line.indexOf("[");
-                    int secondBracket = line.indexOf("]");
-
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("[")) {
+                    int firstBracket = currentLine.indexOf("[");
+                    int secondBracket = currentLine.indexOf("]");
                     if (firstBracket != -1 && secondBracket != -1) {
-                        String timestamp = line.substring(firstBracket + 1, secondBracket).trim();
-                        String action = line.substring(secondBracket + 2).trim();
+                        String timestamp = currentLine.substring(firstBracket + 1, secondBracket).trim();
+                        String action = currentLine.substring(secondBracket + 2).trim();
                         pw.println(timestamp + "," + action);
                     }
                 }
             }
-
-            System.out.println("Log successfully exported to CSV: " + outputCsvPath);
         } catch (IOException e) {
             showErrorAlert("Error exporting log to CSV: " + e.getMessage());
         }
