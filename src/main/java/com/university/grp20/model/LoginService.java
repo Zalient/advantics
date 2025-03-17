@@ -128,9 +128,10 @@ public class LoginService {
   }
 
   public boolean isDataLoaded() {
+    Connection conn = null;
     boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
     try {
-      Connection conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
+      conn = connectDatabase();
 
       PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
       statement.setString(1, "impressionLog");
@@ -146,6 +147,17 @@ public class LoginService {
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
     }
 
     logger.info("isDataLoaded is returning " + (impressionTableExists && clickTableExists && serverTableExists));
@@ -155,6 +167,68 @@ public class LoginService {
 
   public void setOnLogin(LoginListener listener) {
     this.loginListener = listener;
+  }
+
+  public boolean doesUserExist(String enteredUsername) {
+    Connection conn = null;
+    boolean userExists = false;
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("SELECT username FROM users WHERE username == ?");
+      statement.setString(1, enteredUsername);
+      userExists = statement.executeQuery().next();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+    }
+    return userExists;
+
+  }
+
+  public boolean addUser(String username, String password, String role) {
+    logger.info("Adding user: " + username + ", " + password + ", " + role);
+
+    boolean success = false;
+    Connection conn = null;
+
+    try {
+      conn = connectDatabase();
+      PreparedStatement statement = conn.prepareStatement("INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)");
+      statement.setString(1, username);
+      statement.setString(2, password);
+      statement.setString(3, "");
+      statement.setString(4, role);
+
+      statement.executeUpdate();
+
+      success = true;
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return success;
   }
 
 
