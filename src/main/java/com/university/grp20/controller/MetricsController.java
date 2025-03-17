@@ -27,6 +27,7 @@ public class MetricsController {
   @FXML private Label cpmLabel;
   @FXML private Label bounceRateLabel;
   @FXML private Button backButton;
+  @FXML private Button settingsButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
 
   @FXML
@@ -88,5 +89,10 @@ public class MetricsController {
   @FXML
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
+  }
+
+  @FXML
+  private void handleSettingsLoad() {
+    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/SettingsScene.fxml"), false);
   }
 }

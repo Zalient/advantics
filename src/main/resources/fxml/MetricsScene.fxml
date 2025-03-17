@@ -222,5 +222,6 @@
                 </VBox>
             </children>
         </GridPane>
+      <Button fx:id="settingsButton" layoutX="8.0" layoutY="635.0" mnemonicParsing="false" onAction="#handleSettingsLoad" prefHeight="54.0" prefWidth="112.0" stylesheets="@../styles/styles.css" text="Settings" />
     </children>
 </AnchorPane>

@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1007.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
+<AnchorPane prefHeight="558.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
     <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <content>
             <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0">
@@ -163,7 +163,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
-                        <Button fx:id="addUserButton" alignment="CENTER" mnemonicParsing="false" text="Add User" />
+                        <Button fx:id="addUserButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleAddUser" text="Add User" />
                      </children>
                   </HBox>
                </children>
