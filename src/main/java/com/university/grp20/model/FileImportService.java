@@ -8,7 +8,9 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FileImportService {
   private final Logger logger = LogManager.getLogger(FileImportService.class);
@@ -62,7 +64,11 @@ public class FileImportService {
         bytesRead += line.length() + 1;
         String[] columns = line.split(",");
         Object[] params = parser.parse(columns, counter);
-        batchParams.add(params);
+
+        if (params != null) {
+          batchParams.add(params);
+        }
+
         counter++;
 
         if (batchParams.size() >= updateThreshold) {
@@ -83,25 +89,41 @@ public class FileImportService {
   }
 
   private void importImpressionLog(Connection conn) {
-    String deleteSql = "DELETE FROM impressionLog";
-    String insertSql =
-        "INSERT INTO impressionLog (impressionID, Date, ID, Gender, Age, Income, Context, ImpressionCost) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String deleteImpressionSql = "DELETE FROM impressionLog";
+    String insertImpressionSql =
+        "INSERT INTO impressionLog (impressionID, Date, ID, ImpressionCost) VALUES (?, ?, ?, ?)";
     processFile(
         impressionLog,
         "Importing impression log...",
-        deleteSql,
-        insertSql,
+        deleteImpressionSql,
+        insertImpressionSql,
         (columns, counter) ->
             new Object[] {
-              counter,
-              columns[0],
-              Long.parseLong(columns[1]),
-              columns[2],
-              columns[3],
-              columns[4],
-              columns[5],
-              Double.parseDouble(columns[6])
+              counter, columns[0], Long.parseLong(columns[1]), Double.parseDouble(columns[6])
             },
+        conn);
+  }
+
+  private void importUserData(Connection conn) {
+    String deleteUserSql = "DELETE FROM userData";
+    String insertUserSql =
+        "INSERT OR IGNORE INTO userData (ID, Gender, Age, Income, Context) VALUES (?, ?, ?, ?, ?)";
+    Set<Long> seenIDs = new HashSet<>();
+    processFile(
+        impressionLog,
+        "Importing user data...",
+        deleteUserSql,
+        insertUserSql,
+        (columns, counter) -> {
+          long userID = Long.parseLong(columns[1]);
+
+          if (seenIDs.contains(userID)) {
+            return null;
+          }
+
+          seenIDs.add(userID);
+          return new Object[] {userID, columns[2], columns[3], columns[4], columns[5]};
+        },
         conn);
   }
 
@@ -145,14 +167,20 @@ public class FileImportService {
     try {
       DBHelper.executeUpdate(
           conn,
-          "CREATE TABLE IF NOT EXISTS impressionLog ("
-              + "impressionID INTEGER, "
-              + "Date DATETIME, "
+          "CREATE TABLE IF NOT EXISTS userData ("
               + "ID LONG, "
               + "Gender TEXT, "
               + "Age TEXT, "
               + "Income TEXT, "
-              + "Context TEXT, "
+              + "Context TEXT);");
+      logger.info("Created userData table");
+
+      DBHelper.executeUpdate(
+          conn,
+          "CREATE TABLE IF NOT EXISTS impressionLog ("
+              + "impressionID INTEGER, "
+              + "Date DATETIME, "
+              + "ID LONG, "
               + "ImpressionCost REAL);");
       logger.info("Created impressionLog table");
 
@@ -182,13 +210,62 @@ public class FileImportService {
     }
   }
 
+  private void createTableIndexes(Connection conn) throws SQLException {
+    fileProgressLabel.labelText("Creating table indexes...");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_userData_gender ON userData (Gender)");
+    DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_userData_age ON userData (Age)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_userData_income ON userData (Income)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_userData_context ON userData (Context)");
+    fileProgressBarListener.fileProgressBar(0.25);
+
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_serverId ON serverLog (serverId)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_EntryDate ON serverLog (EntryDate)");
+    DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_ID ON serverLog (ID)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_ExitDate ON serverLog (ExitDate)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_PagesViewed ON serverLog (PagesViewed)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_Conversion ON serverLog (Conversion)");
+    fileProgressBarListener.fileProgressBar(0.50);
+
+    DBHelper.executeUpdate(
+        conn,
+        "CREATE INDEX IF NOT EXISTS idx_impressionLog_impressionId ON impressionLog (impressionId)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_impressionLog_Date ON impressionLog (Date)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_impressionLog_ID ON impressionLog (ID)");
+    DBHelper.executeUpdate(
+        conn,
+        "CREATE INDEX IF NOT EXISTS idx_impressionLog_impressionCost ON impressionLog (ImpressionCost)");
+    fileProgressBarListener.fileProgressBar(0.75);
+
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_clickId ON clickLog (clickId)");
+    DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_date ON clickLog (Date)");
+    DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_ID ON clickLog (ID)");
+    DBHelper.executeUpdate(
+        conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_clickCost ON clickLog (ClickCost)");
+    fileProgressBarListener.fileProgressBar(1.00);
+
+    logger.info("Created table indexes");
+  }
+
   public void runFullImport() {
     try (Connection conn = DBHelper.getConnection()) {
       conn.setAutoCommit(false);
       createTables(conn);
       importImpressionLog(conn);
+      importUserData(conn);
       importClickLog(conn);
       importServerLog(conn);
+      createTableIndexes(conn);
       conn.setAutoCommit(true);
       logger.info("Data import complete");
     } catch (SQLException e) {

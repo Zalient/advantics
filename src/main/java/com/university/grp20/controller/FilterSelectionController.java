@@ -52,7 +52,7 @@ public class FilterSelectionController {
     maleRadioButton.setUserData("Male");
     femaleRadioButton.setUserData("Female");
 
-    ageGroupSelector.getItems().addAll("Below 25", "25-34", "35-44", "45-55", "Above 55");
+    ageGroupSelector.getItems().addAll("<25", "25-34", "35-44", "45-54", ">54");
     incomeSelector.getItems().addAll("Low", "Medium", "High");
     contextSelector
         .getItems()
