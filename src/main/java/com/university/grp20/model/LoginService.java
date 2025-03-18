@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class LoginService {
   private static final Logger logger = LogManager.getLogger(LoginService.class);
@@ -213,6 +214,107 @@ public class LoginService {
       statement.executeUpdate();
 
       success = true;
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return success;
+  }
+
+  public ArrayList<String> getAllUsers() {
+    ArrayList<String> userList = new ArrayList<>();
+
+    Connection conn = null;
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("SELECT username FROM users");
+      ResultSet returnedResult = statement.executeQuery();
+
+      while (returnedResult.next()) {
+        userList.add(returnedResult.getString("username"));
+      }
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return userList;
+  }
+
+  public boolean changeUserPassword(String username, String newPassword) {
+    boolean success = false;
+
+    Connection conn = null;
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
+      statement.setString(1, newPassword);
+      statement.setString(2, username);
+
+      statement.executeUpdate();
+
+      success = true;
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return success;
+  }
+
+  public boolean changeUserRole(String username, String newRole) {
+    boolean success = false;
+
+    Connection conn = null;
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("UPDATE users SET role = ? WHERE username = ?");
+      statement.setString(1, newRole);
+      statement.setString(2, username);
+
+      statement.executeUpdate();
+
+      success = true;
+
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     } finally {

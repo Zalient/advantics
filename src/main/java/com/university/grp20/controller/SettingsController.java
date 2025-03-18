@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+
 public class SettingsController {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
 
@@ -22,17 +24,30 @@ public class SettingsController {
   @FXML private HBox userManagementTitleBox;
   @FXML private GridPane userManagementGridPane;
   @FXML private ScrollPane settingsScrollPane;
+  @FXML private GridPane userEditGridPane;
+  @FXML private ComboBox selectUserMenu;
+  @FXML private TextField newPasswordField;
+  @FXML private ComboBox selectNewRoleMenu;
 
   private LoginService loginService = new LoginService();
 
   @FXML
   private void initialize() {
     selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+    selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
 
+    ArrayList<String> userList = loginService.getAllUsers();
+
+    // Add existing users in the database to the selectUserMenu
+    for (String user : userList) {
+      logger.info("Found user: " + user);
+      selectUserMenu.getItems().add(user);
+    }
+
+    // If user isn't an admin them remove all of the admin only settings
     if (!User.getRole().equals("Admin")) {
         VBox content = (VBox) settingsScrollPane.getContent();
-        content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane);
-
+        content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
     }
   }
 
@@ -48,10 +63,16 @@ public class SettingsController {
     if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty() && selectRoleMenu.getValue() != null) {
       if (!loginService.doesUserExist(addUsernameField.getText())) {
 
-          loginService.addUser(enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
-          addUsernameField.setText("");
-          addPasswordField.setText("");
-          selectRoleMenu.getSelectionModel().clearSelection();
+          boolean bSuccessful = loginService.addUser(enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
+
+          if (bSuccessful) {
+            addUsernameField.setText("");
+            addPasswordField.setText("");
+            selectRoleMenu.getSelectionModel().clearSelection();
+          } else {
+            showError("Something went wrong when adding the user to the database.");
+          }
+
 
 
 
@@ -62,6 +83,42 @@ public class SettingsController {
       showError("You have not filled out all the user detail fields..");
     }
 
+  }
+
+  @FXML
+  private void handleUserChange() {
+
+    String enteredPassword = newPasswordField.getText();
+
+    if (selectUserMenu.getValue() != null) {
+
+      String selectedUser = selectUserMenu.getValue().toString();
+
+      if (!enteredPassword.isEmpty()) {
+        boolean passwordUpdateSuccess = loginService.changeUserPassword(selectedUser, enteredPassword);
+
+        if (!passwordUpdateSuccess) {
+          showError("Something went wrong with updating the user's password");
+        }
+      }
+
+      if (selectNewRoleMenu.getValue() != null) {
+        String selectedRole = selectNewRoleMenu.getValue().toString();
+
+        boolean roleUpdateSuccess = loginService.changeUserRole(selectedUser, selectedRole);
+
+        if (!roleUpdateSuccess) {
+          showError("Something went wrong with updating the user's role");
+        }
+      }
+
+      newPasswordField.setText("");
+      selectUserMenu.getSelectionModel().clearSelection();
+      selectNewRoleMenu.getSelectionModel().clearSelection();
+
+    } else {
+      showError("You have not selected a user to edit");
+    }
   }
 
   @FXML
