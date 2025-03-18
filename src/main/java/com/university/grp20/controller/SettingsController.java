@@ -30,7 +30,6 @@ public class SettingsController {
     selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
 
     if (!User.getRole().equals("Admin")) {
-
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane);
 
