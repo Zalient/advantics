@@ -14,8 +14,10 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
@@ -228,6 +230,7 @@ public class ExportService {
 
     }
 
+
     public static void chartToCSV(JFreeChart chart) throws IOException {
 
         String filePath = askForCSVFilename();
@@ -239,15 +242,26 @@ public class ExportService {
         File file = new File(filePath);
         logger.info("Save CSV to " + filePath);
 
-        if (!(chart.getPlot() instanceof CategoryPlot)) {
-            throw new IllegalArgumentException("chartToCSV only supports CategoryPlot");
+        Plot plot = chart.getPlot();
+        if (plot instanceof CategoryPlot categoryPlot) {
+            CategoryDataset categoryDataset = categoryPlot.getDataset();
+            if (categoryDataset == null) {
+                throw new IllegalStateException("Category dataset is null");
+            }
+            exportCategoryDataset(categoryDataset, file);
+        } else if (plot instanceof XYPlot xyPlot) {
+            XYDataset xyDataset = xyPlot.getDataset();
+            if (xyDataset == null) {
+                throw new IllegalStateException("XYdataset is null");
+            }
+            exportXYDataset(xyDataset, file);
+        }else {
+            throw new IllegalStateException("chartToCSV only supports CategoryPlot or XYPlot(Histogram)");
         }
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        CategoryDataset dataset = plot.getDataset();
-        if (dataset == null) {
-            throw new IllegalStateException("Dataset is null");
-        }
+        System.out.println("Exported to CSV: " + filePath);
+    }
 
+    private static void exportCategoryDataset(CategoryDataset dataset, File file) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("Date,Metric,Value\n");
 
@@ -257,12 +271,30 @@ public class ExportService {
                 String seriesName = dataset.getRowKey(row).toString();
                 for (int col = 0; col < columnCount; col++) {
                     String categoryName = dataset.getColumnKey(col).toString();
-                    Number value1 = dataset.getValue(row, col);
-                    writer.write(categoryName + "," + seriesName + "," + value1 + "\n");
+                    Number value = dataset.getValue(row, col);
+                    writer.write(categoryName + "," + seriesName + "," + (value==null? "0": value));
+                    writer.newLine();
                 }
             }
         }
-        System.out.println("Exported to CSV: " + file.getAbsolutePath());
+    }
+
+    private static void exportXYDataset(XYDataset dataset, File file) throws IOException {
+        if (dataset instanceof HistogramDataset histogramDataset) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write("StartX,EndX,Frequency\n");
+
+                int itemCount = histogramDataset.getItemCount(0);
+                for (int itemIndex = 0; itemIndex < itemCount; itemIndex++) {
+                    double startX = histogramDataset.getStartXValue(0, itemIndex);
+                    double endX = histogramDataset.getEndXValue(0, itemIndex);
+                    double value = histogramDataset.getYValue(0, itemIndex);
+
+                    writer.write(startX + "," + endX + "," + value);
+                    writer.newLine();
+                }
+            }
+        }
     }
 
     private static String askForPDFFilename(){
