@@ -5,6 +5,7 @@ import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.FilterCriteriaDTO;
 import com.university.grp20.model.GenerateChartService;
 import com.university.grp20.model.MetricsDTO;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,6 +27,8 @@ public class FilterSelectionController {
   @FXML private DatePicker startDatePicker, endDatePicker;
   @FXML private Button applyChangesButton;
   @FXML private Label chartNameLabel;
+  @FXML private ProgressBar filterProgressBar;
+  @FXML private Label filterProgressLabel;
   private final Logger logger = LogManager.getLogger(FilterSelectionController.class);
   private FilterMode filterMode;
   private MetricsController metricsController;
@@ -61,6 +64,9 @@ public class FilterSelectionController {
 
   @FXML
   private void applyChanges() {
+    CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    calculateMetricsService.setOnFilterStart(this::updateProgressBar);
+    calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
     FilterCriteriaDTO filterCriteriaDTO = buildFilterCriteria();
 
@@ -70,7 +76,6 @@ public class FilterSelectionController {
           new Task<>() {
             @Override
             protected MetricsDTO call() {
-              CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
               return calculateMetricsService.getMetrics(filterCriteriaDTO);
             }
           };
@@ -113,6 +118,10 @@ public class FilterSelectionController {
       granularityChooser.setVisible(false);
       chartNameLabel.setVisible(false);
     }
+    if (filterMode == FilterMode.CHART) {
+      filterProgressBar.setVisible(false);
+      filterProgressLabel.setVisible(false);
+    }
   }
 
   private FilterCriteriaDTO buildFilterCriteria() {
@@ -136,5 +145,15 @@ public class FilterSelectionController {
         selectedToggle != null ? selectedToggle.getUserData().toString() : null);
 
     return filterCriteriaDTO;
+  }
+
+  public void updateProgressBar(Double progress) {
+    logger.info("Updating progress to " + progress);
+    Platform.runLater(() -> filterProgressBar.setProgress(progress));
+  }
+
+  public void updateProgressLabel(String text) {
+    logger.info("Updating progress label to " + text);
+    Platform.runLater(() -> filterProgressLabel.setText(text));
   }
 }

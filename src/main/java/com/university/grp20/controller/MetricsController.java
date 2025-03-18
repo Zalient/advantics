@@ -27,6 +27,8 @@ public class MetricsController {
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    calculateMetricsService.setOnFilterStart(progress -> { /* no-op */ });
+    calculateMetricsService.setOnFilterLabelStart(text -> { /* no-op */ });
     setMetrics(calculateMetricsService.getMetrics(null));
   }
 

@@ -1,7 +1,7 @@
 package com.university.grp20.model;
 
-import com.university.grp20.controller.FileProgressBarListener;
-import com.university.grp20.controller.FileProgressLabel;
+import com.university.grp20.controller.ProgressBarListener;
+import com.university.grp20.controller.ProgressLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
@@ -17,8 +17,8 @@ public class FileImportService {
   private File impressionLog;
   private File clickLog;
   private File serverLog;
-  private FileProgressBarListener fileProgressBarListener;
-  private FileProgressLabel fileProgressLabel;
+  private ProgressBarListener progressBarListener;
+  private ProgressLabel progressLabel;
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -44,7 +44,7 @@ public class FileImportService {
           "Error clearing table for file " + file.getName() + ": " + e.getMessage(), e);
     }
 
-    fileProgressLabel.labelText(label);
+    progressLabel.labelText(label);
 
     long totalBytes = file.length();
     long bytesRead = 0;
@@ -75,13 +75,13 @@ public class FileImportService {
           DBHelper.executeBatchUpdate(conn, insertSql, batchParams);
           batchParams.clear();
           double progress = Math.min((double) bytesRead / totalBytes, 1.0);
-          fileProgressBarListener.fileProgressBar(progress);
+          progressBarListener.progressBar(progress);
         }
       }
       if (!batchParams.isEmpty()) {
         DBHelper.executeBatchUpdate(conn, insertSql, batchParams);
       }
-      fileProgressBarListener.fileProgressBar(1.0);
+      progressBarListener.progressBar(1.0);
     } catch (IOException | SQLException e) {
       throw new RuntimeException(
           "Error processing file " + file.getName() + ": " + e.getMessage(), e);
@@ -211,7 +211,7 @@ public class FileImportService {
   }
 
   private void createTableIndexes(Connection conn) throws SQLException {
-    fileProgressLabel.labelText("Creating table indexes...");
+    progressLabel.labelText("Creating table indexes...");
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_userData_gender ON userData (Gender)");
     DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_userData_age ON userData (Age)");
@@ -219,7 +219,7 @@ public class FileImportService {
         conn, "CREATE INDEX IF NOT EXISTS idx_userData_income ON userData (Income)");
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_userData_context ON userData (Context)");
-    fileProgressBarListener.fileProgressBar(0.25);
+    progressBarListener.progressBar(0.25);
 
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_serverId ON serverLog (serverId)");
@@ -232,7 +232,7 @@ public class FileImportService {
         conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_PagesViewed ON serverLog (PagesViewed)");
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_serverLog_Conversion ON serverLog (Conversion)");
-    fileProgressBarListener.fileProgressBar(0.50);
+    progressBarListener.progressBar(0.50);
 
     DBHelper.executeUpdate(
         conn,
@@ -244,7 +244,7 @@ public class FileImportService {
     DBHelper.executeUpdate(
         conn,
         "CREATE INDEX IF NOT EXISTS idx_impressionLog_impressionCost ON impressionLog (ImpressionCost)");
-    fileProgressBarListener.fileProgressBar(0.75);
+    progressBarListener.progressBar(0.75);
 
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_clickId ON clickLog (clickId)");
@@ -252,7 +252,7 @@ public class FileImportService {
     DBHelper.executeUpdate(conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_ID ON clickLog (ID)");
     DBHelper.executeUpdate(
         conn, "CREATE INDEX IF NOT EXISTS idx_clickLog_clickCost ON clickLog (ClickCost)");
-    fileProgressBarListener.fileProgressBar(1.00);
+    progressBarListener.progressBar(1.00);
 
     logger.info("Created table indexes");
   }
@@ -273,12 +273,12 @@ public class FileImportService {
     }
   }
 
-  public void setOnUploadStart(FileProgressBarListener listener) {
-    this.fileProgressBarListener = listener;
+  public void setOnUploadStart(ProgressBarListener listener) {
+    this.progressBarListener = listener;
   }
 
-  public void setOnUploadLabelStart(FileProgressLabel listener) {
-    this.fileProgressLabel = listener;
+  public void setOnUploadLabelStart(ProgressLabel listener) {
+    this.progressLabel = listener;
   }
 
   public void setImpressionLog(File newImpressionLog) {

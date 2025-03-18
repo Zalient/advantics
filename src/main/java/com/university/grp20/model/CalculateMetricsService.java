@@ -1,8 +1,9 @@
 package com.university.grp20.model;
 
+import com.university.grp20.controller.ProgressBarListener;
+import com.university.grp20.controller.ProgressLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,14 +12,28 @@ import java.util.stream.Collectors;
 
 public class CalculateMetricsService {
 
+  private final Logger logger = LogManager.getLogger(CalculateMetricsService.class);
+  private ProgressBarListener filterProgressBar;
+  private ProgressLabel filterProgressLabel;
+
   public MetricsDTO getMetrics(FilterCriteriaDTO filterCriteriaDTO) {
     MetricsDTO metricsDTO = new MetricsDTO();
     try (Connection conn = DBHelper.getConnection()) {
+      filterProgressLabel.labelText("Filtering impressions...");
       double impressions = rawMetricGetter(conn, buildImpressionQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 1 / 6);
+      filterProgressLabel.labelText("Filtering clicks...");
       double clicks = rawMetricGetter(conn, buildClickQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 2 / 6);
+      filterProgressLabel.labelText("Filtering uniques...");
       double uniques = rawMetricGetter(conn, buildUniquesQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 3 / 6);
+      filterProgressLabel.labelText("Filtering bounces...");
       double bounces = rawMetricGetter(conn, buildBounceQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 4 / 6);
+      filterProgressLabel.labelText("Filtering conversions...");
       double conversions = rawMetricGetter(conn, buildConversionQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 5 / 6);
 
       metricsDTO.setImpressions(impressions);
       metricsDTO.setClicks(clicks);
@@ -26,8 +41,10 @@ public class CalculateMetricsService {
       metricsDTO.setBounces(bounces);
       metricsDTO.setConversions(conversions);
 
+      filterProgressLabel.labelText("Filtering total cost...");
       double clickCost = rawMetricGetter(conn, buildClickCostQuery(filterCriteriaDTO));
       double impressionCost = rawMetricGetter(conn, buildImpressionCostQuery(filterCriteriaDTO));
+      filterProgressBar.progressBar((double) 6 / 6);
       double totalCost = clickCost + impressionCost;
       metricsDTO.setTotalCost(totalCost);
 
@@ -68,7 +85,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, i.Date");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -87,7 +104,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, c.Date");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -106,7 +123,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -125,7 +142,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, s.EntryDate");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -144,7 +161,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, s.EntryDate");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -163,7 +180,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, c.Date");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -181,7 +198,7 @@ public class CalculateMetricsService {
       appendContextFilter(sb, filterCriteriaDTO, "u");
     }
     sb.append(" GROUP BY u.ID, i.Date");
-    sb.append(") AS sub");
+    sb.append(")");
     return sb.toString();
   }
 
@@ -229,5 +246,13 @@ public class CalculateMetricsService {
 
   private String listToSQLInClause(List<String> items) {
     return items.stream().map(item -> "'" + item + "'").collect(Collectors.joining(", "));
+  }
+
+  public void setOnFilterStart(ProgressBarListener listener) {
+    this.filterProgressBar = listener;
+  }
+
+  public void setOnFilterLabelStart(ProgressLabel listener) {
+    this.filterProgressLabel = listener;
   }
 }
