@@ -333,5 +333,67 @@ public class LoginService {
     return success;
   }
 
+  public String getUserPassword(String username) {
+
+    Connection conn = null;
+    String password = "";
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("SELECT password FROM users WHERE username = ?");
+      statement.setString(1, username);
+      password = statement.executeQuery().getString("password");
+
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return password;
+  }
+
+  public String getUserRole(String username) {
+
+    Connection conn = null;
+    String role = "";
+
+    try {
+      conn = connectDatabase();
+
+      PreparedStatement statement = conn.prepareStatement("SELECT role FROM users WHERE username = ?");
+      statement.setString(1, username);
+      role = statement.executeQuery().getString("role");
+
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    return role;
+  }
+
 
 }

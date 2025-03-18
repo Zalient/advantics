@@ -3,7 +3,6 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
 import com.university.grp20.model.User;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -28,6 +27,8 @@ public class SettingsController {
   @FXML private ComboBox selectUserMenu;
   @FXML private TextField newPasswordField;
   @FXML private ComboBox selectNewRoleMenu;
+  @FXML private Label currentPasswordLabel;
+  @FXML private Label currentRoleLabel;
 
   private LoginService loginService = new LoginService();
 
@@ -59,7 +60,6 @@ public class SettingsController {
     String enteredUsername = addUsernameField.getText();
     String enteredPassword = addPasswordField.getText();
 
-
     if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty() && selectRoleMenu.getValue() != null) {
       if (!loginService.doesUserExist(addUsernameField.getText())) {
 
@@ -81,6 +81,15 @@ public class SettingsController {
       }
     } else {
       showError("You have not filled out all the user detail fields..");
+    }
+
+  }
+
+  @FXML
+  private void updateEditUserLabels() {
+    if (selectUserMenu.getValue() != null) {
+      currentPasswordLabel.setText("Current Password: " + loginService.getUserPassword(selectUserMenu.getValue().toString()));
+      currentRoleLabel.setText("Current Role: " + loginService.getUserRole(selectUserMenu.getValue().toString()));
     }
 
   }
@@ -115,6 +124,8 @@ public class SettingsController {
       newPasswordField.setText("");
       selectUserMenu.getSelectionModel().clearSelection();
       selectNewRoleMenu.getSelectionModel().clearSelection();
+      currentPasswordLabel.setText("Current Password: ");
+      currentRoleLabel.setText("Current Role: ");
 
     } else {
       showError("You have not selected a user to edit");

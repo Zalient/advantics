@@ -176,7 +176,7 @@
                         <HBox fx:id="selectUser" alignment="CENTER" prefHeight="26.0" prefWidth="448.0" spacing="20.0">
                            <children>
                               <Label alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="209.0" text="Select User" />
-                              <ComboBox fx:id="selectUserMenu" prefHeight="25.0" prefWidth="209.0" />
+                              <ComboBox fx:id="selectUserMenu" onAction="#updateEditUserLabels" prefHeight="25.0" prefWidth="209.0" />
                            </children>
                         </HBox>
                      </children>
@@ -185,7 +185,7 @@
                      <children>
                         <HBox fx:id="selectUser1" alignment="CENTER" prefHeight="25.0" prefWidth="448.0" spacing="20.0">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="209.0" text="Current Password:" />
+                              <Label fx:id="currentPasswordLabel" prefHeight="17.0" prefWidth="209.0" text="Current Password:" />
                               <TextField fx:id="newPasswordField" prefHeight="25.0" prefWidth="209.0" promptText="New Password" />
                            </children>
                         </HBox>
@@ -195,8 +195,8 @@
                      <children>
                         <HBox fx:id="selectUser11" alignment="CENTER" prefHeight="25.0" prefWidth="448.0" spacing="20.0">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="209.0" text="Current Role:" />
-                              <ComboBox fx:id="selectNewRoleMenu" prefHeight="25.0" prefWidth="208.0" />
+                              <Label fx:id="currentRoleLabel" prefHeight="17.0" prefWidth="209.0" text="Current Role:" />
+                              <ComboBox fx:id="selectNewRoleMenu" prefHeight="25.0" prefWidth="208.0" promptText="New Role" />
                            </children>
                         </HBox>
                      </children>
