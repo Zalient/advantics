@@ -28,12 +28,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
+
 public class ExportService {
 
     private static final Logger logger = LogManager.getLogger(ExportService.class);
 
-    public static void dashboardToPDF(MetricsDTO metricsDTO) throws IOException {
-        String filePath = askForPDFFilename();
+    public static void dashboardToPDF(MetricsDTO metricsDTO, String filePath) throws IOException {
+
         if (filePath == null) {
             logger.info("User cancelled export");
             return;
@@ -114,9 +116,8 @@ public class ExportService {
         }
     }
 
-    public static void dashboardToCSV(MetricsDTO metricsDTO) throws IOException {
+    public static void dashboardToCSV(MetricsDTO metricsDTO, String filePath) throws IOException {
 
-        String filePath = askForCSVFilename();
         if (filePath == null) {
             logger.info("User cancelled export");
             return;
@@ -173,9 +174,8 @@ public class ExportService {
     }
 
 
-    public static void chartToPDF(JFreeChart chart) throws IOException {
+    public static void chartToPDF(JFreeChart chart, String filePath) throws IOException {
 
-        String filePath = askForPDFFilename();
         if (filePath == null) {
             logger.info("User cancelled export");
             return;
@@ -231,9 +231,8 @@ public class ExportService {
     }
 
 
-    public static void chartToCSV(JFreeChart chart) throws IOException {
+    public static void chartToCSV(JFreeChart chart, String filePath) throws IOException {
 
-        String filePath = askForCSVFilename();
         if (filePath == null) {
             logger.info("User cancelled export");
             return;
@@ -297,7 +296,7 @@ public class ExportService {
         }
     }
 
-    private static String askForPDFFilename(){
+    public static String askForPDFFilename(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF file", "*.pdf"));
@@ -309,7 +308,7 @@ public class ExportService {
         return null;
     }
 
-    private static String askForCSVFilename(){
+    public static String askForCSVFilename(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV file", "*.csv"));

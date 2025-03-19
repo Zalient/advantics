@@ -74,12 +74,14 @@ public class MetricsController {
 
   @FXML
   private void saveAsPDF() throws IOException {
-    ExportService.dashboardToPDF(metricsDTO);
+    String filePath = ExportService.askForPDFFilename();
+    ExportService.dashboardToPDF(metricsDTO, filePath);
   }
 
   @FXML
   private void saveAsCSV() throws IOException {
-    ExportService.dashboardToCSV(metricsDTO);
+    String filePath = ExportService.askForCSVFilename();
+    ExportService.dashboardToCSV(metricsDTO, filePath);
   }
 
   @FXML

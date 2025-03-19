@@ -172,7 +172,8 @@ public class ChartController {
     Button exportPDFButton = new Button("Export as PDF");
     exportPDFButton.setOnAction(e -> {
         try{
-          ExportService.chartToPDF(chartViewer.getChart());
+          String filePath = ExportService.askForPDFFilename();
+          ExportService.chartToPDF(chartViewer.getChart(), filePath);
         } catch (IOException ex){
           ex.printStackTrace();
         }
@@ -181,7 +182,8 @@ public class ChartController {
     Button exportCSVButton = new Button("Export as CSV");
     exportCSVButton.setOnAction(e -> {
         try {
-            ExportService.chartToCSV(chartViewer.getChart());
+          String filePath = ExportService.askForCSVFilename();
+          ExportService.chartToCSV(chartViewer.getChart(), filePath);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
