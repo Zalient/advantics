@@ -83,10 +83,10 @@ public class ChartController {
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
-       operationLogger.log("Back button clicked, returned to login page);
+       operationLogger.log("Back button clicked, returned to login page");
     } else {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
-      operationLogger.log("Back button clicked, returned to file upload page);
+      operationLogger.log("Back button clicked, returned to file upload page");
     }
    
   }
