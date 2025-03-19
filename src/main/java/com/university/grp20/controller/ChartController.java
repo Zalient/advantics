@@ -6,6 +6,7 @@ import com.university.grp20.model.ExportService;
 
 import com.university.grp20.model.CalculateMetricsService;
 
+
 import com.university.grp20.model.GenerateChartService;
 
 import java.io.IOException;
@@ -103,6 +104,7 @@ public class ChartController {
       try {
         FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
         loader.load();
+
 
         FilterSelectionController controller = loader.getController();
         controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
@@ -243,6 +245,7 @@ public class ChartController {
 
     VBox chartBox = new VBox();
 
+
     if (chart.getPlot() instanceof CategoryPlot) {
       CategoryPlot chartPlot = chart.getCategoryPlot();
       CategoryAxis xAxis = chartPlot.getDomainAxis();
@@ -278,6 +281,7 @@ public class ChartController {
     HBox buttonBox = new HBox(exportPDFButton, exportCSVButton);
     buttonBox.setSpacing(10);
     chartBox = new VBox(buttonBox, chartViewer);
+
 
     addChartFlowPane.getChildren().add(chartBox);
   }

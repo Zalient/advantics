@@ -58,6 +58,7 @@ public class GenerateChartService {
       String dateColumn,
       String userAlias) {
 
+
     StringBuilder sb = new StringBuilder(baseSQL);
 
     if (filterDTO.getStartDate() != null) {
@@ -79,7 +80,9 @@ public class GenerateChartService {
           .append("'");
     }
 
+
     if (userAlias != null && !userAlias.isEmpty()) {
+
       if (filterDTO.getGender() != null) {
         sb.append(" AND ")
             .append(userAlias)
@@ -119,7 +122,6 @@ public class GenerateChartService {
                 .collect(Collectors.joining(", ")));
         sb.append(")");
       }
-
       if (filterDTO.getTimeGranularity() == null || filterDTO.getTimeGranularity().isEmpty() || "Per Day".equals(filterDTO.getTimeGranularity())) {
         sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ")
             .append(dateAlias)
@@ -206,6 +208,7 @@ public class GenerateChartService {
 
         applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
 
+
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Impressions");
     String label = granularityLabel(filterDTO);
@@ -225,6 +228,7 @@ public class GenerateChartService {
 
         applyCommonFilter(baseSQL, filterDTO, "c", "Date", "u") + " ORDER BY time";
 
+
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Clicks");
     String label = granularityLabel(filterDTO);
@@ -242,6 +246,7 @@ public class GenerateChartService {
             + "WHERE 1=1 ";
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
+
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Uniques");
@@ -261,6 +266,7 @@ public class GenerateChartService {
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "u") + " ORDER BY time";
 
+
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Bounces");
     String label = granularityLabel(filterDTO);
@@ -278,6 +284,7 @@ public class GenerateChartService {
             + "WHERE s.Conversion = 'Yes' ";
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "u") + " ORDER BY time";
+
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Conversions");
@@ -297,6 +304,7 @@ public class GenerateChartService {
     impressionSQL =
         applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
+
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
             + ", SUM(c.ClickCost) AS total_amount "
@@ -304,7 +312,9 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
 
+
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
+
 
     String finalSQL =
         "SELECT time, SUM(total_amount) AS combined_total FROM ("
@@ -328,7 +338,9 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
     impressionSQL =
+
         applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
+
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -336,7 +348,9 @@ public class GenerateChartService {
             + "FROM clickLog c "
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
+
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
+
 
 
     String finalSQL =
@@ -361,7 +375,9 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
+
     impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
+
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -369,7 +385,9 @@ public class GenerateChartService {
             + "FROM clickLog c "
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
+
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
+
 
 
     String unionCost =
@@ -385,7 +403,9 @@ public class GenerateChartService {
             + "FROM serverLog s "
             + "JOIN userData u ON u.ID = s.ID "
             + "WHERE s.Conversion = 'Yes' ";
+
     conversionSQL = applyCommonFilter(conversionSQL, filterDTO, "s", "EntryDate", "u");
+
 
     String finalSQL =
         "SELECT cost.day, (cost.Daily_Cost * 1.0 / conv.Total_Conversions) AS CPA "
@@ -411,7 +431,9 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
     impressionSQL =
+
         applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
+
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -421,6 +443,7 @@ public class GenerateChartService {
             + "WHERE 1=1 ";
     clickSQL =
         applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
+
 
     String unionCost =
         "SELECT time, SUM(total_cost) AS Daily_Cost FROM ("
@@ -437,6 +460,7 @@ public class GenerateChartService {
             + "WHERE 1=1 ";
     totalClickSQL =
         applyCommonFilter(totalClickSQL, filterDTO, "c2", "Date", "u");
+
 
     String finalSQL =
         "SELECT cost.time, (cost.Daily_Cost * 1.0 / clicks.Total_Clicks) AS CPC "
@@ -463,6 +487,7 @@ public class GenerateChartService {
     impressionSQL =
         applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
+
     String impressionCountSQL =
         applyGranularitySelect(filterDTO, "i2", "Date")
             + ", COUNT(*) AS Total_Impressions "
@@ -470,6 +495,7 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = i2.ID "
             + "WHERE 1=1 ";
     impressionCountSQL = applyCommonFilter(impressionCountSQL, filterDTO, "i2", "Date", "u");
+
 
     String finalSQL =
         "SELECT cost.time, ((cost.total_cost * 1.0 / impression.Total_Impressions) * 1000) AS CPM "
@@ -495,12 +521,15 @@ public class GenerateChartService {
             + "WHERE s.PagesViewed = 1 ";
     bounceSQL = applyCommonFilter(bounceSQL, filterDTO, "s", "EntryDate", "u");
 
+
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
             + ", COUNT(*) AS Total_Clicks "
             + "FROM clickLog c "
             + "JOIN userData u ON u.ID = c.ID ";
+
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
+
 
     String finalSQL =
         "SELECT bounces.time, "

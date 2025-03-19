@@ -50,13 +50,17 @@ public class MetricsController {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
+
   public MetricsDTO metricsDTO;
+
 
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+
     metricsDTO = calculateMetricsService.getMetrics(null);
     setMetrics(metricsDTO);
+
 
 
 /**
