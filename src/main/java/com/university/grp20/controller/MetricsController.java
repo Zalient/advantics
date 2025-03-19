@@ -57,9 +57,9 @@ public class MetricsController {
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
-
-    metricsDTO = calculateMetricsService.getMetrics(null);
-    setMetrics(metricsDTO);
+    calculateMetricsService.setOnFilterStart(progress -> { /* no-op */ });
+    calculateMetricsService.setOnFilterLabelStart(text -> { /* no-op */ });
+    setMetrics(calculateMetricsService.getMetrics(null));
 
 
 
@@ -75,9 +75,8 @@ public class MetricsController {
  *     });
  */
 
-
   }
-
+  
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
     impressionsLabel.setText(String.format("%.2f", metricsDTO.getImpressions()) + " impressions");

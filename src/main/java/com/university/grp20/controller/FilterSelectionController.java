@@ -1,20 +1,21 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
+import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.FilterCriteriaDTO;
+import com.university.grp20.model.GenerateChartService;
+import com.university.grp20.model.MetricsDTO;
+import com.university.grp20.model.OperationLogger;
+import javafx.application.Platform;
 import com.university.grp20.model.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
-import org.jfree.chart.title.TextTitle;
-
-import java.awt.*;
 
 public class FilterSelectionController {
   public enum FilterMode {
@@ -28,6 +29,8 @@ public class FilterSelectionController {
   @FXML private DatePicker startDatePicker, endDatePicker;
   @FXML private Button applyChangesButton;
   @FXML private Label chartNameLabel;
+  @FXML private ProgressBar filterProgressBar;
+  @FXML private Label filterProgressLabel;
   private final Logger logger = LogManager.getLogger(FilterSelectionController.class);
   private FilterMode filterMode;
   private MetricsController metricsController;
@@ -55,7 +58,7 @@ public class FilterSelectionController {
     maleRadioButton.setUserData("Male");
     femaleRadioButton.setUserData("Female");
 
-    ageGroupSelector.getItems().addAll("Below 25", "25-34", "35-44", "45-55", "Above 55");
+    ageGroupSelector.getItems().addAll("<25", "25-34", "35-44", "45-54", ">54");
     incomeSelector.getItems().addAll("Low", "Medium", "High");
     contextSelector
         .getItems()
@@ -64,6 +67,9 @@ public class FilterSelectionController {
 
   @FXML
   private void applyChanges() {
+    CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    calculateMetricsService.setOnFilterStart(this::updateProgressBar);
+    calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
     FilterCriteriaDTO filterCriteriaDTO = buildFilterCriteria();
     operationLogger.log("Filters chosen and applied");
@@ -74,7 +80,6 @@ public class FilterSelectionController {
           new Task<>() {
             @Override
             protected MetricsDTO call() {
-              CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
               return calculateMetricsService.getMetrics(filterCriteriaDTO);
             }
           };
@@ -82,7 +87,6 @@ public class FilterSelectionController {
       task.setOnSucceeded(
           e -> {
             metricsController.setMetrics(task.getValue());
-            metricsController.metricsDTO = task.getValue();
             UIManager.closeModal();
             logger.info("Testing - clicks: " + task.getValue().getClicks());
           });
@@ -101,20 +105,6 @@ public class FilterSelectionController {
           generateChartService.getFilteredChart(metricType, filterCriteriaDTO);
 
       if (newFilteredChart != null && chartViewer != null) {
-        String filterApplied =
-                "Time granularity: " + filterCriteriaDTO.getTimeGranularity() + "   " +
-                        "Start Date: " + (filterCriteriaDTO.getStartDate() != null ? filterCriteriaDTO.getStartDate().toString() : " ") + "   " +
-                        "End Date: " + (filterCriteriaDTO.getEndDate() != null ? filterCriteriaDTO.getEndDate().toString() : " ") + "   " +
-                        "\n" +
-                        "Gender: " + (filterCriteriaDTO.getGender() != null ? filterCriteriaDTO.getGender() : "All Gender") + "   " +
-                        "Age Ranges: " + (filterCriteriaDTO.getAgeRanges() != null ? filterCriteriaDTO.getAgeRanges().toString() : "All Age Range") + "   " +
-                        "Income: " + (filterCriteriaDTO.getIncomes() != null ? filterCriteriaDTO.getIncomes().toString() : "All Income Levels") + "   " +
-                        "Contexts: " + (filterCriteriaDTO.getContexts() != null ? filterCriteriaDTO.getContexts().toString() : "All Context");
-
-        TextTitle subtitle = new TextTitle(filterApplied);
-        subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        subtitle.setPaint(new Color(0,0,140));
-        newFilteredChart.addSubtitle(subtitle);
         chartViewer.setChart(newFilteredChart);
       }
 
@@ -132,6 +122,10 @@ public class FilterSelectionController {
     if (filterMode == FilterMode.METRICS) {
       granularityChooser.setVisible(false);
       chartNameLabel.setVisible(false);
+    }
+    if (filterMode == FilterMode.CHART) {
+      filterProgressBar.setVisible(false);
+      filterProgressLabel.setVisible(false);
     }
   }
 
@@ -156,5 +150,15 @@ public class FilterSelectionController {
         selectedToggle != null ? selectedToggle.getUserData().toString() : null);
 
     return filterCriteriaDTO;
+  }
+
+  public void updateProgressBar(Double progress) {
+    logger.info("Updating progress to " + progress);
+    Platform.runLater(() -> filterProgressBar.setProgress(progress));
+  }
+
+  public void updateProgressLabel(String text) {
+    logger.info("Updating progress label to " + text);
+    Platform.runLater(() -> filterProgressLabel.setText(text));
   }
 }
