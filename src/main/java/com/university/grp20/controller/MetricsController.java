@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import com.university.grp20.model.User;
 import javafx.application.Platform;
+import com.university.grp20.model.OperationLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -46,6 +47,7 @@ public class MetricsController {
   @FXML
   private Button filterButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   private void initialize() {
@@ -90,10 +92,12 @@ public class MetricsController {
     } else {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
     }
+
   }
 
   @FXML
   private void showMetricsFilter() {
+    operationLogger.log("Metrics filter chosen, displaying filter options");
     try {
       logger.info("Filter button clicked");
       FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
@@ -112,6 +116,7 @@ public class MetricsController {
   @FXML
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
+    operationLogger.log("Charts page chosen, displaying charts page");
   }
 
   @FXML

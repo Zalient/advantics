@@ -11,7 +11,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FileImportService {
   private final Logger logger = LogManager.getLogger(FileImportService.class);
@@ -22,6 +24,8 @@ public class FileImportService {
   private FileProgressLabel fileProgressLabel;
   private FileErrorListener fileErrorListener;
   private String campaignStartDate = "";
+  private final OperationLogger operationLogger = new OperationLogger();
+
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -33,18 +37,18 @@ public class FileImportService {
   }
 
   private void processFile(
-      File file,
-      String label,
-      String deleteSql,
-      String insertSql,
-      LineParser parser,
-      Connection conn) {
+          File file,
+          String label,
+          String deleteSql,
+          String insertSql,
+          LineParser parser,
+          Connection conn) {
     try {
       DBHelper.executeUpdate(conn, deleteSql);
       logger.info("Deleted existing rows for table associated with file: " + file.getName());
     } catch (SQLException e) {
       throw new RuntimeException(
-          "Error clearing table for file " + file.getName() + ": " + e.getMessage(), e);
+              "Error clearing table for file " + file.getName() + ": " + e.getMessage(), e);
     }
 
     fileProgressLabel.labelText(label);
@@ -97,7 +101,6 @@ public class FileImportService {
 
         }
 
-
         counter++;
 
         if (batchParams.size() >= updateThreshold) {
@@ -113,34 +116,53 @@ public class FileImportService {
       fileProgressBarListener.fileProgressBar(1.0);
     } catch (IOException | SQLException e) {
       throw new RuntimeException(
-          "Error processing file " + file.getName() + ": " + e.getMessage(), e);
+              "Error processing file " + file.getName() + ": " + e.getMessage(), e);
     }
   }
 
   private void importImpressionLog(Connection conn) {
-    String deleteSql = "DELETE FROM impressionLog";
-    String insertSql =
-        "INSERT INTO impressionLog (impressionID, Date, ID, Gender, Age, Income, Context, ImpressionCost) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String deleteImpressionSql = "DELETE FROM impressionLog";
+    String insertImpressionSql =
+            "INSERT INTO impressionLog (impressionID, Date, ID, ImpressionCost) VALUES (?, ?, ?, ?)";
     processFile(
-        impressionLog,
-        "Importing impression log...",
-        deleteSql,
-        insertSql,
-        (columns, counter) ->
-            new Object[] {
-              counter,
-              columns[0],
-              Long.parseLong(columns[1]),
-              columns[2],
-              columns[3],
-              columns[4],
-              columns[5],
-              Double.parseDouble(columns[6])
+            impressionLog,
+            "Importing impression log...",
+            deleteImpressionSql,
+            insertImpressionSql,
+            (columns, counter) ->
+                    new Object[] {
+                            counter,
+                            columns[0],
+                            Long.parseLong(columns[1]),
+                            Double.parseDouble(columns[6])
+                    },
+            conn);
+  }
+
+  private void importUserData(Connection conn) {
+    String deleteUserSql = "DELETE FROM userData";
+    String insertUserSql =
+            "INSERT OR IGNORE INTO userData (ID, Gender, Age, Income, Context) VALUES (?, ?, ?, ?, ?)";
+    Set<Long> seenIDs = new HashSet<>();
+    processFile(
+            impressionLog,
+            "Importing user data...",
+            deleteUserSql,
+            insertUserSql,
+            (columns, counter) -> {
+              long userID = Long.parseLong(columns[1]);
+
+              if (seenIDs.contains(userID)) {
+                return null;
+              }
+
+              seenIDs.add(userID);
+              return new Object[] { userID, columns[2], columns[3], columns[4], columns[5] };
             },
         conn);
 
-
   }
+
 
   private void importClickLog(Connection conn) {
     String deleteSql = "DELETE FROM clickLog";
@@ -181,15 +203,21 @@ public class FileImportService {
   private void createTables(Connection conn) {
     try {
       DBHelper.executeUpdate(
+              conn,
+              "CREATE TABLE IF NOT EXISTS userData ("
+                      + "ID LONG, "
+                      + "Gender TEXT, "
+                      + "Age TEXT, "
+                      + "Income TEXT, "
+                      + "Context TEXT);");
+      logger.info("Created userData table");
+
+      DBHelper.executeUpdate(
           conn,
           "CREATE TABLE IF NOT EXISTS impressionLog ("
               + "impressionID INTEGER, "
               + "Date DATETIME, "
               + "ID LONG, "
-              + "Gender TEXT, "
-              + "Age TEXT, "
-              + "Income TEXT, "
-              + "Context TEXT, "
               + "ImpressionCost REAL);");
       logger.info("Created impressionLog table");
 
@@ -224,6 +252,7 @@ public class FileImportService {
       conn.setAutoCommit(false);
       createTables(conn);
       importImpressionLog(conn);
+      importUserData(conn);
       importClickLog(conn);
       importServerLog(conn);
       conn.setAutoCommit(true);
@@ -303,14 +332,17 @@ public class FileImportService {
 
   public void setImpressionLog(File newImpressionLog) {
     this.impressionLog = newImpressionLog;
+    operationLogger.log("File uploaded: " + newImpressionLog);
   }
 
   public void setClickLog(File newClickLog) {
     this.clickLog = newClickLog;
+    operationLogger.log("File uploaded: " + newClickLog);
   }
 
   public void setServerLog(File newServerLog) {
     this.serverLog = newServerLog;
+    operationLogger.log("File uploaded: " + newServerLog);
   }
 
   public void setCampaignStartDate(String newCampaignStartDate) {

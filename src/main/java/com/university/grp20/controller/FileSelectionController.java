@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import com.university.grp20.model.User;
+import com.university.grp20.model.OperationLogger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,7 @@ public class FileSelectionController {
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   public void initialize() {
@@ -95,22 +97,26 @@ public class FileSelectionController {
       alert.showAndWait();
     }
 
+
   }
 
   @FXML
   private void handleImpressionUpload() {
     selectFile(
         "Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
+    operationLogger.log("Impression log file chooser displayed");
   }
 
   @FXML
   private void handleClickUpload() {
     selectFile("Select Click Log File", fileImportService::setClickLog, clickLogButton);
+    operationLogger.log("Click log file chooser displayed");
   }
 
   @FXML
   private void handleServerUpload() {
     selectFile("Select Server Log File", fileImportService::setServerLog, serverLogButton);
+    operationLogger.log("Server log file chooser displayed");
   }
 
   @FXML
