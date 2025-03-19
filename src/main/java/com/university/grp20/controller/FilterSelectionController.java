@@ -1,13 +1,8 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
-import com.university.grp20.model.CalculateMetricsService;
-import com.university.grp20.model.FilterCriteriaDTO;
-import com.university.grp20.model.GenerateChartService;
-import com.university.grp20.model.MetricsDTO;
-import com.university.grp20.model.OperationLogger;
-import javafx.application.Platform;
 import com.university.grp20.model.*;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

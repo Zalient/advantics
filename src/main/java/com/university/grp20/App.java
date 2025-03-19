@@ -2,7 +2,6 @@ package com.university.grp20;
 
 import com.university.grp20.model.OperationLogger;
 import javafx.application.Application;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

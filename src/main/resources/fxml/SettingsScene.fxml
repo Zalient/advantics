@@ -2,9 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
         <Label layoutX="576.0" layoutY="13.0" prefHeight="44.0" prefWidth="128.0" text="Settings">
             <font>
                 <Font size="36.0" />
@@ -36,66 +36,31 @@
                     </Label>
                 </HBox>
                 <VBox spacing="15.0">
-                    <GridPane alignment="CENTER_LEFT" hgap="10" prefWidth="540.0" vgap="10">
+                    <GridPane alignment="CENTER_LEFT" hgap="10" prefHeight="88.0" prefWidth="1278.0" vgap="10">
                         <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
                         </columnConstraints>
                         <rowConstraints>
                             <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <Label alignment="CENTER" prefHeight="26.0" prefWidth="294.0" style="-fx-font-size: 20" text="Bounce Registered as:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <CheckBox alignment="CENTER" mnemonicParsing="false" text="Time spent on website">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </CheckBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="638.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                     <children>
+                        <RadioButton fx:id="pagesViewedOpt" mnemonicParsing="false" text="Pages Viewed" />
+                        <RadioButton fx:id="timeSpentOpt" mnemonicParsing="false" text="Time Spent on Page" />
+                     </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <CheckBox mnemonicParsing="false" text="Number of pages visited">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </CheckBox>
-                        </HBox>
-                    </GridPane>
-                    <GridPane alignment="CENTER_LEFT" hgap="10" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                        </rowConstraints>
-                        <Label alignment="CENTER" prefHeight="26.0" prefWidth="295.0" style="-fx-font-size: 20" text="Displayed on dashboard:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <CheckBox alignment="CENTER" mnemonicParsing="false" text="Number of impressions">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </CheckBox>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <CheckBox mnemonicParsing="false" text="Number of clicks">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </CheckBox>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                            <CheckBox mnemonicParsing="false" text="Number of uniques">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </CheckBox>
-                        </HBox>
+                  <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="bounceChooser" mnemonicParsing="false" text="Choose" disable="true"/>
+                        <TextField fx:id="addUsernameField" prefHeight="25.0" prefWidth="205.0" promptText="Enter Value" disable="true"/>
+                     </children>
+                  </VBox>
                     </GridPane>
                 </VBox>
-            <HBox prefHeight="50.0" prefWidth="200.0">
+            <HBox prefHeight="87.0" prefWidth="1278.0">
                <children>
                   <Label style="-fx-font-weight: bold;" text="Accessibility">
                      <font>

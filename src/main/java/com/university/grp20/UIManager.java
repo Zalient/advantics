@@ -1,20 +1,18 @@
 package com.university.grp20;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.university.grp20.controller.ChartController;
 import com.university.grp20.controller.MetricsController;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class UIManager {
   private static final Logger logger = LogManager.getLogger(UIManager.class);

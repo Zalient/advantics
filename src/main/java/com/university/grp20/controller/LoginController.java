@@ -4,17 +4,11 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
 
 public class LoginController {
   private static final Logger logger = LogManager.getLogger(LoginController.class);
