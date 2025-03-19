@@ -83,7 +83,7 @@
                                 </HBox>
                             </children>
                         </HBox>
-                        <CheckComboBox fx:id="ageGroupSelector" prefHeight="25.0" prefWidth="103.0" title="Age Group"
+                        <CheckComboBox fx:id="ageGroupSelector" prefHeight="25.0" prefWidth="140.0" title="Age Group"
                                        GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
                                        GridPane.valignment="CENTER">
                         </CheckComboBox>

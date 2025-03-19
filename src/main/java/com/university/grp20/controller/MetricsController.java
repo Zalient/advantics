@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.ExportService;
 import com.university.grp20.model.MetricsDTO;
 
 import java.io.IOException;
@@ -49,10 +50,18 @@ public class MetricsController {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
+
+  public MetricsDTO metricsDTO;
+
+
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
-    setMetrics(calculateMetricsService.getMetrics(null));
+
+    metricsDTO = calculateMetricsService.getMetrics(null);
+    setMetrics(metricsDTO);
+
+
 
 /**
  * Platform.runLater(() -> {
@@ -111,6 +120,18 @@ public class MetricsController {
     } catch (IOException e) {
       logger.error("Error loading metrics filter: " + e.getMessage());
     }
+  }
+
+  @FXML
+  private void saveAsPDF() throws IOException {
+    String filePath = ExportService.askForPDFFilename();
+    ExportService.dashboardToPDF(metricsDTO, filePath);
+  }
+
+  @FXML
+  private void saveAsCSV() throws IOException {
+    String filePath = ExportService.askForCSVFilename();
+    ExportService.dashboardToCSV(metricsDTO, filePath);
   }
 
   @FXML

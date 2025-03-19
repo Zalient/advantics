@@ -1,7 +1,12 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
+
+import com.university.grp20.model.ExportService;
+
 import com.university.grp20.model.CalculateMetricsService;
+
+
 import com.university.grp20.model.GenerateChartService;
 
 import java.io.IOException;
@@ -16,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,6 +104,7 @@ public class ChartController {
       try {
         FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
         loader.load();
+
 
         FilterSelectionController controller = loader.getController();
         controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
@@ -236,7 +243,8 @@ public class ChartController {
     chartViewer.setUserData(metricType);
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    VBox chartBox = new VBox(chartViewer);
+    VBox chartBox = new VBox();
+
 
     if (chart.getPlot() instanceof CategoryPlot) {
       CategoryPlot chartPlot = chart.getCategoryPlot();
@@ -249,6 +257,31 @@ public class ChartController {
       filterButton.setOnAction(e -> showFilterSelection(chartViewer));
       chartBox.getChildren().add(0, filterButton);
     }
+
+    Button exportPDFButton = new Button("Export as PDF");
+    exportPDFButton.setOnAction(e -> {
+        try{
+          String filePath = ExportService.askForPDFFilename();
+          ExportService.chartToPDF(chartViewer.getChart(), filePath);
+        } catch (IOException ex){
+          ex.printStackTrace();
+        }
+    });
+
+    Button exportCSVButton = new Button("Export as CSV");
+    exportCSVButton.setOnAction(e -> {
+        try {
+          String filePath = ExportService.askForCSVFilename();
+          ExportService.chartToCSV(chartViewer.getChart(), filePath);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    });
+
+    HBox buttonBox = new HBox(exportPDFButton, exportCSVButton);
+    buttonBox.setSpacing(10);
+    chartBox = new VBox(buttonBox, chartViewer);
+
 
     addChartFlowPane.getChildren().add(chartBox);
   }
