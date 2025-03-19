@@ -114,21 +114,21 @@ public class GenerateChartService {
                 .collect(Collectors.joining(", ")));
         sb.append(")");
       }
-      if (filterDTO.getTimeGranularity() == null
-          || filterDTO.getTimeGranularity().isEmpty()
-          || "Per Day".equals(filterDTO.getTimeGranularity())) {
-        sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ")
-            .append(dateAlias)
-            .append(".")
-            .append(dateColumn)
-            .append(") ");
-      } else if ("Per Week".equals(filterDTO.getTimeGranularity())) {
-        sb.append(" GROUP BY STRFTIME('%Y-%W', ")
-            .append(dateAlias)
-            .append(".")
-            .append(dateColumn)
-            .append(") ");
-      }
+        if (filterDTO.getTimeGranularity() == null
+                || filterDTO.getTimeGranularity().isEmpty()
+                || "Per Day".equals(filterDTO.getTimeGranularity())) {
+            sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ")
+                    .append(dateAlias)
+                    .append(".")
+                    .append(dateColumn)
+                    .append(") ");
+        } else if ("Per Week".equals(filterDTO.getTimeGranularity())) {
+            sb.append(" GROUP BY STRFTIME('%Y-%W', ")
+                    .append(dateAlias)
+                    .append(".")
+                    .append(dateColumn)
+                    .append(") ");
+        }
     }
     return sb.toString();
   }
@@ -213,12 +213,12 @@ public class GenerateChartService {
         "SELECT STRFTIME('%d', i.Date) AS day, SUM(i.ImpressionCost) AS total_amount "
             + "FROM impressionLog i WHERE 1=1 ";
     impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i") + " GROUP BY day";
+        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i");
 
     String clickSQL =
         "SELECT STRFTIME('%d', c.Date) AS day, SUM(c.ClickCost) AS total_amount "
             + "FROM clickLog c JOIN impressionLog i2 ON c.ID = i2.ID WHERE 1=1 ";
-    clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2") + " GROUP BY day";
+    clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2");
 
     String finalSQL =
         "SELECT day, SUM(total_amount) AS combined_total FROM ("
@@ -235,12 +235,12 @@ public class GenerateChartService {
         "SELECT STRFTIME('%d', i.Date) AS day, COUNT(*) AS Num_Of_Imp "
             + "FROM impressionLog i WHERE 1=1 ";
     impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i") + " GROUP BY day";
+        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i");
 
     String clickSQL =
         "SELECT STRFTIME('%d', c.Date) AS day, COUNT(*) AS Num_Of_Clicks "
             + "FROM clickLog c JOIN impressionLog i2 ON c.ID = i2.ID WHERE 1=1 ";
-    clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2") + " GROUP BY day";
+    clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2");
 
     String finalSQL =
         "SELECT imp.day, (cli.Num_Of_Clicks * 100.0 / imp.Num_Of_Imp) AS ctr "
@@ -258,14 +258,12 @@ public class GenerateChartService {
         "SELECT strftime('%d', i.Date) AS Day_Of_Month, SUM(i.ImpressionCost) AS total_cost "
             + "FROM impressionLog i WHERE 1=1 ";
     impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i")
-            + " GROUP BY Day_Of_Month";
-
+        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i");
     String clickSQL =
         "SELECT strftime('%d', c.Date) AS Day_Of_Month, SUM(c.ClickCost) AS total_cost "
             + "FROM clickLog c JOIN impressionLog i2 ON c.ID = i2.ID WHERE 1=1 ";
     clickSQL =
-        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2") + " GROUP BY Day_Of_Month";
+        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2");
 
     String unionCost =
         "SELECT Day_Of_Month, SUM(total_cost) AS Daily_Cost FROM ("
@@ -278,8 +276,7 @@ public class GenerateChartService {
         "SELECT strftime('%d', s.EntryDate) AS Day_Of_Month, COUNT(*) AS Total_Conversions "
             + "FROM serverLog s JOIN impressionLog i3 ON s.ID = i3.ID WHERE s.Conversion = 'Yes' ";
     conversionSQL =
-        applyCommonFilter(conversionSQL, filterDTO, "s", "EntryDate", "i3")
-            + " GROUP BY Day_Of_Month";
+        applyCommonFilter(conversionSQL, filterDTO, "s", "EntryDate", "i3");
 
     String finalSQL =
         "SELECT cost.Day_Of_Month, (cost.Daily_Cost * 1.0 / conv.Total_Conversions) AS CPA "
@@ -297,14 +294,13 @@ public class GenerateChartService {
         "SELECT strftime('%d', i.Date) AS Day_Of_Month, SUM(i.ImpressionCost) AS total_cost "
             + "FROM impressionLog i WHERE 1=1 ";
     impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i")
-            + " GROUP BY Day_Of_Month";
+        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i");
 
     String clickSQL =
         "SELECT strftime('%d', c.Date) AS Day_Of_Month, SUM(c.ClickCost) AS total_cost "
             + "FROM clickLog c JOIN impressionLog i2 ON c.ID = i2.ID WHERE 1=1 ";
     clickSQL =
-        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2") + " GROUP BY Day_Of_Month";
+        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2");
 
     String unionCost =
         "SELECT Day_Of_Month, SUM(total_cost) AS Daily_Cost FROM ("
@@ -317,8 +313,7 @@ public class GenerateChartService {
         "SELECT strftime('%d', c2.Date) AS Day_Of_Month, COUNT(*) AS Total_Clicks "
             + "FROM clickLog c2 JOIN impressionLog i3 ON c2.ID = i3.ID WHERE 1=1 ";
     totalClickSQL =
-        applyCommonFilter(totalClickSQL, filterDTO, "c2", "Date", "i3")
-            + " GROUP BY Day_Of_Month";
+        applyCommonFilter(totalClickSQL, filterDTO, "c2", "Date", "i3");
 
     String finalSQL =
         "SELECT cost.Day_Of_Month, (COALESCE(cost.Daily_Cost, 0) * 1.0 / NULLIF(clicks.Total_Clicks, 0)) AS CPC "
@@ -336,14 +331,13 @@ public class GenerateChartService {
         "SELECT strftime('%d', i.Date) AS Day_Of_Month, SUM(i.ImpressionCost) AS cost_part "
             + "FROM impressionLog i WHERE 1=1 ";
     impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i")
-            + " GROUP BY Day_Of_Month";
+        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "i");
 
     String clickSQL =
         "SELECT strftime('%d', c.Date) AS Day_Of_Month, SUM(c.ClickCost) AS cost_part "
             + "FROM clickLog c JOIN impressionLog i2 ON c.ID = i2.ID WHERE 1=1 ";
     clickSQL =
-        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2") + " GROUP BY Day_Of_Month";
+        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "i2");
 
     String unionCost =
         "SELECT Day_Of_Month, SUM(cost_part) AS Daily_Cost FROM ("
@@ -356,8 +350,7 @@ public class GenerateChartService {
         "SELECT strftime('%d', i3.Date) AS Day_Of_Month, COUNT(*) AS Total_Impressions "
             + "FROM impressionLog i3 WHERE 1=1 ";
     impressionCountSQL =
-        applyCommonFilter(impressionCountSQL, filterDTO, "i3", "Date", "i3")
-            + " GROUP BY Day_Of_Month";
+        applyCommonFilter(impressionCountSQL, filterDTO, "i3", "Date", "i3");
 
     String finalSQL =
         "SELECT cost.Day_Of_Month, ((cost.Daily_Cost * 1.0 / impression.Total_Impressions) * 1000) AS CPM "
@@ -375,8 +368,7 @@ public class GenerateChartService {
         "SELECT strftime('%Y-%m-%d', s.EntryDate) AS day, COUNT(*) AS bounces_by_day "
             + "FROM serverLog s JOIN impressionLog i ON s.ID = i.ID WHERE s.PagesViewed = 1 ";
     String finalSQL =
-        applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "i")
-            + " GROUP BY day ORDER BY day";
+        applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "i");
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Bounces");
     return ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
   }
