@@ -1,8 +1,6 @@
 package com.university.grp20.model;
 
-import com.university.grp20.controller.FileProgressBarListener;
 import com.university.grp20.controller.LoginListener;
-import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

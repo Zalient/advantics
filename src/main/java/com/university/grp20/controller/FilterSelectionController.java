@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -23,6 +24,8 @@ public class FilterSelectionController {
   @FXML private DatePicker startDatePicker, endDatePicker;
   @FXML private Button applyChangesButton;
   @FXML private Label chartNameLabel;
+  @FXML private ProgressBar filterProgressBar;
+  @FXML private Label filterProgressLabel;
   private final Logger logger = LogManager.getLogger(FilterSelectionController.class);
   private FilterMode filterMode;
   private MetricsController metricsController;
@@ -50,7 +53,7 @@ public class FilterSelectionController {
     maleRadioButton.setUserData("Male");
     femaleRadioButton.setUserData("Female");
 
-    ageGroupSelector.getItems().addAll("Below 25", "25-34", "35-44", "45-55", "Above 55");
+    ageGroupSelector.getItems().addAll("<25", "25-34", "35-44", "45-54", ">54");
     incomeSelector.getItems().addAll("Low", "Medium", "High");
     contextSelector
         .getItems()
@@ -59,6 +62,9 @@ public class FilterSelectionController {
 
   @FXML
   private void applyChanges() {
+    CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    calculateMetricsService.setOnFilterStart(this::updateProgressBar);
+    calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
     FilterCriteriaDTO filterCriteriaDTO = buildFilterCriteria();
     operationLogger.log("Filters chosen and applied");
@@ -69,7 +75,6 @@ public class FilterSelectionController {
           new Task<>() {
             @Override
             protected MetricsDTO call() {
-              CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
               return calculateMetricsService.getMetrics(filterCriteriaDTO);
             }
           };
@@ -113,6 +118,10 @@ public class FilterSelectionController {
       granularityChooser.setVisible(false);
       chartNameLabel.setVisible(false);
     }
+    if (filterMode == FilterMode.CHART) {
+      filterProgressBar.setVisible(false);
+      filterProgressLabel.setVisible(false);
+    }
   }
 
   private FilterCriteriaDTO buildFilterCriteria() {
@@ -136,5 +145,15 @@ public class FilterSelectionController {
         selectedToggle != null ? selectedToggle.getUserData().toString() : null);
 
     return filterCriteriaDTO;
+  }
+
+  public void updateProgressBar(Double progress) {
+    logger.info("Updating progress to " + progress);
+    Platform.runLater(() -> filterProgressBar.setProgress(progress));
+  }
+
+  public void updateProgressLabel(String text) {
+    logger.info("Updating progress label to " + text);
+    Platform.runLater(() -> filterProgressLabel.setText(text));
   }
 }

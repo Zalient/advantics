@@ -1,21 +1,15 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
-import com.university.grp20.model.CalculateMetricsService;
-import com.university.grp20.model.MetricsDTO;
-
-import java.io.IOException;
-
-import com.university.grp20.model.User;
-import javafx.application.Platform;
-import com.university.grp20.model.OperationLogger;
+import com.university.grp20.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 public class MetricsController {
   @FXML
@@ -49,10 +43,18 @@ public class MetricsController {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
+
+  public MetricsDTO metricsDTO;
+
+
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    calculateMetricsService.setOnFilterStart(progress -> { /* no-op */ });
+    calculateMetricsService.setOnFilterLabelStart(text -> { /* no-op */ });
     setMetrics(calculateMetricsService.getMetrics(null));
+
+
 
 /**
  * Platform.runLater(() -> {
@@ -66,9 +68,8 @@ public class MetricsController {
  *     });
  */
 
-
   }
-
+  
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
     impressionsLabel.setText(String.format("%.2f", metricsDTO.getImpressions()) + " impressions");
@@ -111,6 +112,18 @@ public class MetricsController {
     } catch (IOException e) {
       logger.error("Error loading metrics filter: " + e.getMessage());
     }
+  }
+
+  @FXML
+  private void saveAsPDF() throws IOException {
+    String filePath = ExportService.askForPDFFilename();
+    ExportService.dashboardToPDF(metricsDTO, filePath);
+  }
+
+  @FXML
+  private void saveAsCSV() throws IOException {
+    String filePath = ExportService.askForCSVFilename();
+    ExportService.dashboardToCSV(metricsDTO, filePath);
   }
 
   @FXML

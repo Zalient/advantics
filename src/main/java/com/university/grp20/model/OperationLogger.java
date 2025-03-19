@@ -23,6 +23,7 @@ public class OperationLogger {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        log("Operation logger initialized");
     }
 
     public void log(String action) {

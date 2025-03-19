@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
+import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,13 +30,22 @@ public class SettingsController {
   @FXML private ComboBox selectNewRoleMenu;
   @FXML private Label currentPasswordLabel;
   @FXML private Label currentRoleLabel;
+  @FXML private RadioButton pagesViewedOpt;
+  @FXML private RadioButton timeSpentOpt;
+  @FXML private Button bounceChooser;
+  @FXML private ToggleGroup bounceGroup;
 
   private LoginService loginService = new LoginService();
+  private OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   private void initialize() {
+    operationLogger.log("Settings page clicked and displayed");
     selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
     selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+    bounceGroup = new ToggleGroup();
+    pagesViewedOpt.setToggleGroup(bounceGroup);
+    timeSpentOpt.setToggleGroup(bounceGroup);
 
     ArrayList<String> userList = loginService.getAllUsers();
 
