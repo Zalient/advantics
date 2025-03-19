@@ -16,3 +16,7 @@
     -fx-pref-height: 60px;
     -fx-pref-width: 140px;
 }
+
+.button:hover {
+    -fx-background-color: #c2c2c2;
+}

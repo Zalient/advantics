@@ -1,11 +1,14 @@
 package com.university.grp20.model;
 
+import com.university.grp20.controller.FileErrorListener;
 import com.university.grp20.controller.FileProgressBarListener;
 import com.university.grp20.controller.FileProgressLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +22,10 @@ public class FileImportService {
   private File serverLog;
   private FileProgressBarListener fileProgressBarListener;
   private FileProgressLabel fileProgressLabel;
+  private FileErrorListener fileErrorListener;
+  private String campaignStartDate = "";
   private final OperationLogger operationLogger = new OperationLogger();
+
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -56,18 +62,43 @@ public class FileImportService {
 
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
       String header = reader.readLine();
+
+      if (file == this.impressionLog && !header.trim().equals("Date,ID,Gender,Age,Income,Context,Impression Cost")) {
+        fileErrorListener.fileReadError("Impression Log File Header is Invalid");
+      } else if (file == this.clickLog && !header.trim().equals("Date,ID,Click Cost")) {
+        fileErrorListener.fileReadError("Click Log File Header is Invalid");
+      } else if (file == this.serverLog && !header.trim().equals("Entry Date,ID,Exit Date,Pages Viewed,Conversion")) {
+        fileErrorListener.fileReadError("Server Log File Header is Invalid");
+      }
+
       if (header != null) {
         bytesRead += header.length() + 1;
       }
+
 
       String line;
       while ((line = reader.readLine()) != null) {
         bytesRead += line.length() + 1;
         String[] columns = line.split(",");
         Object[] params = parser.parse(columns, counter);
+        batchParams.add(params);
 
-        if (params != null) {
-          batchParams.add(params);
+        if (counter == 1) {
+          String[] column0Split = columns[0].split(" ");
+          logger.info("colums[0]: " + columns[0]);
+          logger.info("column1Split[0]: " + column0Split[0]);
+
+          if (!campaignStartDate.equals("") && !(column0Split[0].equals(campaignStartDate))) {
+            logger.info("Start data mismatch: " + file.getName() + " starts at " + columns[1] + ". Expected "
+                    + campaignStartDate);
+            fileErrorListener.fileReadError("File " + file.getName() + "'s start date does not match the " +
+                    "previously uploaded files. These files may not all be from the same campaign.");
+            throw new IOException(file.getName() + " has a start date that doesn't match the previous files");
+          } else {
+            campaignStartDate = column0Split[0];
+            logger.info("Start date set to " + column0Split[0]);
+          }
+
         }
 
         counter++;
@@ -128,7 +159,8 @@ public class FileImportService {
               seenIDs.add(userID);
               return new Object[] { userID, columns[2], columns[3], columns[4], columns[5] };
             },
-            conn);
+        conn);
+
   }
 
 
@@ -230,12 +262,72 @@ public class FileImportService {
     }
   }
 
+  public void deleteInsertedData() {
+    try (Connection conn = DBHelper.getConnection()) {
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS impressionLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS clickLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS serverLog");
+      logger.info("Dropped all log database tables");
+    } catch (SQLException e) {
+      throw new RuntimeException("Error during import: " + e.getMessage(), e);
+    }
+  }
+
+  public boolean isDataLoaded() {
+    Connection conn = null;
+    boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
+    try {
+      conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");;
+
+      PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "impressionLog");
+      impressionTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "clickLog");
+      clickTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "serverLog");
+      serverTableExists = statement.executeQuery().next();
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    logger.info("isDataLoaded is returning " + (impressionTableExists && clickTableExists && serverTableExists));
+
+    return (impressionTableExists && clickTableExists && serverTableExists);
+  }
+
+
   public void setOnUploadStart(FileProgressBarListener listener) {
     this.fileProgressBarListener = listener;
   }
 
   public void setOnUploadLabelStart(FileProgressLabel listener) {
     this.fileProgressLabel = listener;
+  }
+
+  public void setOnFileError(FileErrorListener listener) {
+    this.fileErrorListener = listener;
   }
 
   public void setImpressionLog(File newImpressionLog) {
@@ -251,5 +343,9 @@ public class FileImportService {
   public void setServerLog(File newServerLog) {
     this.serverLog = newServerLog;
     operationLogger.log("File uploaded: " + newServerLog);
+  }
+
+  public void setCampaignStartDate(String newCampaignStartDate) {
+    this.campaignStartDate = newCampaignStartDate;
   }
 }

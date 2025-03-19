@@ -3,6 +3,10 @@ package com.university.grp20;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.university.grp20.controller.ChartController;
+import com.university.grp20.controller.MetricsController;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,12 +23,20 @@ public class UIManager {
   private static Stage primaryStage;
   private static Stage currentModal = null;
   private static final Map<String, Parent> ROOT_CACHE =
-      new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
-          return size() > CACHE_MAX_SIZE;
-        }
-      };
+          new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
+              return size() > CACHE_MAX_SIZE;
+            }
+          };
+
+  private static final Map<String, Object> CONTROLLER_CACHE =
+          new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+              return size() > CACHE_MAX_SIZE;
+            }
+          };
 
   public static void setPrimaryStage(Stage stage) {
     primaryStage = stage;
@@ -42,27 +54,46 @@ public class UIManager {
     try {
       Parent root = null;
       String key = null;
+      Object controller = null;
+
       if (useCache && loader.getLocation() != null) {
         key = loader.getLocation().toString();
         root = ROOT_CACHE.get(key);
+        controller = ROOT_CACHE.get(key);
       }
+
       if (root == null) {
         root = (loader.getRoot() == null) ? loader.load() : loader.getRoot();
         if (useCache && key != null) {
           ROOT_CACHE.put(key, root);
+          CONTROLLER_CACHE.put(key, loader.getController());
         }
       }
+
       Scene currentScene = primaryStage.getScene();
+
       if (currentScene == null) {
         currentScene = new Scene(root);
         primaryStage.setScene(currentScene);
       } else {
         currentScene.setRoot(root);
       }
+
       primaryStage.show();
+
+      if (loader.getLocation().toString().contains("ChartsScene.fxml")) {
+        logger.info("CHARTS SCENE IDENTIFIED");
+        controller = CONTROLLER_CACHE.get(key);
+        ((ChartController) controller).disableForViewer();
+      } else if (loader.getLocation().toString().contains("MetricsScene.fxml")) {
+        logger.info("METRICS SCENE IDENTIFIED");
+        controller = CONTROLLER_CACHE.get(key);
+        ((MetricsController) controller).disableForViewer();
+      }
+
     } catch (IOException e) {
       String loaderLocation =
-          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
+              (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
       logger.error("Error switching scene using loader: " + loaderLocation, e);
     }
   }
@@ -75,14 +106,17 @@ public class UIManager {
     try {
       Parent root = null;
       String key = null;
+      Object controller = null;
       if (useCache && loader.getLocation() != null) {
         key = loader.getLocation().toString();
         root = ROOT_CACHE.get(key);
+        controller = CONTROLLER_CACHE.get(key);
       }
       if (root == null) {
         root = (loader.getRoot() == null) ? loader.load() : loader.getRoot();
         if (useCache && key != null) {
           ROOT_CACHE.put(key, root);
+          CONTROLLER_CACHE.put(key, controller);
         }
       }
       Scene scene = new Scene(root);
@@ -97,7 +131,7 @@ public class UIManager {
       return modalStage;
     } catch (IOException e) {
       String loaderLocation =
-          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
+              (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
       logger.error("Error showing modal scene using loader: " + loaderLocation, e);
       return null;
     }

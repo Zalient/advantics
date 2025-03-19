@@ -3,27 +3,49 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.MetricsDTO;
+
 import java.io.IOException;
 
+import com.university.grp20.model.User;
+import javafx.application.Platform;
 import com.university.grp20.model.OperationLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MetricsController {
-  @FXML private Label impressionsLabel;
-  @FXML private Label clicksLabel;
-  @FXML private Label uniquesLabel;
-  @FXML private Label bouncesLabel;
-  @FXML private Label conversionsLabel;
-  @FXML private Label totalLabel;
-  @FXML private Label ctrLabel;
-  @FXML private Label cpaLabel;
-  @FXML private Label cpcLabel;
-  @FXML private Label cpmLabel;
-  @FXML private Label bounceRateLabel;
+  @FXML
+  private Label impressionsLabel;
+  @FXML
+  private Label clicksLabel;
+  @FXML
+  private Label uniquesLabel;
+  @FXML
+  private Label bouncesLabel;
+  @FXML
+  private Label conversionsLabel;
+  @FXML
+  private Label totalLabel;
+  @FXML
+  private Label ctrLabel;
+  @FXML
+  private Label cpaLabel;
+  @FXML
+  private Label cpcLabel;
+  @FXML
+  private Label cpmLabel;
+  @FXML
+  private Label bounceRateLabel;
+  @FXML
+  private Button backButton;
+  @FXML
+  private Button settingsButton;
+  @FXML
+  private Button filterButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
@@ -31,6 +53,20 @@ public class MetricsController {
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     setMetrics(calculateMetricsService.getMetrics(null));
+
+/**
+ * Platform.runLater(() -> {
+ *       logger.info("Detected role: " + User.getRole());
+ *
+ *       if (User.getRole().equals("Viewer")) {
+ *         backButton.setVisible(false);
+ *       } else {
+ *         backButton.setVisible(true);
+ *       }
+ *     });
+ */
+
+
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
@@ -45,14 +81,18 @@ public class MetricsController {
     cpaLabel.setText(String.format("%.2f pounds per conversion", metricsDTO.getCpa() / 100));
     cpcLabel.setText(String.format("%.2f pence per click", metricsDTO.getCpc()));
     cpmLabel.setText(
-        String.format("%.2f pounds per thousand impressions", metricsDTO.getCpm() / 100));
+            String.format("%.2f pounds per thousand impressions", metricsDTO.getCpm() / 100));
     bounceRateLabel.setText(String.format("%.2f bounces per click", metricsDTO.getBounceRate()));
   }
 
   @FXML
   private void showFileSelection() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
-    operationLogger.log("Back button clicked, returned to file selection page");
+    if (User.getRole().equals("Viewer")) {
+      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
+    } else {
+      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+    }
+
   }
 
   @FXML
@@ -77,5 +117,18 @@ public class MetricsController {
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
     operationLogger.log("Charts page chosen, displaying charts page");
+  }
+
+  @FXML
+  private void handleSettingsLoad() {
+    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/SettingsScene.fxml"), false);
+  }
+
+  public void disableForViewer() {
+    logger.info("disableForViewer called");
+
+    filterButton.setDisable(User.getRole().equals("Viewer"));
+
+
   }
 }
