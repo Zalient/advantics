@@ -2,10 +2,13 @@ package com.university.grp20.model;
 
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
+import com.university.grp20.controller.FileErrorListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +22,9 @@ public class FileImportService {
   private File serverLog;
   private ProgressBarListener progressBarListener;
   private ProgressLabel progressLabel;
+  private FileErrorListener fileErrorListener;
+  private String campaignStartDate = "";
+  private final OperationLogger operationLogger = new OperationLogger();
 
   public boolean isReady() {
     return impressionLog != null && clickLog != null && serverLog != null;
@@ -30,18 +36,18 @@ public class FileImportService {
   }
 
   private void processFile(
-      File file,
-      String label,
-      String deleteSql,
-      String insertSql,
-      LineParser parser,
-      Connection conn) {
+          File file,
+          String label,
+          String deleteSql,
+          String insertSql,
+          LineParser parser,
+          Connection conn) {
     try {
       DBHelper.executeUpdate(conn, deleteSql);
       logger.info("Deleted existing rows for table associated with file: " + file.getName());
     } catch (SQLException e) {
       throw new RuntimeException(
-          "Error clearing table for file " + file.getName() + ": " + e.getMessage(), e);
+              "Error clearing table for file " + file.getName() + ": " + e.getMessage(), e);
     }
 
     progressLabel.labelText(label);
@@ -55,20 +61,48 @@ public class FileImportService {
 
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
       String header = reader.readLine();
+
+      if (file == this.impressionLog && !header.trim().equals("Date,ID,Gender,Age,Income,Context,Impression Cost")) {
+        fileErrorListener.fileReadError("Impression Log File Header is Invalid");
+      } else if (file == this.clickLog && !header.trim().equals("Date,ID,Click Cost")) {
+        fileErrorListener.fileReadError("Click Log File Header is Invalid");
+      } else if (file == this.serverLog && !header.trim().equals("Entry Date,ID,Exit Date,Pages Viewed,Conversion")) {
+        fileErrorListener.fileReadError("Server Log File Header is Invalid");
+      }
+
       if (header != null) {
         bytesRead += header.length() + 1;
       }
+
 
       String line;
       while ((line = reader.readLine()) != null) {
         bytesRead += line.length() + 1;
         String[] columns = line.split(",");
         Object[] params = parser.parse(columns, counter);
-
+        
         if (params != null) {
           batchParams.add(params);
         }
 
+        if (counter == 1) {
+          String[] column0Split = columns[0].split(" ");
+          logger.info("colums[0]: " + columns[0]);
+          logger.info("column1Split[0]: " + column0Split[0]);
+
+          if (!campaignStartDate.equals("") && !(column0Split[0].equals(campaignStartDate))) {
+            logger.info("Start data mismatch: " + file.getName() + " starts at " + columns[1] + ". Expected "
+                    + campaignStartDate);
+            fileErrorListener.fileReadError("File " + file.getName() + "'s start date does not match the " +
+                    "previously uploaded files. These files may not all be from the same campaign.");
+            throw new IOException(file.getName() + " has a start date that doesn't match the previous files");
+          } else {
+            campaignStartDate = column0Split[0];
+            logger.info("Start date set to " + column0Split[0]);
+          }
+
+        }
+        
         counter++;
 
         if (batchParams.size() >= updateThreshold) {
@@ -84,24 +118,51 @@ public class FileImportService {
       progressBarListener.progressBar(1.0);
     } catch (IOException | SQLException e) {
       throw new RuntimeException(
-          "Error processing file " + file.getName() + ": " + e.getMessage(), e);
+              "Error processing file " + file.getName() + ": " + e.getMessage(), e);
     }
   }
 
   private void importImpressionLog(Connection conn) {
     String deleteImpressionSql = "DELETE FROM impressionLog";
     String insertImpressionSql =
-        "INSERT INTO impressionLog (impressionID, Date, ID, ImpressionCost) VALUES (?, ?, ?, ?)";
+            "INSERT INTO impressionLog (impressionID, Date, ID, ImpressionCost) VALUES (?, ?, ?, ?)";
     processFile(
-        impressionLog,
-        "Importing impression log...",
-        deleteImpressionSql,
-        insertImpressionSql,
-        (columns, counter) ->
-            new Object[] {
-              counter, columns[0], Long.parseLong(columns[1]), Double.parseDouble(columns[6])
+            impressionLog,
+            "Importing impression log...",
+            deleteImpressionSql,
+            insertImpressionSql,
+            (columns, counter) ->
+                    new Object[] {
+                            counter,
+                            columns[0],
+                            Long.parseLong(columns[1]),
+                            Double.parseDouble(columns[6])
+                    },
+            conn);
+  }
+
+  private void importUserData(Connection conn) {
+    String deleteUserSql = "DELETE FROM userData";
+    String insertUserSql =
+            "INSERT OR IGNORE INTO userData (ID, Gender, Age, Income, Context) VALUES (?, ?, ?, ?, ?)";
+    Set<Long> seenIDs = new HashSet<>();
+    processFile(
+            impressionLog,
+            "Importing user data...",
+            deleteUserSql,
+            insertUserSql,
+            (columns, counter) -> {
+              long userID = Long.parseLong(columns[1]);
+
+              if (seenIDs.contains(userID)) {
+                return null;
+              }
+
+              seenIDs.add(userID);
+              return new Object[] { userID, columns[2], columns[3], columns[4], columns[5] };
             },
         conn);
+
   }
 
   private void importUserData(Connection conn) {
@@ -165,6 +226,16 @@ public class FileImportService {
 
   private void createTables(Connection conn) {
     try {
+      DBHelper.executeUpdate(
+              conn,
+              "CREATE TABLE IF NOT EXISTS userData ("
+                      + "ID LONG, "
+                      + "Gender TEXT, "
+                      + "Age TEXT, "
+                      + "Income TEXT, "
+                      + "Context TEXT);");
+      logger.info("Created userData table");
+
       DBHelper.executeUpdate(
           conn,
           "CREATE TABLE IF NOT EXISTS userData ("
@@ -273,6 +344,61 @@ public class FileImportService {
     }
   }
 
+  public void deleteInsertedData() {
+    try (Connection conn = DBHelper.getConnection()) {
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS impressionLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS clickLog");
+      DBHelper.executeUpdate(
+              conn,
+              "DROP TABLE IF EXISTS serverLog");
+      logger.info("Dropped all log database tables");
+    } catch (SQLException e) {
+      throw new RuntimeException("Error during import: " + e.getMessage(), e);
+    }
+  }
+
+  public boolean isDataLoaded() {
+    Connection conn = null;
+    boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
+    try {
+      conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");;
+
+      PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "impressionLog");
+      impressionTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "clickLog");
+      clickTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "serverLog");
+      serverTableExists = statement.executeQuery().next();
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+    }
+
+    logger.info("isDataLoaded is returning " + (impressionTableExists && clickTableExists && serverTableExists));
+
+    return (impressionTableExists && clickTableExists && serverTableExists);
+  }
+
+
   public void setOnUploadStart(ProgressBarListener listener) {
     this.progressBarListener = listener;
   }
@@ -281,15 +407,26 @@ public class FileImportService {
     this.progressLabel = listener;
   }
 
+  public void setOnFileError(FileErrorListener listener) {
+    this.fileErrorListener = listener;
+  }
+
   public void setImpressionLog(File newImpressionLog) {
     this.impressionLog = newImpressionLog;
+    operationLogger.log("File uploaded: " + newImpressionLog);
   }
 
   public void setClickLog(File newClickLog) {
     this.clickLog = newClickLog;
+    operationLogger.log("File uploaded: " + newClickLog);
   }
 
   public void setServerLog(File newServerLog) {
     this.serverLog = newServerLog;
+    operationLogger.log("File uploaded: " + newServerLog);
+  }
+
+  public void setCampaignStartDate(String newCampaignStartDate) {
+    this.campaignStartDate = newCampaignStartDate;
   }
 }

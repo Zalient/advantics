@@ -5,7 +5,9 @@ import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.FilterCriteriaDTO;
 import com.university.grp20.model.GenerateChartService;
 import com.university.grp20.model.MetricsDTO;
+import com.university.grp20.model.OperationLogger;
 import javafx.application.Platform;
+import com.university.grp20.model.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -33,6 +35,7 @@ public class FilterSelectionController {
   private FilterMode filterMode;
   private MetricsController metricsController;
   private ChartViewer chartViewer;
+  private final OperationLogger operationLogger = new OperationLogger();
 
   public void setFilterMode(FilterMode mode) {
     this.filterMode = mode;
@@ -69,6 +72,7 @@ public class FilterSelectionController {
     calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
     FilterCriteriaDTO filterCriteriaDTO = buildFilterCriteria();
+    operationLogger.log("Filters chosen and applied");
 
     if (filterMode == FilterMode.METRICS) {
       logger.info("Calculating filtered metrics");
@@ -110,6 +114,7 @@ public class FilterSelectionController {
 
   @FXML
   private void quit() {
+    operationLogger.log("Quit button selected");
     UIManager.closeModal();
   }
 
