@@ -2,12 +2,8 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.FileImportService;
-import java.io.File;
-import java.io.IOException;
-import java.util.function.Consumer;
-
-import com.university.grp20.model.User;
 import com.university.grp20.model.OperationLogger;
+import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +17,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.function.Consumer;
 
 public class FileSelectionController {
   @FXML private Button impressionLogButton;

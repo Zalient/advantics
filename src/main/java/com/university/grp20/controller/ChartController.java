@@ -1,23 +1,16 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
-
 import com.university.grp20.model.ExportService;
-
-import com.university.grp20.model.CalculateMetricsService;
-
-
 import com.university.grp20.model.GenerateChartService;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import com.university.grp20.model.User;
-import javafx.application.Platform;
 import com.university.grp20.model.OperationLogger;
+import com.university.grp20.model.User;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
@@ -34,7 +27,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 
-import java.awt.Color;
+import java.awt.*;
+import java.io.IOException;
+import java.util.Optional;
 
 public class ChartController {
 
@@ -243,8 +238,8 @@ public class ChartController {
     chartViewer.setUserData(metricType);
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    VBox chartBox = new VBox();
-
+    VBox chartBox;
+    HBox buttonBox = new HBox();
 
     if (chart.getPlot() instanceof CategoryPlot) {
       CategoryPlot chartPlot = chart.getCategoryPlot();
@@ -255,38 +250,36 @@ public class ChartController {
 
       Button filterButton = new Button("Filter");
       filterButton.setOnAction(e -> showFilterSelection(chartViewer));
-      chartBox.getChildren().add(0, filterButton);
+      buttonBox.getChildren().add(0, filterButton);
     }
 
     Button exportPDFButton = new Button("Export as PDF");
     exportPDFButton.setOnAction(e -> {
-        try{
-          String filePath = ExportService.askForPDFFilename();
-          ExportService.chartToPDF(chartViewer.getChart(), filePath);
-        } catch (IOException ex){
-          ex.printStackTrace();
-        }
+      try{
+        String filePath = ExportService.askForPDFFilename();
+        ExportService.chartToPDF(chartViewer.getChart(), filePath);
+      } catch (IOException ex){
+        ex.printStackTrace();
+      }
     });
 
     Button exportCSVButton = new Button("Export as CSV");
     exportCSVButton.setOnAction(e -> {
-        try {
-          String filePath = ExportService.askForCSVFilename();
-          ExportService.chartToCSV(chartViewer.getChart(), filePath);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+      try {
+        String filePath = ExportService.askForCSVFilename();
+        ExportService.chartToCSV(chartViewer.getChart(), filePath);
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
     });
 
-    HBox buttonBox = new HBox(exportPDFButton, exportCSVButton);
+    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton);
     buttonBox.setSpacing(10);
     chartBox = new VBox(buttonBox, chartViewer);
 
 
     addChartFlowPane.getChildren().add(chartBox);
   }
-
-
 
   private void addHistogram(int numBins) {
     JFreeChart chart = new GenerateChartService().clickCostHistogram(numBins);

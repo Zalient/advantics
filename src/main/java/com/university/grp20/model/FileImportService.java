@@ -1,11 +1,15 @@
 package com.university.grp20.model;
 
+import com.university.grp20.controller.FileErrorListener;
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
-import com.university.grp20.controller.FileErrorListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
