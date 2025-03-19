@@ -4,6 +4,8 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.FileImportService;
 import java.io.File;
 import java.util.function.Consumer;
+
+import com.university.grp20.model.OperationLogger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,6 +25,7 @@ public class FileSelectionController {
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   private void startImport() {
@@ -32,6 +35,7 @@ public class FileSelectionController {
     impressionLogButton.setDisable(true);
     clickLogButton.setDisable(true);
     serverLogButton.setDisable(true);
+    operationLogger.log("Files chosen import starting");
     Thread importDataThread =
         new Thread(
             () -> {
@@ -47,6 +51,7 @@ public class FileSelectionController {
                     () ->
                         UIManager.switchScene(
                             UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
+                            operationLogger.log("Metrics dashboard displayed");
               } catch (Exception e) {
                 Platform.runLater(this::resetUI);
                 throw new RuntimeException(
@@ -60,16 +65,19 @@ public class FileSelectionController {
   private void handleImpressionUpload() {
     selectFile(
         "Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
+    operationLogger.log("Impression log file chooser displayed");
   }
 
   @FXML
   private void handleClickUpload() {
     selectFile("Select Click Log File", fileImportService::setClickLog, clickLogButton);
+    operationLogger.log("Click log file chooser displayed");
   }
 
   @FXML
   private void handleServerUpload() {
     selectFile("Select Server Log File", fileImportService::setServerLog, serverLogButton);
+    operationLogger.log("Server log file chooser displayed");
   }
 
   private void selectFile(String title, Consumer<File> fileSetter, Button sourceButton) {

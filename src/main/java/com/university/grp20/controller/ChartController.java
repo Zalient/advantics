@@ -4,6 +4,8 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.GenerateChartService;
 import java.io.IOException;
 import java.util.Optional;
+
+import com.university.grp20.model.OperationLogger;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +21,10 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.fx.ChartViewer;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -30,19 +35,23 @@ public class ChartController {
   @FXML private FlowPane addChartFlowPane;
 
   private final Logger logger = LogManager.getLogger(ChartController.class);
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
   private void showMetrics() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+    operationLogger.log("Metrics page chosen, displaying metrics dashboard");
   }
 
   @FXML
   private void showFileSelection() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+    operationLogger.log("Back button clicked, returned to file selection page");
   }
 
   @FXML
   private void showFilterSelection(ChartViewer chartViewer) {
+    operationLogger.log("Charts filter chosen, displaying filter options");
     try {
       FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
       loader.load();
@@ -61,72 +70,85 @@ public class ChartController {
   private void addImpressionsChart() {
     JFreeChart chart = new GenerateChartService().impressionsChart();
     addChart(chart, "Impressions");
+    operationLogger.log("Impressions chart chosen and displayed");
   }
 
   @FXML
   private void addClicksChart() {
     JFreeChart chart = new GenerateChartService().clicksChart();
     addChart(chart, "Clicks");
+    operationLogger.log("Clicks chart chosen and displayed");
   }
 
   @FXML
   private void addUniquesChart() {
     JFreeChart chart = new GenerateChartService().uniquesChart();
     addChart(chart, "Uniques");
+    operationLogger.log("Uniques chart chosen and displayed");
   }
 
   @FXML
   private void addBouncesChart() {
     JFreeChart chart = new GenerateChartService().bouncesChart();
     addChart(chart, "Bounces");
+    operationLogger.log("Bounces chart chosen and displayed");
   }
 
   @FXML
   private void addConversionsChart() {
     JFreeChart chart = new GenerateChartService().conversionsChart();
     addChart(chart, "Conversions");
+    operationLogger.log("Conversions chart chosen and displayed");
+
   }
 
   @FXML
   private void addTotalCostChart() {
     JFreeChart chart = new GenerateChartService().totalCostChart();
     addChart(chart, "Total Cost");
+    operationLogger.log("Total Cost chart chosen and displayed");
   }
 
   @FXML
   private void addCTRChart() {
     JFreeChart chart = new GenerateChartService().ctrChart();
     addChart(chart, "CTR");
+    operationLogger.log("CTR chart chosen and displayed");
   }
 
   @FXML
   private void addCPAChart() {
     JFreeChart chart = new GenerateChartService().cpaChart();
     addChart(chart, "CPA");
+    operationLogger.log("CPA chart chosen and displayed");
   }
 
   @FXML
   private void addCPCChart() {
     JFreeChart chart = new GenerateChartService().cpcChart();
     addChart(chart, "CPC");
+    operationLogger.log("CPC chart chosen and displayed");
   }
 
   @FXML
   private void addCPMChart() {
     JFreeChart chart = new GenerateChartService().cpmChart();
     addChart(chart, "CPM");
+    operationLogger.log("CPM chart chosen and displayed");
   }
 
   @FXML
   private void addBounceRateChart() {
     JFreeChart chart = new GenerateChartService().bounceRateChart();
     addChart(chart, "Bounce Rate");
+    operationLogger.log("Bounce Rate chart chosen and displayed");
   }
 
   @FXML
   private void binSizePrompt() {
     Dialog<Integer> numBinsDialog = new Dialog<>();
     numBinsDialog.setTitle("Set Number Of Bins");
+    operationLogger.log("Click Cost histogram chosen, bin size prompt displayed");
 
     TextField numBinsField = new TextField();
     numBinsField.setPromptText("Enter Number Of Bins");
@@ -161,19 +183,31 @@ public class ChartController {
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.prefHeightProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.setUserData(metricType);
-
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    Button filterButton = new Button("Filter");
-    filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+    VBox chartBox = new VBox(chartViewer);
 
-    VBox chartBox = new VBox(filterButton, chartViewer);
+    if (chart.getPlot() instanceof CategoryPlot) {
+      CategoryPlot chartPlot = chart.getCategoryPlot();
+      CategoryAxis xAxis = chartPlot.getDomainAxis();
+      xAxis.setCategoryLabelPositions(
+              CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4)
+      );
+
+      Button filterButton = new Button("Filter");
+      filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+      chartBox.getChildren().add(0, filterButton);
+    }
+
     addChartFlowPane.getChildren().add(chartBox);
   }
+
+
 
   private void addHistogram(int numBins) {
     JFreeChart chart = new GenerateChartService().clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
+    operationLogger.log("Bin size chosen and histogram displayed");
 
     XYPlot plot = (XYPlot) chart.getPlot();
     XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
