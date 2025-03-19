@@ -40,6 +40,10 @@ public class MetricsController {
   private Button settingsButton;
   @FXML
   private Button filterButton;
+  @FXML
+  private Button pdfButton;
+  @FXML
+  private Button csvButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
@@ -139,8 +143,11 @@ public class MetricsController {
 
   public void disableForViewer() {
     logger.info("disableForViewer called");
+    boolean status = User.getRole().equals("Viewer");
 
-    filterButton.setDisable(User.getRole().equals("Viewer"));
+    filterButton.setDisable(status);
+    pdfButton.setDisable(status);
+    csvButton.setDisable(status);
 
 
   }

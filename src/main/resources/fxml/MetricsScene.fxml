@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
@@ -215,13 +223,11 @@
             </children>
         </GridPane>
 
-      <Button layoutX="1130.0" layoutY="94.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="172.0"
-              onAction="#saveAsPDF" stylesheets="@../styles/styles.css" text="Save as PDF">
+      <Button fx:id="pdfButton" layoutX="1130.0" layoutY="94.0" mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="40.0" prefWidth="172.0" stylesheets="@../styles/styles.css" text="Save as PDF">
          <font>
             <Font size="10.0" />
          </font></Button>
-      <Button layoutX="1130.0" layoutY="170.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0"
-              onAction="#saveAsCSV" stylesheets="@../styles/styles.css" text="Save as CSV">
+      <Button fx:id="csvButton" layoutX="1130.0" layoutY="170.0" mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="40.0" prefWidth="100.0" stylesheets="@../styles/styles.css" text="Save as CSV">
          <font>
             <Font size="10.0" />
          </font></Button>

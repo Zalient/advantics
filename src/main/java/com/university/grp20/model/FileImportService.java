@@ -224,16 +224,6 @@ public class FileImportService {
 
       DBHelper.executeUpdate(
           conn,
-          "CREATE TABLE IF NOT EXISTS userData ("
-              + "ID LONG, "
-              + "Gender TEXT, "
-              + "Age TEXT, "
-              + "Income TEXT, "
-              + "Context TEXT);");
-      logger.info("Created userData table");
-
-      DBHelper.executeUpdate(
-          conn,
           "CREATE TABLE IF NOT EXISTS impressionLog ("
               + "impressionID INTEGER, "
               + "Date DATETIME, "
@@ -314,15 +304,38 @@ public class FileImportService {
     logger.info("Created table indexes");
   }
 
+  private void dropTableIndexes(Connection conn) throws SQLException {
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_gender");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_age");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_income");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_context");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_serverId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_EntryDate");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_ExitDate");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_PagesViewed");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_Conversion");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_impressionId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_Date");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_impressionCost");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_clickId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_date");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_clickCost");
+    logger.info("Dropped table indexes");
+  }
+
   public void runFullImport() {
     try (Connection conn = DBHelper.getConnection()) {
       conn.setAutoCommit(false);
+      dropTableIndexes(conn);
       createTables(conn);
       importImpressionLog(conn);
       importUserData(conn);
       importClickLog(conn);
       importServerLog(conn);
-      createTableIndexes(conn);
+      createTableIndexes(conn); // PROBLEM
       conn.setAutoCommit(true);
       logger.info("Data import complete");
     } catch (SQLException e) {
@@ -335,6 +348,8 @@ public class FileImportService {
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS impressionLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS clickLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS serverLog");
+      DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS userData");
+      // PROBLEM
       logger.info("Dropped all log database tables");
     } catch (SQLException e) {
       throw new RuntimeException("Error during import: " + e.getMessage(), e);

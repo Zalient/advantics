@@ -61,13 +61,22 @@ public class ChartController {
   public void disableForViewer() {
     logger.info("disableForViewer called");
 
-    addChartButton.setDisable(User.getRole().equals("Viewer"));
+    boolean status = User.getRole().equals("Viewer");
+
+    addChartButton.setDisable(status);
 
     addChartFlowPane.getChildren().forEach(node -> {
       if (node instanceof VBox vbox) {
-        vbox.getChildren().forEach(child -> {
-          if (child instanceof Button button && button.getText().equals("Filter")) {
-            button.setDisable(User.getRole().equals("Viewer"));
+        vbox.getChildren().forEach(vBoxElement -> {
+          if (vBoxElement instanceof HBox foundHBox) {
+            foundHBox.getChildren().forEach(foundButton -> {
+              if (foundButton instanceof Button currentButton) {
+                String buttonText = currentButton.getText();
+                if (buttonText.equals("Filter") || buttonText.equals("Export as PDF") || buttonText.equals("Export as CSV")) {
+                  currentButton.setDisable(status);
+                }
+              }
+            });
           }
         });
       }
@@ -84,12 +93,12 @@ public class ChartController {
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
-       operationLogger.log("Back button clicked, returned to login page");
+      operationLogger.log("Back button clicked, returned to login page");
     } else {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
       operationLogger.log("Back button clicked, returned to file upload page");
     }
-   
+
   }
 
   @FXML
@@ -255,10 +264,10 @@ public class ChartController {
 
     Button exportPDFButton = new Button("Export as PDF");
     exportPDFButton.setOnAction(e -> {
-      try{
+      try {
         String filePath = ExportService.askForPDFFilename();
         ExportService.chartToPDF(chartViewer.getChart(), filePath);
-      } catch (IOException ex){
+      } catch (IOException ex) {
         ex.printStackTrace();
       }
     });

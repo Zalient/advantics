@@ -47,6 +47,9 @@ public class SettingsController {
     @FXML private RadioButton timeSpentOpt;
     @FXML private Button bounceChooser;
     @FXML private ToggleGroup bounceGroup;
+    @FXML private HBox exportLogHBox;
+    @FXML private HBox metricsTitleBox;
+    @FXML private VBox metricsVBox;
 
     private LoginService loginService = new LoginService();
     private OperationLogger OperationLogger = new OperationLogger();
@@ -71,7 +74,13 @@ public class SettingsController {
       // If user isn't an admin them remove all of the admin only settings
       if (!User.getRole().equals("Admin")) {
           VBox content = (VBox) settingsScrollPane.getContent();
-          content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
+          content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane, exportLogHBox);
+      }
+
+      // If user is a viewer remove metrics settings
+      if (User.getRole().equals("Viewer")) {
+        VBox content = (VBox) settingsScrollPane.getContent();
+        content.getChildren().removeAll(metricsTitleBox, metricsVBox);
       }
     }
 
