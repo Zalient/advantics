@@ -1,5 +1,6 @@
 package com.university.grp20.controller;
 
+import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
@@ -76,30 +77,12 @@ public class LoginController {
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
-        try {
-          FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FileSelectionScene.fxml"));
-          Parent root = null;
-          root = loader.load();
-          Stage stage = (Stage) loginButton.getScene().getWindow();
-          stage.setScene(new Scene(root));
-          stage.setTitle("Advertising Dashboard");
-          stage.show();
-        } catch (IOException e) {
-          logger.info("Error reading FXML file");
-        }
+          UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
 
       } else if (role.equals("Viewer")) {
         if (loginService.isDataLoaded()) {
-          try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MetricsScene.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Advertising Dashboard");
-            stage.show();
-          } catch (IOException e) {
-            logger.info("Error reading FXML file");
-          }
+            UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error!");

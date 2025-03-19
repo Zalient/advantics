@@ -81,7 +81,9 @@ public class FileImportService {
         bytesRead += line.length() + 1;
         String[] columns = line.split(",");
         Object[] params = parser.parse(columns, counter);
-        batchParams.add(params);
+        if (params != null) {
+          batchParams.add(params);
+        }
 
         if (counter == 1) {
           String[] column0Split = columns[0].split(" ");
