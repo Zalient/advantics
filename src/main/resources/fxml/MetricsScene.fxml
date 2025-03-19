@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
+<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1280" AnchorPane.topAnchor="0.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#showFileSelection" stylesheets="@../styles/styles.css" text="Back">
+                <Button fx:id="backButton" mnemonicParsing="false" onAction="#showFileSelection" stylesheets="@../styles/styles.css" text="Back">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin>
@@ -35,7 +35,7 @@
                     </HBox.margin>
                 </ToggleButton>
                 <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                <Button mnemonicParsing="false" onAction="#showMetricsFilter" stylesheets="@../styles/styles.css" text="Filter">
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#showMetricsFilter" stylesheets="@../styles/styles.css" text="Filter">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin>
@@ -214,6 +214,7 @@
                 </VBox>
             </children>
         </GridPane>
+
       <Button layoutX="1130.0" layoutY="94.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="172.0"
               onAction="#saveAsPDF" stylesheets="@../styles/styles.css" text="Save as PDF">
          <font>
