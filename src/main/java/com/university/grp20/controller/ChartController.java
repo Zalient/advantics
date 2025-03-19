@@ -3,6 +3,7 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.GenerateChartService;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -11,12 +12,7 @@ import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -27,24 +23,49 @@ import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
+
 import java.awt.Color;
 
 public class ChartController {
 
-  @FXML private FlowPane addChartFlowPane;
-  @FXML private Button backButton;
+  @FXML
+  private FlowPane addChartFlowPane;
+  @FXML
+  private Button backButton;
+  @FXML
+  private MenuButton addChartButton;
 
   private final Logger logger = LogManager.getLogger(ChartController.class);
 
   @FXML
   private void initialize() {
 
-    Platform.runLater(() -> {
-      if (User.getRole().equals("Viewer")) {
-        backButton.setVisible(false);
+    /**
+     * Platform.runLater(() -> {
+     *       if (User.getRole().equals("Viewer")) {
+     *         backButton.setVisible(false);
+     *       }
+     *     });
+     */
+
+
+  }
+
+
+  public void disableForViewer() {
+    logger.info("disableForViewer called");
+
+    addChartButton.setDisable(User.getRole().equals("Viewer"));
+
+    addChartFlowPane.getChildren().forEach(node -> {
+      if (node instanceof VBox vbox) {
+        vbox.getChildren().forEach(child -> {
+          if (child instanceof Button button && button.getText().equals("Filter")) {
+            button.setDisable(User.getRole().equals("Viewer"));
+          }
+        });
       }
     });
-
   }
 
   @FXML
@@ -54,22 +75,34 @@ public class ChartController {
 
   @FXML
   private void showFileSelection() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+    if (User.getRole().equals("Viewer")) {
+      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
+    } else {
+      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+    }
   }
 
   @FXML
   private void showFilterSelection(ChartViewer chartViewer) {
-    try {
-      FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
-      loader.load();
+    if (!User.getRole().equals("Viewer")) {
+      try {
+        FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
+        loader.load();
 
-      FilterSelectionController controller = loader.getController();
-      controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
-      controller.setChartViewer(chartViewer);
+        FilterSelectionController controller = loader.getController();
+        controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
+        controller.setChartViewer(chartViewer);
 
-      UIManager.showModal(loader, false);
-    } catch (IOException e) {
-      logger.error("Error loading chart filter: " + e.getMessage());
+        UIManager.showModal(loader, false);
+      } catch (IOException e) {
+        logger.error("Error loading chart filter: " + e.getMessage());
+      }
+    } else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("Viewers cannot filter charts. Please contact an editor or administrator.");
+      alert.showAndWait();
     }
   }
 
@@ -154,19 +187,19 @@ public class ChartController {
     numBinsDialog.getDialogPane().getButtonTypes().setAll(applyButton, cancelButton);
 
     numBinsDialog.setResultConverter(
-        dialogButton -> {
-          if (dialogButton == applyButton) {
-            String input = numBinsField.getText();
-            try {
-              return Integer.parseInt(input);
-            } catch (NumberFormatException ex) {
-              Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setContentText("Input is not an integer, wrong type");
-              alert.showAndWait();
-            }
-          }
-          return null;
-        });
+            dialogButton -> {
+              if (dialogButton == applyButton) {
+                String input = numBinsField.getText();
+                try {
+                  return Integer.parseInt(input);
+                } catch (NumberFormatException ex) {
+                  Alert alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setContentText("Input is not an integer, wrong type");
+                  alert.showAndWait();
+                }
+              }
+              return null;
+            });
 
     Optional<Integer> numBinsRes = numBinsDialog.showAndWait();
     numBinsRes.ifPresent(this::addHistogram);

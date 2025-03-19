@@ -43,7 +43,7 @@
                     </HBox.margin>
                 </ToggleButton>
                 <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                <Button mnemonicParsing="false" onAction="#showMetricsFilter" stylesheets="@../styles/styles.css" text="Filter">
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#showMetricsFilter" stylesheets="@../styles/styles.css" text="Filter">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin>

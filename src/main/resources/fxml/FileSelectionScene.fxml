@@ -11,9 +11,14 @@
 
 <AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>
-      <Button fx:id="logoutButton" layoutX="25.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="60.0" prefWidth="140.0" stylesheets="@../styles/styles.css" text="Logout">
+      <Button fx:id="logoutButton" layoutX="35.0" layoutY="644.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="60.0" prefWidth="140.0" stylesheets="@../styles/styles.css" text="Logout">
          <font>
             <Font size="22.0" />
+         </font>
+      </Button>
+      <Button fx:id="skipButton" layoutX="1106.0" layoutY="644.0" mnemonicParsing="false" onAction="#handleSkip" prefHeight="86.0" prefWidth="181.0" stylesheets="@../styles/styles.css" text="Skip">
+         <font>
+            <Font size="23.0" />
          </font>
       </Button>
         <VBox alignment="CENTER" layoutY="95.0" prefHeight="505.0" prefWidth="1280.0" spacing="50.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="95.0">

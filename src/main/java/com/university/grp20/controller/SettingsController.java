@@ -66,6 +66,12 @@ public class SettingsController {
           boolean bSuccessful = loginService.addUser(enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
 
           if (bSuccessful) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText(null);
+            alert.setContentText("New user \"" + enteredUsername + "\" was successfully added to the database");
+            alert.showAndWait();
+
             addUsernameField.setText("");
             addPasswordField.setText("");
             selectRoleMenu.getSelectionModel().clearSelection();

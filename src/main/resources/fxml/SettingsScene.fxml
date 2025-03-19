@@ -108,7 +108,7 @@
                </children>
             </HBox>
                 <HBox fx:id="userManagementTitleBox" prefHeight="50.0" prefWidth="200.0">
-                    <Label style="-fx-font-weight: bold;" text="User Management {Admin Only}">
+                    <Label style="-fx-font-weight: bold;" text="User Management [Admin Only]">
                         <font>
                             <Font size="18.0" />
                         </font>

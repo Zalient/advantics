@@ -54,7 +54,7 @@
                         </HBox.margin>
                     </ToggleButton>
                     <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                    <MenuButton stylesheets="@../styles/styles.css" text="Add">
+                    <MenuButton fx:id="addChartButton" stylesheets="@../styles/styles.css" text="Add">
                         <items>
                             <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
                             <MenuItem mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks" />

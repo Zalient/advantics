@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -248,6 +250,43 @@ public class FileImportService {
     }
   }
 
+  public boolean isDataLoaded() {
+    Connection conn = null;
+    boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
+    try {
+      conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");;
+
+      PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "impressionLog");
+      impressionTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "clickLog");
+      clickTableExists = statement.executeQuery().next();
+
+      statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      statement.setString(1, "serverLog");
+      serverTableExists = statement.executeQuery().next();
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
+        try {
+          //Attempt to close the connection to the database
+          conn.close();
+          logger.info("Connection to database has been closed");
+        } catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+    }
+
+    logger.info("isDataLoaded is returning " + (impressionTableExists && clickTableExists && serverTableExists));
+
+    return (impressionTableExists && clickTableExists && serverTableExists);
+  }
 
 
   public void setOnUploadStart(FileProgressBarListener listener) {

@@ -33,6 +33,7 @@ public class FileSelectionController {
   @FXML private Label impressionPathLabel;
   @FXML private Label clickPathLabel;
   @FXML private Label serverPathLabel;
+  @FXML private Button skipButton;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
@@ -63,6 +64,7 @@ public class FileSelectionController {
       clickLogButton.setDisable(true);
       serverLogButton.setDisable(true);
       logoutButton.setDisable(true);
+      skipButton.setDisable(true);
       Thread importDataThread =
               new Thread(
                       () -> {
@@ -127,7 +129,19 @@ public class FileSelectionController {
       logger.info("Error reading FXML file");
     }
 
+  }
 
+  @FXML
+  private void handleSkip() {
+    if (fileImportService.isDataLoaded()) {
+      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+    } else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("You cannot Skip if data has not already been uploaded into the database.");
+      alert.showAndWait();
+    }
   }
 
   private void selectFile(String title, Consumer<File> fileSetter, Button sourceButton) {
@@ -175,6 +189,7 @@ public class FileSelectionController {
     serverLogButton.setDisable(false);
     nextButton.setDisable(true);
     logoutButton.setDisable(false);
+    skipButton.setDisable(false);
     impressionPathLabel.setText("File Path");
     clickPathLabel.setText("File Path");
     serverPathLabel.setText("File Path");
