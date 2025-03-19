@@ -85,6 +85,9 @@ public class SettingsController {
             addUsernameField.setText("");
             addPasswordField.setText("");
             selectRoleMenu.getSelectionModel().clearSelection();
+
+            selectUserMenu.getItems().add(enteredUsername);
+
           } else {
             showError("Something went wrong when adding the user to the database.");
           }

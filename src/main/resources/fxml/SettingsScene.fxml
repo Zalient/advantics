@@ -25,16 +25,21 @@
     <ScrollPane fx:id="settingsScrollPane" layoutY="82.0" prefHeight="638.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="82.0">
         <content>
             <VBox alignment="TOP_CENTER" prefHeight="613.0" prefWidth="1278.0" spacing="10.0">
-                <HBox prefHeight="25.0" prefWidth="600.0">
-                    <Label style="-fx-font-weight: bold;" text="Metrics">
-                        <font>
-                            <Font size="20.0" />
-                        </font>
-                        <padding>
-                            <Insets left="10.0" />
-                        </padding>
-                    </Label>
-                </HBox>
+            <HBox prefHeight="32.0" prefWidth="1278.0">
+               <children>
+                  <Label alignment="TOP_LEFT" text="Metrics">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
                 <VBox spacing="15.0">
                     <GridPane alignment="CENTER_LEFT" hgap="10" prefHeight="88.0" prefWidth="1278.0" vgap="10">
                         <columnConstraints>
@@ -60,28 +65,18 @@
                   </VBox>
                     </GridPane>
                 </VBox>
-            <HBox prefHeight="87.0" prefWidth="1278.0">
+            <HBox fx:id="userManagementTitleBox" prefHeight="32.0" prefWidth="1278.0">
                <children>
-                  <Label style="-fx-font-weight: bold;" text="Accessibility">
+                  <Label text="User Settings">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="20.0" />
                      </font>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
                   </Label>
                </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </HBox>
-                <HBox fx:id="userManagementTitleBox" prefHeight="50.0" prefWidth="200.0">
-                    <Label style="-fx-font-weight: bold;" text="User Management [Admin Only]">
-                        <font>
-                            <Font size="18.0" />
-                        </font>
-                        <padding>
-                            <Insets left="10.0" />
-                        </padding>
-                    </Label>
-                </HBox>
             <GridPane fx:id="userManagementGridPane" alignment="CENTER_LEFT" hgap="10" vgap="10">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
