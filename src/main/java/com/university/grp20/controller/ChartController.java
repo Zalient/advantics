@@ -21,7 +21,10 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.fx.ChartViewer;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -180,15 +183,26 @@ public class ChartController {
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.prefHeightProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.setUserData(metricType);
-
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    Button filterButton = new Button("Filter");
-    filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+    VBox chartBox = new VBox(chartViewer);
 
-    VBox chartBox = new VBox(filterButton, chartViewer);
+    if (chart.getPlot() instanceof CategoryPlot) {
+      CategoryPlot chartPlot = chart.getCategoryPlot();
+      CategoryAxis xAxis = chartPlot.getDomainAxis();
+      xAxis.setCategoryLabelPositions(
+              CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4)
+      );
+
+      Button filterButton = new Button("Filter");
+      filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+      chartBox.getChildren().add(0, filterButton);
+    }
+
     addChartFlowPane.getChildren().add(chartBox);
   }
+
+
 
   private void addHistogram(int numBins) {
     JFreeChart chart = new GenerateChartService().clickCostHistogram(numBins);

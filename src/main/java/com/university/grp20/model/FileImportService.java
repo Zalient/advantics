@@ -186,10 +186,6 @@ public class FileImportService {
               + "impressionID INTEGER, "
               + "Date DATETIME, "
               + "ID LONG, "
-              + "Gender TEXT, "
-              + "Age TEXT, "
-              + "Income TEXT, "
-              + "Context TEXT, "
               + "ImpressionCost REAL);");
       logger.info("Created impressionLog table");
 
