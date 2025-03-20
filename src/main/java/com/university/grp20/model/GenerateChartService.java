@@ -19,8 +19,18 @@ import java.util.stream.Collectors;
 
 public class GenerateChartService {
   private final Logger logger = LogManager.getLogger(GenerateChartService.class);
+  private static String bounceType = "Pages Viewed";
+  private static String bounceValue = "1";
 
-  private DefaultCategoryDataset getCategoryDataset(String query, String metricLine) {
+  public static void setBounceType(String bounceType){
+    GenerateChartService.bounceType = bounceType;
+  }
+
+  public static void setBounceValue(String bounceValue){
+    GenerateChartService.bounceValue = bounceValue;
+  }
+
+  private static DefaultCategoryDataset getCategoryDataset(String query, String metricLine) {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     try (Connection conn = DBHelper.getConnection();
         ResultSet rs = DBHelper.executeQuery(conn, query)) {
@@ -35,7 +45,7 @@ public class GenerateChartService {
     return dataset;
   }
 
-  private HistogramDataset getHistogramDataset(String query, String metricLine, int binSize) {
+  private static HistogramDataset getHistogramDataset(String query, String metricLine, int binSize) {
     List<Double> dataPoints = new ArrayList<>();
     try (Connection conn = DBHelper.getConnection();
         ResultSet rs = DBHelper.executeQuery(conn, query)) {
@@ -158,6 +168,16 @@ public class GenerateChartService {
     return selectStmt;
   }
 
+  private static String applyBounceDef(){
+    String bounceStmt = "";
+    if (bounceType.equals("Pages Viewed")){
+      bounceStmt = "s.PagesViewed <= " + bounceValue;
+    } else if (bounceType.equals("Time Spent on Page")){
+      bounceStmt = "s.TimeSpent >= 0 AND s.TimeSpent < " + bounceValue;
+    }
+    return bounceStmt;
+  }
+
   private String granularityLabel(FilterCriteriaDTO filterDTO){
     String granularityLabel;
     if ("Per Hour".equals(filterDTO.getTimeGranularity())) {
@@ -242,7 +262,7 @@ public class GenerateChartService {
         applyGranularitySelect(filterDTO, "i", "Date")
             + ", COUNT(DISTINCT i.ID) AS uniques_by_day "
             + "FROM impressionLog i "
-            + "JOIN userData u ON u.ID = i.ID"
+            + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
@@ -262,7 +282,8 @@ public class GenerateChartService {
             + ", COUNT(*) AS bounces_by_day "
             + "FROM serverLog s "
             + "JOIN userData u ON u.ID = s.ID "
-            + "WHERE s.PagesViewed = 1 ";
+            + "WHERE 1=1 "
+            + "AND " + applyBounceDef();
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "u") + " ORDER BY time";
 
@@ -354,12 +375,12 @@ public class GenerateChartService {
 
 
     String finalSQL =
-        "SELECT imp.day, (cli.Num_Of_Clicks * 100.0 / imp.Num_Of_Imp) AS ctr "
+        "SELECT imp.time, (cli.Num_Of_Clicks * 100.0 / imp.Num_Of_Imp) AS ctr "
             + "FROM ("
             + impressionSQL
             + ") imp JOIN ("
             + clickSQL
-            + ") cli ON imp.day = cli.day ORDER BY imp.day";
+            + ") cli ON imp.time = cli.time ORDER BY imp.time";
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CTR");
     String label = granularityLabel(filterDTO);
@@ -391,7 +412,7 @@ public class GenerateChartService {
 
 
     String unionCost =
-        "SELECT day, SUM(total_cost) AS Daily_Cost FROM ("
+        "SELECT time, SUM(total_cost) AS Daily_Cost FROM ("
             + impressionSQL
             + " UNION ALL "
             + clickSQL
@@ -408,12 +429,12 @@ public class GenerateChartService {
 
 
     String finalSQL =
-        "SELECT cost.day, (cost.Daily_Cost * 1.0 / conv.Total_Conversions) AS CPA "
+        "SELECT cost.time, (cost.Daily_Cost * 1.0 / conv.Total_Conversions) AS CPA "
             + "FROM ("
             + unionCost
             + ") cost JOIN ("
             + conversionSQL
-            + ") conv ON cost.day = conv.day ORDER BY cost.day";
+            + ") conv ON cost.time = conv.time ORDER BY cost.time";
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CPA");
@@ -518,7 +539,8 @@ public class GenerateChartService {
             + ", COUNT(*) AS Total_Bounces "
             + "FROM serverLog s "
             + "JOIN userData u ON u.ID = s.ID "
-            + "WHERE s.PagesViewed = 1 ";
+            + "WHERE 1=1 "
+            + "AND " + applyBounceDef();
     bounceSQL = applyCommonFilter(bounceSQL, filterDTO, "s", "EntryDate", "u");
 
 
@@ -550,14 +572,14 @@ public class GenerateChartService {
     return chart;
   }
 
-  public JFreeChart clickCostHistogram(int numBins) {
+  public static JFreeChart clickCostHistogram(int numBins) {
     HistogramDataset histogramDataset =
         getHistogramDataset("SELECT clickCost FROM clickLog", "Click Cost Distribution", numBins);
     return ChartFactory.createHistogram(
         "Histogram of Click Costs", "Cost Intervals", "Frequency", histogramDataset);
   }
 
-  public JFreeChart impressionsChart() {
+  public static JFreeChart impressionsChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Impressions FROM impressionLog GROUP BY Day ORDER BY Day",
@@ -565,7 +587,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("Impressions Per Day", "Day", "Impressions", dataset);
   }
 
-  public JFreeChart clicksChart() {
+  public static JFreeChart clicksChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day ORDER BY Day",
@@ -573,7 +595,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("Clicks Per Day", "Day", "Clicks", dataset);
   }
 
-  public JFreeChart uniquesChart() {
+  public static JFreeChart uniquesChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(DISTINCT ID) AS Total_Unique_IDs FROM impressionLog GROUP BY Day ORDER BY Day",
@@ -581,15 +603,15 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("Uniques Per Day", "Day", "Uniques", dataset);
   }
 
-  public JFreeChart bouncesChart() {
+  public static JFreeChart bouncesChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
-            "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog WHERE PagesViewed = 1 GROUP BY Day ORDER BY Day",
+            "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE " + applyBounceDef() +" GROUP BY Day ORDER BY Day",
             "Bounces");
     return ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
   }
 
-  public JFreeChart conversionsChart() {
+  public static JFreeChart conversionsChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Conversions FROM serverLog WHERE Conversion = 'Yes' GROUP BY Day ORDER BY Day",
@@ -597,7 +619,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("Conversions Per Day", "Day", "Conversions", dataset);
   }
 
-  public JFreeChart totalCostChart() {
+  public static JFreeChart totalCostChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT Day, SUM(Total_Cost) AS Daily_Cost FROM ("
@@ -609,7 +631,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("Total Cost Per Day", "Day", "Total Cost", dataset);
   }
 
-  public JFreeChart ctrChart() {
+  public static JFreeChart ctrChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT imp.Day, (cli.Total_Clicks * 100.0 / imp.Total_Impressions) AS CTR "
@@ -620,7 +642,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("CTR Per Day", "Day", "CTR", dataset);
   }
 
-  public JFreeChart cpaChart() {
+  public static JFreeChart cpaChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT total.Day, (total.Daily_Cost / conv.Total_Conversions) AS CPA "
@@ -635,7 +657,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("CPA Per Day", "Day", "CPA", dataset);
   }
 
-  public JFreeChart cpcChart() {
+  public static JFreeChart cpcChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT total.Day, (total.Daily_Cost / cli.Total_Clicks) AS CPC "
@@ -650,7 +672,7 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("CPC Per Day", "Day", "CPC", dataset);
   }
 
-  public JFreeChart cpmChart() {
+  public static JFreeChart cpmChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT c_imp.Day, (c_imp.Total_Cost/imp.Total_Impressions) * 1000 AS CPM "
@@ -661,11 +683,11 @@ public class GenerateChartService {
     return ChartFactory.createLineChart("CPM Per Day", "Day", "CPM", dataset);
   }
 
-  public JFreeChart bounceRateChart() {
+  public static JFreeChart bounceRateChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT bounce.Day, (bounce.Total_Bounces * 1.0 / cli.Total_Clicks) AS Bounce_Rate "
-                + "FROM (SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog WHERE PagesViewed = 1 GROUP BY Day) bounce "
+                + "FROM (SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE "+ applyBounceDef() +" GROUP BY Day) bounce "
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day) cli "
                 + "ON bounce.Day = cli.Day ORDER BY bounce.Day",
             "Bounce Rate");

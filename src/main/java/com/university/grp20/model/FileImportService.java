@@ -1,23 +1,18 @@
 package com.university.grp20.model;
 
-import com.university.grp20.controller.FileErrorListener;
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
+import com.university.grp20.controller.FileErrorListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class FileImportService {
   private final Logger logger = LogManager.getLogger(FileImportService.class);
@@ -192,21 +187,40 @@ public class FileImportService {
   private void importServerLog(Connection conn) {
     String deleteSql = "DELETE FROM serverLog";
     String insertSql =
-        "INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, Conversion) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, TimeSpent, Conversion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     processFile(
         serverLog,
         "Importing server log...",
         deleteSql,
         insertSql,
-        (columns, counter) ->
-            new Object[] {
-              counter,
-              columns[0],
-              Long.parseLong(columns[1]),
-              columns[2],
-              Integer.parseInt(columns[3]),
-              columns[4]
-            },
+        (columns, counter) -> {
+          try{
+            Date entryDate = dateFormat.parse(columns[0]);
+            String exitDateStr = columns[2].trim();
+
+            long timeSpent = -1;
+
+            if (!exitDateStr.equalsIgnoreCase("n/a")) {
+              Date exitDate = dateFormat.parse(exitDateStr);
+              timeSpent = (exitDate.getTime() - entryDate.getTime()) / 1000;
+            }
+
+            return new Object[]{
+                    counter,
+                    columns[0],
+                    Long.parseLong(columns[1]),
+                    columns[2],
+                    Integer.parseInt(columns[3]),
+                    timeSpent,
+                    columns[4]
+            };
+          } catch (ParseException e) {
+            logger.error("Error parsing dates" + e.getMessage());
+            return null;
+          }
+        },
         conn);
   }
 
@@ -248,6 +262,7 @@ public class FileImportService {
               + "ID LONG, "
               + "ExitDate DATETIME, "
               + "PagesViewed INTEGER, "
+              + "TimeSpent INTEGER, "
               + "Conversion TEXT);");
       logger.info("Created serverLog table");
 
