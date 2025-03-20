@@ -9,12 +9,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class SettingsController {
+      private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
   private final Logger logger = LogManager.getLogger(MetricsController.class);
+  private ExportLogService exportLogService = new ExportLogService();
+    private OperationLogger operationLogger = new OperationLogger();
 
   @FXML private TextField addUsernameField;
   @FXML private TextField addPasswordField;
@@ -34,35 +38,49 @@ public class SettingsController {
   @FXML private Button bounceChooser;
   @FXML private ToggleGroup bounceGroup;
   @FXML private TextField bounceValField;
+  @FXML private HBox exportLogHBox;
+    @FXML private HBox metricsTitleBox;
+    @FXML private VBox metricsVBox;
 
   private LoginService loginService = new LoginService();
-  private OperationLogger operationLogger = new OperationLogger();
 
   private CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
 
-  @FXML
-  private void initialize() {
-    operationLogger.log("Settings page clicked and displayed");
-    selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
-    selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
-    bounceGroup = new ToggleGroup();
-    pagesViewedOpt.setToggleGroup(bounceGroup);
-    timeSpentOpt.setToggleGroup(bounceGroup);
+    @FXML
+    private void initialize() {
+      operationLogger.log("Settings page clicked and displayed");
+      selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+      selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+      bounceGroup = new ToggleGroup();
+      pagesViewedOpt.setToggleGroup(bounceGroup);
+      timeSpentOpt.setToggleGroup(bounceGroup);
 
-    ArrayList<String> userList = loginService.getAllUsers();
+      ArrayList<String> userList = loginService.getAllUsers();
 
-    // Add existing users in the database to the selectUserMenu
-    for (String user : userList) {
-      logger.info("Found user: " + user);
-      selectUserMenu.getItems().add(user);
-    }
+      // Add existing users in the database to the selectUserMenu
+      for (String user : userList) {
+        logger.info("Found user: " + user);
+        selectUserMenu.getItems().add(user);
+      }
 
+      // If user isn't an admin them remove all of the admin only settings
+      if (!User.getRole().equals("Admin")) {
+          VBox content = (VBox) settingsScrollPane.getContent();
+          content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane, exportLogHBox);
+      }
+
+      // If user is a viewer remove metrics settings
+      if (User.getRole().equals("Viewer")) {
+        VBox content = (VBox) settingsScrollPane.getContent();
+        content.getChildren().removeAll(metricsTitleBox, metricsVBox);
+      }
     // If user isn't an admin them remove all of the admin only settings
     if (!User.getRole().equals("Admin")) {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
     }
-  }
+      }
+    
 
   @FXML
   private void handleBounceChoice(){

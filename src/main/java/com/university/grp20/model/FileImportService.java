@@ -340,6 +340,7 @@ public class FileImportService {
     DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_clickCost");
     logger.info("Dropped table indexes");
   }
+
   public void runFullImport() {
     try (Connection conn = DBHelper.getConnection()) {
       conn.setAutoCommit(false);
@@ -362,6 +363,8 @@ public class FileImportService {
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS impressionLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS clickLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS serverLog");
+      DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS userData");
+      // PROBLEM
       logger.info("Dropped all log database tables");
     } catch (SQLException e) {
       throw new RuntimeException("Error during import: " + e.getMessage(), e);
