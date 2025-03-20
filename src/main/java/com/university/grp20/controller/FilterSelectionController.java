@@ -6,11 +6,17 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
+import org.jfree.chart.title.TextTitle;
+
+import java.awt.*;
 
 public class FilterSelectionController {
   public enum FilterMode {
@@ -98,6 +104,23 @@ public class FilterSelectionController {
               : "";
       JFreeChart newFilteredChart =
           generateChartService.getFilteredChart(metricType, filterCriteriaDTO);
+
+      if (newFilteredChart != null && chartViewer != null) {
+        String filterApplied =
+                "Time granularity: " + filterCriteriaDTO.getTimeGranularity() + "   " +
+                        "Start Date: " + (filterCriteriaDTO.getStartDate() != null ? filterCriteriaDTO.getStartDate().toString() : " ") + "   " +
+                        "End Date: " + (filterCriteriaDTO.getEndDate() != null ? filterCriteriaDTO.getEndDate().toString() : " ") + "   " +
+                        "\n" +
+                        "Gender: " + (filterCriteriaDTO.getGender() != null ? filterCriteriaDTO.getGender() : "All Gender") + "   " +
+                        "Age Ranges: " + (filterCriteriaDTO.getAgeRanges() != null ? filterCriteriaDTO.getAgeRanges().toString() : "All Age Range") + "   " +
+                        "Income: " + (filterCriteriaDTO.getIncomes() != null ? filterCriteriaDTO.getIncomes().toString() : "All Income Levels") + "   " +
+                        "Contexts: " + (filterCriteriaDTO.getContexts() != null ? filterCriteriaDTO.getContexts().toString() : "All Context");
+
+        TextTitle subtitle = new TextTitle(filterApplied);
+        subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        subtitle.setPaint(new Color(0, 0, 140));
+        newFilteredChart.addSubtitle(subtitle);
+      }
 
       if (newFilteredChart != null && chartViewer != null) {
         chartViewer.setChart(newFilteredChart);
