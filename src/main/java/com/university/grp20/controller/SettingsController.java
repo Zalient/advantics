@@ -78,7 +78,8 @@ public class SettingsController {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
     }
-  }
+      }
+    }
 
   @FXML
   private void handleBounceChoice(){
