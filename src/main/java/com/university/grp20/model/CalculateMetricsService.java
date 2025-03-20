@@ -16,6 +16,26 @@ public class CalculateMetricsService {
   private final Logger logger = LogManager.getLogger(CalculateMetricsService.class);
   private ProgressBarListener filterProgressBar;
   private ProgressLabel filterProgressLabel;
+  private static String bounceType = "Pages Viewed";
+  private static String bounceValue = "1";
+
+  public void setBounceType(String bounceType){
+    CalculateMetricsService.bounceType = bounceType;
+  }
+
+  public void setBounceValue(String bounceValue){
+    CalculateMetricsService.bounceValue = bounceValue;
+  }
+
+  private static String applyBounceDef(){
+    String bounceStmt = "";
+    if (bounceType.equals("Pages Viewed")){
+      bounceStmt = "s.PagesViewed <= " + bounceValue;
+    } else if (bounceType.equals("Time Spent on Page")){
+      bounceStmt = "s.TimeSpent >= 0 AND s.TimeSpent < " + bounceValue;
+    }
+    return bounceStmt;
+  }
 
   public MetricsDTO getMetrics(FilterCriteriaDTO filterCriteriaDTO) {
     MetricsDTO metricsDTO = new MetricsDTO();
@@ -134,7 +154,7 @@ public class CalculateMetricsService {
     sb.append(" SELECT u.ID, s.EntryDate ");
     sb.append(" FROM serverLog s JOIN userData u ON u.ID = s.ID ");
     sb.append(" JOIN impressionLog i ON i.ID = u.ID ");
-    sb.append(" WHERE s.PagesViewed = 1 ");
+    sb.append(" WHERE " + applyBounceDef());
     if (filterCriteriaDTO != null) {
       appendDateFilter(sb, filterCriteriaDTO, "s", "EntryDate");
       appendGenderFilter(sb, filterCriteriaDTO, "u");
@@ -144,6 +164,7 @@ public class CalculateMetricsService {
     }
     sb.append(" GROUP BY u.ID, s.EntryDate");
     sb.append(")");
+    logger.info(sb.toString());
     return sb.toString();
   }
 

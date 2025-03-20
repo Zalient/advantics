@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.SettingsController">
         <Label layoutX="576.0" layoutY="13.0" prefHeight="44.0" prefWidth="128.0" text="Settings">
             <font>
                 <Font size="36.0" />
@@ -53,14 +53,14 @@
                         <Label alignment="CENTER" prefHeight="26.0" prefWidth="294.0" style="-fx-font-size: 20" text="Bounce Registered as:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="638.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
                      <children>
-                        <RadioButton fx:id="pagesViewedOpt" mnemonicParsing="false" text="Pages Viewed" />
-                        <RadioButton fx:id="timeSpentOpt" mnemonicParsing="false" text="Time Spent on Page" />
+                        <RadioButton fx:id="pagesViewedOpt" mnemonicParsing="false" onAction="#handleBounceChoice" text="Pages Viewed" />
+                        <RadioButton fx:id="timeSpentOpt" mnemonicParsing="false" onAction="#handleBounceChoice" text="Time Spent on Page" />
                      </children>
                         </HBox>
                   <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="bounceChooser" disable="true" mnemonicParsing="false" text="Choose" />
-                        <TextField fx:id="enterValueField" disable="true" prefHeight="25.0" prefWidth="205.0" promptText="Enter Value" />
+                        <TextField fx:id="bounceValField" disable="true" prefHeight="25.0" prefWidth="205.0" promptText="Enter Value" />
+                        <Button fx:id="bounceChooser" disable="true" mnemonicParsing="false" onAction="#bounceApply" text="Apply" />
                      </children>
                   </VBox>
                     </GridPane>
@@ -168,17 +168,6 @@
                   </HBox>
                </children>
             </GridPane>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label alignment="CENTER" text="Export Operation Log">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="PDF" onAction="#handleExportLogToPDF"/>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="CSV" onAction="#handleExportLogToCSV"/>
-               </children>
-            </HBox>
             </VBox>
         </content>
     </ScrollPane>

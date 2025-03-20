@@ -121,35 +121,35 @@ public class ChartController {
 
   @FXML
   private void addImpressionsChart() {
-    JFreeChart chart = new GenerateChartService().impressionsChart();
+    JFreeChart chart = GenerateChartService.impressionsChart();
     addChart(chart, "Impressions");
     operationLogger.log("Impressions chart chosen and displayed");
   }
 
   @FXML
   private void addClicksChart() {
-    JFreeChart chart = new GenerateChartService().clicksChart();
+    JFreeChart chart = GenerateChartService.clicksChart();
     addChart(chart, "Clicks");
     operationLogger.log("Clicks chart chosen and displayed");
   }
 
   @FXML
   private void addUniquesChart() {
-    JFreeChart chart = new GenerateChartService().uniquesChart();
+    JFreeChart chart = GenerateChartService.uniquesChart();
     addChart(chart, "Uniques");
     operationLogger.log("Uniques chart chosen and displayed");
   }
 
   @FXML
   private void addBouncesChart() {
-    JFreeChart chart = new GenerateChartService().bouncesChart();
+    JFreeChart chart = GenerateChartService.bouncesChart();
     addChart(chart, "Bounces");
     operationLogger.log("Bounces chart chosen and displayed");
   }
 
   @FXML
   private void addConversionsChart() {
-    JFreeChart chart = new GenerateChartService().conversionsChart();
+    JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
     operationLogger.log("Conversions chart chosen and displayed");
 
@@ -157,42 +157,42 @@ public class ChartController {
 
   @FXML
   private void addTotalCostChart() {
-    JFreeChart chart = new GenerateChartService().totalCostChart();
+    JFreeChart chart = GenerateChartService.totalCostChart();
     addChart(chart, "Total Cost");
     operationLogger.log("Total Cost chart chosen and displayed");
   }
 
   @FXML
   private void addCTRChart() {
-    JFreeChart chart = new GenerateChartService().ctrChart();
+    JFreeChart chart = GenerateChartService.ctrChart();
     addChart(chart, "CTR");
     operationLogger.log("CTR chart chosen and displayed");
   }
 
   @FXML
   private void addCPAChart() {
-    JFreeChart chart = new GenerateChartService().cpaChart();
+    JFreeChart chart = GenerateChartService.cpaChart();
     addChart(chart, "CPA");
     operationLogger.log("CPA chart chosen and displayed");
   }
 
   @FXML
   private void addCPCChart() {
-    JFreeChart chart = new GenerateChartService().cpcChart();
+    JFreeChart chart = GenerateChartService.cpcChart();
     addChart(chart, "CPC");
     operationLogger.log("CPC chart chosen and displayed");
   }
 
   @FXML
   private void addCPMChart() {
-    JFreeChart chart = new GenerateChartService().cpmChart();
+    JFreeChart chart = GenerateChartService.cpmChart();
     addChart(chart, "CPM");
     operationLogger.log("CPM chart chosen and displayed");
   }
 
   @FXML
   private void addBounceRateChart() {
-    JFreeChart chart = new GenerateChartService().bounceRateChart();
+    JFreeChart chart = GenerateChartService.bounceRateChart();
     addChart(chart, "Bounce Rate");
     operationLogger.log("Bounce Rate chart chosen and displayed");
   }
@@ -282,7 +282,7 @@ public class ChartController {
   }
 
   private void addHistogram(int numBins) {
-    JFreeChart chart = new GenerateChartService().clickCostHistogram(numBins);
+    JFreeChart chart = GenerateChartService.clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
     operationLogger.log("Bin size chosen and histogram displayed");
 
