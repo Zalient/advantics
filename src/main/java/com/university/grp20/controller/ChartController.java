@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
@@ -39,6 +40,8 @@ public class ChartController {
   private Button backButton;
   @FXML
   private MenuButton addChartButton;
+  @FXML
+  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
 
   private final Logger logger = LogManager.getLogger(ChartController.class);
   private final OperationLogger operationLogger = new OperationLogger();
@@ -226,7 +229,15 @@ public class ChartController {
               if (dialogButton == applyButton) {
                 String input = numBinsField.getText();
                 try {
-                  return Integer.parseInt(input);
+                  int bins = Integer.parseInt(input);
+
+                  if (bins <= 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Input is negative, please enter a positive value");
+                    alert.showAndWait();
+                    return null;
+                  }
+                  return bins;
                 } catch (NumberFormatException ex) {
                   Alert alert = new Alert(Alert.AlertType.ERROR);
                   alert.setContentText("Input is not an integer, wrong type");

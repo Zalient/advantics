@@ -93,26 +93,38 @@ public class SettingsController {
 
   @FXML
   private void bounceApply() {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
+    Alert inputAlert = new Alert(Alert.AlertType.ERROR);
     RadioButton selectedBounce = (RadioButton) bounceGroup.getSelectedToggle();
     String bounceVal = bounceValField.getText();
 
     if (bounceVal.isEmpty()) {
-      alert.setTitle("Error");
-      alert.setHeaderText(null);
-      alert.setContentText("Invalid, please enter a value");
-      alert.showAndWait();
+      inputAlert.setTitle("Error");
+      inputAlert.setHeaderText(null);
+      inputAlert.setContentText("Empty input, please enter a value");
+      inputAlert.showAndWait();
     } else {
       try {
         int bounceValue = Integer.parseInt(bounceVal);
+
+        if (bounceValue < 0) {
+          inputAlert.setContentText("Input is a negative number, please enter positive integer");
+          inputAlert.showAndWait();
+          return;
+        }
 
         GenerateChartService.setBounceType(selectedBounce.getText());
         GenerateChartService.setBounceValue(bounceVal);
         calculateMetricsService.setBounceType(selectedBounce.getText());
         calculateMetricsService.setBounceValue(bounceVal);
+
+        Alert successAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        successAlert.setTitle("Confirmation");
+        successAlert.setHeaderText(null);
+        successAlert.setContentText("Bounce successfully redefined");
+        successAlert.showAndWait();
       } catch (NumberFormatException ex) {
-        alert.setContentText("Input is not an integer, wrong type");
-        alert.showAndWait();
+        inputAlert.setContentText("Input is not an integer, wrong type");
+        inputAlert.showAndWait();
       }
     }
   }
