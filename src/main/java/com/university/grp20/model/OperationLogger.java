@@ -36,4 +36,8 @@ public class OperationLogger {
             e.printStackTrace();
         }
     }
+
+    public static String getLogFileName() {
+        return logFileName;
+    }
 }
