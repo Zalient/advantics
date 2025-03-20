@@ -56,7 +56,13 @@ public class MetricsController {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     calculateMetricsService.setOnFilterStart(progress -> { /* no-op */ });
     calculateMetricsService.setOnFilterLabelStart(text -> { /* no-op */ });
-    setMetrics(calculateMetricsService.getMetrics(null));
+
+    this.metricsDTO = calculateMetricsService.getMetrics(null);
+    if (this.metricsDTO == null) {
+      logger.warn("MetricsDTO is null. Creating a new empty MetricsDTO.");
+      this.metricsDTO = new MetricsDTO();
+    }
+    setMetrics(metricsDTO);
 
 
 
@@ -120,8 +126,16 @@ public class MetricsController {
 
   @FXML
   private void saveAsPDF() throws IOException {
+    if (metricsDTO == null) {
+      logger.error("Cannot export to PDF: metricsDTO is null.");
+      return;
+    }
+
     String filePath = ExportService.askForPDFFilename();
-    ExportService.dashboardToPDF(metricsDTO, filePath);
+    if (filePath != null) {
+      ExportService.dashboardToPDF(metricsDTO, filePath);
+      logger.info("Metrics exported successfully to PDF.");
+    }
   }
 
   @FXML
