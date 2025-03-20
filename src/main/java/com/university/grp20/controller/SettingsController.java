@@ -73,13 +73,14 @@ public class SettingsController {
       if (User.getRole().equals("Viewer")) {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(metricsTitleBox, metricsVBox);
+      }
     // If user isn't an admin them remove all of the admin only settings
     if (!User.getRole().equals("Admin")) {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
     }
       }
-    }
+    
 
   @FXML
   private void handleBounceChoice(){
