@@ -53,14 +53,14 @@
                         <Label alignment="CENTER" prefHeight="26.0" prefWidth="294.0" style="-fx-font-size: 20" text="Bounce Registered as:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="638.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
                      <children>
-                        <RadioButton fx:id="pagesViewedOpt" mnemonicParsing="false" text="Pages Viewed" />
-                        <RadioButton fx:id="timeSpentOpt" mnemonicParsing="false" text="Time Spent on Page" />
+                        <RadioButton fx:id="pagesViewedOpt" mnemonicParsing="false" onAction="#handleBounceChoice" text="Pages Viewed" />
+                        <RadioButton fx:id="timeSpentOpt" mnemonicParsing="false" onAction="#handleBounceChoice" text="Time Spent on Page" />
                      </children>
                         </HBox>
                   <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="bounceChooser" mnemonicParsing="false" text="Choose" disable="true"/>
-                        <TextField fx:id="addUsernameField" prefHeight="25.0" prefWidth="205.0" promptText="Enter Value" disable="true"/>
+                        <TextField fx:id="bounceValField" disable="true" prefHeight="25.0" prefWidth="205.0" promptText="Enter Value" />
+                        <Button fx:id="bounceChooser" disable="true" mnemonicParsing="false" onAction="#bounceApply" text="Apply" />
                      </children>
                   </VBox>
                     </GridPane>

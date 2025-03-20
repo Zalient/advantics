@@ -1,9 +1,7 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
-import com.university.grp20.model.LoginService;
-import com.university.grp20.model.OperationLogger;
-import com.university.grp20.model.User;
+import com.university.grp20.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -13,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SettingsController {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
@@ -34,9 +33,12 @@ public class SettingsController {
   @FXML private RadioButton timeSpentOpt;
   @FXML private Button bounceChooser;
   @FXML private ToggleGroup bounceGroup;
+  @FXML private TextField bounceValField;
 
   private LoginService loginService = new LoginService();
   private OperationLogger operationLogger = new OperationLogger();
+
+  private CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
 
   @FXML
   private void initialize() {
@@ -62,9 +64,40 @@ public class SettingsController {
     }
   }
 
+  @FXML
+  private void handleBounceChoice(){
+    bounceChooser.setDisable(false);
+    bounceValField.setDisable(false);
+  }
 
   @FXML
-  private void handleAddUser () {
+  private void bounceApply() {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    RadioButton selectedBounce = (RadioButton) bounceGroup.getSelectedToggle();
+    String bounceVal = bounceValField.getText();
+
+    if (bounceVal.isEmpty()) {
+      alert.setTitle("Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Invalid, please enter a value");
+      alert.showAndWait();
+    } else {
+      try {
+        int bounceValue = Integer.parseInt(bounceVal);
+
+        GenerateChartService.setBounceType(selectedBounce.getText());
+        GenerateChartService.setBounceValue(bounceVal);
+        calculateMetricsService.setBounceType(selectedBounce.getText());
+        calculateMetricsService.setBounceValue(bounceVal);
+      } catch (NumberFormatException ex) {
+        alert.setContentText("Input is not an integer, wrong type");
+        alert.showAndWait();
+      }
+    }
+  }
+
+  @FXML
+  private void handleAddUser() {
     logger.info("roleMenu had selected " + selectRoleMenu.getValue());
 
     String enteredUsername = addUsernameField.getText();

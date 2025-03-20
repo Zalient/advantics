@@ -1,23 +1,18 @@
 package com.university.grp20.model;
 
-import com.university.grp20.controller.FileErrorListener;
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
+import com.university.grp20.controller.FileErrorListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class FileImportService {
   private final Logger logger = LogManager.getLogger(FileImportService.class);
@@ -192,36 +187,45 @@ public class FileImportService {
   private void importServerLog(Connection conn) {
     String deleteSql = "DELETE FROM serverLog";
     String insertSql =
-        "INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, Conversion) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO serverLog (serverID, EntryDate, ID, ExitDate, PagesViewed, TimeSpent, Conversion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     processFile(
         serverLog,
         "Importing server log...",
         deleteSql,
         insertSql,
-        (columns, counter) ->
-            new Object[] {
-              counter,
-              columns[0],
-              Long.parseLong(columns[1]),
-              columns[2],
-              Integer.parseInt(columns[3]),
-              columns[4]
-            },
+        (columns, counter) -> {
+          try{
+            Date entryDate = dateFormat.parse(columns[0]);
+            String exitDateStr = columns[2].trim();
+
+            long timeSpent = -1;
+
+            if (!exitDateStr.equalsIgnoreCase("n/a")) {
+              Date exitDate = dateFormat.parse(exitDateStr);
+              timeSpent = (exitDate.getTime() - entryDate.getTime()) / 1000;
+            }
+
+            return new Object[]{
+                    counter,
+                    columns[0],
+                    Long.parseLong(columns[1]),
+                    columns[2],
+                    Integer.parseInt(columns[3]),
+                    timeSpent,
+                    columns[4]
+            };
+          } catch (ParseException e) {
+            logger.error("Error parsing dates" + e.getMessage());
+            return null;
+          }
+        },
         conn);
   }
 
   private void createTables(Connection conn) {
     try {
-      DBHelper.executeUpdate(
-          conn,
-          "CREATE TABLE IF NOT EXISTS userData ("
-              + "ID LONG, "
-              + "Gender TEXT, "
-              + "Age TEXT, "
-              + "Income TEXT, "
-              + "Context TEXT);");
-      logger.info("Created userData table");
-
       DBHelper.executeUpdate(
           conn,
           "CREATE TABLE IF NOT EXISTS userData ("
@@ -258,6 +262,7 @@ public class FileImportService {
               + "ID LONG, "
               + "ExitDate DATETIME, "
               + "PagesViewed INTEGER, "
+              + "TimeSpent INTEGER, "
               + "Conversion TEXT);");
       logger.info("Created serverLog table");
 
@@ -314,15 +319,37 @@ public class FileImportService {
     logger.info("Created table indexes");
   }
 
+  private void dropTableIndexes(Connection conn) throws SQLException {
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_gender");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_age");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_income");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_userData_context");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_serverId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_EntryDate");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_ExitDate");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_PagesViewed");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_serverLog_Conversion");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_impressionId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_Date");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_impressionLog_impressionCost");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_clickId");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_date");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_ID");
+    DBHelper.executeUpdate(conn, "DROP INDEX IF EXISTS idx_clickLog_clickCost");
+    logger.info("Dropped table indexes");
+  }
   public void runFullImport() {
     try (Connection conn = DBHelper.getConnection()) {
       conn.setAutoCommit(false);
+      dropTableIndexes(conn);
       createTables(conn);
       importImpressionLog(conn);
       importUserData(conn);
       importClickLog(conn);
       importServerLog(conn);
-      createTableIndexes(conn);
+      createTableIndexes(conn); // PROBLEM
       conn.setAutoCommit(true);
       logger.info("Data import complete");
     } catch (SQLException e) {
