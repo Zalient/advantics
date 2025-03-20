@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -42,7 +43,6 @@ public class SettingsController {
     @FXML private VBox metricsVBox;
 
   private LoginService loginService = new LoginService();
-  private OperationLogger operationLogger = new OperationLogger();
 
   private CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
 
