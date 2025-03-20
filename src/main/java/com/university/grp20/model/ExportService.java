@@ -39,6 +39,11 @@ public class ExportService {
             return;
         }
 
+        if (metricsDTO == null) {
+            logger.error("Cannot export to PDF: metricsDTO is null.");
+            return;
+        }
+
         File file = new File(filePath);
         logger.info("Save PDF to " + filePath);
 
