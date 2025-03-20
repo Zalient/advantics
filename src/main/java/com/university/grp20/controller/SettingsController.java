@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -9,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -203,6 +206,26 @@ public class SettingsController {
   }
 
   @FXML
+  public void handleExportLogToPDF(ActionEvent event) {
+    String logFileName = operationLogger.getLogFileName();
+    String timestamp = LocalDateTime.now().format(formatter);
+    //Gives the timestamp in the filename once exported
+    String filePath = "operationLogs/exported_log_" + timestamp + ".pdf";
+    exportLogService.exportLogToPDF(logFileName, filePath);
+    showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
+  }
+
+  @FXML
+  public void handleExportLogToCSV(ActionEvent event) {
+    String logFileName = operationLogger.getLogFileName();
+    String timestamp = LocalDateTime.now().format(formatter);
+    //Gives the timestamp in the filename once exported
+    String filePath = "operationLogs/exported_log_" + timestamp + ".csv";
+    exportLogService.exportLogToCSV(logFileName, filePath);
+    showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);
+  }
+
+  @FXML
   private void handleBack() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
   }
@@ -212,6 +235,14 @@ public class SettingsController {
     alert.setTitle("Error!");
     alert.setHeaderText(null);
     alert.setContentText(errorMessage);
+    alert.showAndWait();
+  }
+
+  private void showAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
     alert.showAndWait();
   }
 }
