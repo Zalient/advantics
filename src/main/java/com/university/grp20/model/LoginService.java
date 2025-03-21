@@ -20,7 +20,8 @@ public class LoginService {
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("SELECT username FROM users WHERE username == ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT username FROM users WHERE username == ?");
       statement.setString(1, enteredUsername);
       boolean userExists = statement.executeQuery().next();
 
@@ -53,19 +54,18 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
   }
 
   public Connection connectDatabase() {
-    Connection conn = null;
+    Connection conn;
     try {
       // Connect to the database and commence setup
       conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
@@ -80,7 +80,8 @@ public class LoginService {
   public void setupDatabase(Connection conn) {
     try {
       // Determine is users table already exists
-      PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
       statement.setString(1, "users");
       boolean tableExists = statement.executeQuery().next();
 
@@ -89,15 +90,19 @@ public class LoginService {
         logger.info("users table did not already exist");
 
         // Create table to store the users in the database
-        statement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users (" +
-                "username TEXT PRIMARY KEY, " +
-                "password TEXT, " +
-                "name TEXT, " +
-                "role TEXT);");
+        statement =
+            conn.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS users ("
+                    + "username TEXT PRIMARY KEY, "
+                    + "password TEXT, "
+                    + "name TEXT, "
+                    + "role TEXT);");
         statement.executeUpdate();
 
         // Insert example admin
-        statement = conn.prepareStatement("INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+        statement =
+            conn.prepareStatement(
+                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
         statement.setString(1, "Admin");
         statement.setString(2, "1");
         statement.setString(3, "Mr Admin");
@@ -105,7 +110,9 @@ public class LoginService {
         statement.executeUpdate();
 
         // Insert example editor
-        statement = conn.prepareStatement("INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+        statement =
+            conn.prepareStatement(
+                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
         statement.setString(1, "Editor");
         statement.setString(2, "2");
         statement.setString(3, "Mr Editor");
@@ -113,7 +120,9 @@ public class LoginService {
         statement.executeUpdate();
 
         // Insert example viewer
-        statement = conn.prepareStatement("INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+        statement =
+            conn.prepareStatement(
+                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
         statement.setString(1, "Viewer");
         statement.setString(2, "3");
         statement.setString(3, "Mr Viewer");
@@ -123,16 +132,16 @@ public class LoginService {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-
   }
 
   public boolean isDataLoaded() {
     Connection conn = null;
-    boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
+    boolean impressionTableExists, clickTableExists, serverTableExists;
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
       statement.setString(1, "impressionLog");
       impressionTableExists = statement.executeQuery().next();
 
@@ -149,17 +158,18 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
-    logger.info("isDataLoaded is returning " + (impressionTableExists && clickTableExists && serverTableExists));
+    logger.info(
+        "isDataLoaded is returning "
+            + (impressionTableExists && clickTableExists && serverTableExists));
 
     return (impressionTableExists && clickTableExists && serverTableExists);
   }
@@ -170,12 +180,13 @@ public class LoginService {
 
   public boolean doesUserExist(String enteredUsername) {
     Connection conn = null;
-    boolean userExists = false;
+    boolean userExists;
 
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("SELECT username FROM users WHERE username == ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT username FROM users WHERE username == ?");
       statement.setString(1, enteredUsername);
       userExists = statement.executeQuery().next();
     } catch (Exception e) {
@@ -183,7 +194,7 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
@@ -192,7 +203,6 @@ public class LoginService {
       }
     }
     return userExists;
-
   }
 
   public boolean addUser(String username, String password, String role) {
@@ -203,7 +213,9 @@ public class LoginService {
 
     try {
       conn = connectDatabase();
-      PreparedStatement statement = conn.prepareStatement("INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)");
+      PreparedStatement statement =
+          conn.prepareStatement(
+              "INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)");
       statement.setString(1, username);
       statement.setString(2, password);
       statement.setString(3, "");
@@ -217,14 +229,13 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return success;
@@ -250,14 +261,13 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return userList;
@@ -271,7 +281,8 @@ public class LoginService {
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
       statement.setString(1, newPassword);
       statement.setString(2, username);
 
@@ -284,14 +295,13 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return success;
@@ -305,7 +315,8 @@ public class LoginService {
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("UPDATE users SET role = ? WHERE username = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("UPDATE users SET role = ? WHERE username = ?");
       statement.setString(1, newRole);
       statement.setString(2, username);
 
@@ -318,14 +329,13 @@ public class LoginService {
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return success;
@@ -339,24 +349,23 @@ public class LoginService {
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("SELECT password FROM users WHERE username = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT password FROM users WHERE username = ?");
       statement.setString(1, username);
       password = statement.executeQuery().getString("password");
-
 
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return password;
@@ -370,28 +379,25 @@ public class LoginService {
     try {
       conn = connectDatabase();
 
-      PreparedStatement statement = conn.prepareStatement("SELECT role FROM users WHERE username = ?");
+      PreparedStatement statement =
+          conn.prepareStatement("SELECT role FROM users WHERE username = ?");
       statement.setString(1, username);
       role = statement.executeQuery().getString("role");
-
 
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     } finally {
       if (conn != null) {
         try {
-          //Attempt to close the connection to the database
+          // Attempt to close the connection to the database
           conn.close();
           logger.info("Connection to database has been closed");
         } catch (SQLException e) {
           System.out.println(e.getMessage());
         }
       }
-
     }
 
     return role;
   }
-
-
 }

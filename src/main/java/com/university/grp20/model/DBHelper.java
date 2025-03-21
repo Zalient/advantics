@@ -2,13 +2,26 @@ package com.university.grp20.model;
 
 import java.sql.*;
 import java.util.List;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class DBHelper {
-  private static final String URL = "jdbc:sqlite:./statsDatabase.db";
   private static final int BATCH_SIZE = 15000;
+  private static final HikariDataSource dataSource;
+
+  static {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl("jdbc:sqlite:./statsDatabase.db");
+    config.setDriverClassName("org.sqlite.JDBC");
+    config.setMaximumPoolSize(10);
+    config.setConnectionTestQuery("SELECT 1");
+    config.setPoolName("HikariCP-Pool");
+
+    dataSource = new HikariDataSource(config);
+  }
 
   public static Connection getConnection() throws SQLException {
-    return DriverManager.getConnection(URL);
+    return dataSource.getConnection();
   }
 
   public static ResultSet executeQuery(Connection conn, String sql, Object... params)

@@ -2,7 +2,9 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
-import javafx.event.ActionEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -11,22 +13,16 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class SettingsController {
-      private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+  private static final DateTimeFormatter formatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
   private final Logger logger = LogManager.getLogger(MetricsController.class);
-  private ExportLogService exportLogService = new ExportLogService();
-    private OperationLogger operationLogger = new OperationLogger();
+  private final ExportLogService exportLogService = new ExportLogService();
+  private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML private TextField addUsernameField;
   @FXML private TextField addPasswordField;
   @FXML private ComboBox selectRoleMenu;
-  @FXML private Button addUserButton;
   @FXML private HBox userManagementTitleBox;
   @FXML private GridPane userManagementGridPane;
   @FXML private ScrollPane settingsScrollPane;
@@ -42,51 +38,55 @@ public class SettingsController {
   @FXML private ToggleGroup bounceGroup;
   @FXML private TextField bounceValField;
   @FXML private HBox exportLogHBox;
-    @FXML private HBox metricsTitleBox;
-    @FXML private VBox metricsVBox;
+  @FXML private HBox metricsTitleBox;
+  @FXML private VBox metricsVBox;
 
-  private LoginService loginService = new LoginService();
+  private final LoginService loginService = new LoginService();
 
-  private CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
-
-    @FXML
-    private void initialize() {
-      operationLogger.log("Settings page clicked and displayed");
-      selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
-      selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
-      bounceGroup = new ToggleGroup();
-      pagesViewedOpt.setToggleGroup(bounceGroup);
-      timeSpentOpt.setToggleGroup(bounceGroup);
-
-      ArrayList<String> userList = loginService.getAllUsers();
-
-      // Add existing users in the database to the selectUserMenu
-      for (String user : userList) {
-        logger.info("Found user: " + user);
-        selectUserMenu.getItems().add(user);
-      }
-
-      // If user isn't an admin them remove all of the admin only settings
-      if (!User.getRole().equals("Admin")) {
-          VBox content = (VBox) settingsScrollPane.getContent();
-          content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane, exportLogHBox);
-      }
-
-      // If user is a viewer remove metrics settings
-      if (User.getRole().equals("Viewer")) {
-        VBox content = (VBox) settingsScrollPane.getContent();
-        content.getChildren().removeAll(metricsTitleBox, metricsVBox);
-      }
-    // If user isn't an admin them remove all of the admin only settings
-    if (!User.getRole().equals("Admin")) {
-        VBox content = (VBox) settingsScrollPane.getContent();
-        content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
-    }
-      }
-    
+  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
 
   @FXML
-  private void handleBounceChoice(){
+  private void initialize() {
+    operationLogger.log("Settings page clicked and displayed");
+    selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+    selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
+    bounceGroup = new ToggleGroup();
+    pagesViewedOpt.setToggleGroup(bounceGroup);
+    timeSpentOpt.setToggleGroup(bounceGroup);
+
+    ArrayList<String> userList = loginService.getAllUsers();
+
+    // Add existing users in the database to the selectUserMenu
+    for (String user : userList) {
+      logger.info("Found user: " + user);
+      selectUserMenu.getItems().add(user);
+    }
+
+    // If user isn't an admin them remove all the admin only settings
+    if (!User.getRole().equals("Admin")) {
+      VBox content = (VBox) settingsScrollPane.getContent();
+      content
+          .getChildren()
+          .removeAll(
+              userManagementTitleBox, userManagementGridPane, userEditGridPane, exportLogHBox);
+    }
+
+    // If user is a viewer remove metrics settings
+    if (User.getRole().equals("Viewer")) {
+      VBox content = (VBox) settingsScrollPane.getContent();
+      content.getChildren().removeAll(metricsTitleBox, metricsVBox);
+    }
+    // If user isn't an admin them remove all the admin only settings
+    if (!User.getRole().equals("Admin")) {
+      VBox content = (VBox) settingsScrollPane.getContent();
+      content
+          .getChildren()
+          .removeAll(userManagementTitleBox, userManagementGridPane, userEditGridPane);
+    }
+  }
+
+  @FXML
+  private void handleBounceChoice() {
     bounceChooser.setDisable(false);
     bounceValField.setDisable(false);
   }
@@ -104,8 +104,6 @@ public class SettingsController {
       alert.showAndWait();
     } else {
       try {
-        int bounceValue = Integer.parseInt(bounceVal);
-
         GenerateChartService.setBounceType(selectedBounce.getText());
         GenerateChartService.setBounceValue(bounceVal);
         calculateMetricsService.setBounceType(selectedBounce.getText());
@@ -124,30 +122,32 @@ public class SettingsController {
     String enteredUsername = addUsernameField.getText();
     String enteredPassword = addPasswordField.getText();
 
-    if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty() && selectRoleMenu.getValue() != null) {
+    if (!enteredUsername.isEmpty()
+        && !enteredPassword.isEmpty()
+        && selectRoleMenu.getValue() != null) {
       if (!loginService.doesUserExist(addUsernameField.getText())) {
 
-          boolean bSuccessful = loginService.addUser(enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
+        boolean bSuccessful =
+            loginService.addUser(
+                enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
 
-          if (bSuccessful) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("New user \"" + enteredUsername + "\" was successfully added to the database");
-            alert.showAndWait();
+        if (bSuccessful) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Confirmation");
+          alert.setHeaderText(null);
+          alert.setContentText(
+              "New user \"" + enteredUsername + "\" was successfully added to the database");
+          alert.showAndWait();
 
-            addUsernameField.setText("");
-            addPasswordField.setText("");
-            selectRoleMenu.getSelectionModel().clearSelection();
+          addUsernameField.setText("");
+          addPasswordField.setText("");
+          selectRoleMenu.getSelectionModel().clearSelection();
 
-            selectUserMenu.getItems().add(enteredUsername);
+          selectUserMenu.getItems().add(enteredUsername);
 
-          } else {
-            showError("Something went wrong when adding the user to the database.");
-          }
-
-
-
+        } else {
+          showError("Something went wrong when adding the user to the database.");
+        }
 
       } else {
         showError("A user with that username already exists in the database");
@@ -155,16 +155,17 @@ public class SettingsController {
     } else {
       showError("You have not filled out all the user detail fields..");
     }
-
   }
 
   @FXML
   private void updateEditUserLabels() {
     if (selectUserMenu.getValue() != null) {
-      currentPasswordLabel.setText("Current Password: " + loginService.getUserPassword(selectUserMenu.getValue().toString()));
-      currentRoleLabel.setText("Current Role: " + loginService.getUserRole(selectUserMenu.getValue().toString()));
+      currentPasswordLabel.setText(
+          "Current Password: "
+              + loginService.getUserPassword(selectUserMenu.getValue().toString()));
+      currentRoleLabel.setText(
+          "Current Role: " + loginService.getUserRole(selectUserMenu.getValue().toString()));
     }
-
   }
 
   @FXML
@@ -177,7 +178,8 @@ public class SettingsController {
       String selectedUser = selectUserMenu.getValue().toString();
 
       if (!enteredPassword.isEmpty()) {
-        boolean passwordUpdateSuccess = loginService.changeUserPassword(selectedUser, enteredPassword);
+        boolean passwordUpdateSuccess =
+            loginService.changeUserPassword(selectedUser, enteredPassword);
 
         if (!passwordUpdateSuccess) {
           showError("Something went wrong with updating the user's password");
@@ -206,20 +208,20 @@ public class SettingsController {
   }
 
   @FXML
-  public void handleExportLogToPDF(ActionEvent event) {
-    String logFileName = operationLogger.getLogFileName();
+  public void handleExportLogToPDF() {
+    String logFileName = OperationLogger.getLogFileName();
     String timestamp = LocalDateTime.now().format(formatter);
-    //Gives the timestamp in the filename once exported
+    // Gives the timestamp in the filename once exported
     String filePath = "operationLogs/exported_log_" + timestamp + ".pdf";
     exportLogService.exportLogToPDF(logFileName, filePath);
     showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
   }
 
   @FXML
-  public void handleExportLogToCSV(ActionEvent event) {
-    String logFileName = operationLogger.getLogFileName();
+  public void handleExportLogToCSV() {
+    String logFileName = OperationLogger.getLogFileName();
     String timestamp = LocalDateTime.now().format(formatter);
-    //Gives the timestamp in the filename once exported
+    // Gives the timestamp in the filename once exported
     String filePath = "operationLogs/exported_log_" + timestamp + ".csv";
     exportLogService.exportLogToCSV(logFileName, filePath);
     showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);

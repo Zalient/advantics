@@ -87,10 +87,10 @@ public class FileImportService {
 
         if (counter == 1) {
           String[] column0Split = columns[0].split(" ");
-          logger.info("colums[0]: " + columns[0]);
+          logger.info("columns[0]: " + columns[0]);
           logger.info("column1Split[0]: " + column0Split[0]);
 
-          if (!campaignStartDate.equals("") && !(column0Split[0].equals(campaignStartDate))) {
+          if (!campaignStartDate.isEmpty() && !(column0Split[0].equals(campaignStartDate))) {
             logger.info(
                 "Start data mismatch: "
                     + file.getName()
@@ -196,7 +196,7 @@ public class FileImportService {
         deleteSql,
         insertSql,
         (columns, counter) -> {
-          try{
+          try {
             Date entryDate = dateFormat.parse(columns[0]);
             String exitDateStr = columns[2].trim();
 
@@ -207,14 +207,14 @@ public class FileImportService {
               timeSpent = (exitDate.getTime() - entryDate.getTime()) / 1000;
             }
 
-            return new Object[]{
-                    counter,
-                    columns[0],
-                    Long.parseLong(columns[1]),
-                    columns[2],
-                    Integer.parseInt(columns[3]),
-                    timeSpent,
-                    columns[4]
+            return new Object[] {
+              counter,
+              columns[0],
+              Long.parseLong(columns[1]),
+              columns[2],
+              Integer.parseInt(columns[3]),
+              timeSpent,
+              columns[4]
             };
           } catch (ParseException e) {
             logger.error("Error parsing dates" + e.getMessage());
@@ -373,10 +373,9 @@ public class FileImportService {
 
   public boolean isDataLoaded() {
     Connection conn = null;
-    boolean impressionTableExists = false, clickTableExists = false, serverTableExists = false;
+    boolean impressionTableExists, clickTableExists, serverTableExists;
     try {
       conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
-      ;
 
       PreparedStatement statement =
           conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");

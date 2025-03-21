@@ -43,17 +43,17 @@ public class FileSelectionController {
 
   @FXML
   public void initialize() {
-    Platform.runLater(() -> {
-      logger.info("Initialising file upload controller");
+    Platform.runLater(
+        () -> {
+          logger.info("Initialising file upload controller");
 
-      logger.info("Role is: " + User.getRole());
-      roleLabel.setText("Role: " + User.getRole());
+          logger.info("Role is: " + User.getRole());
+          roleLabel.setText("Role: " + User.getRole());
 
-      fileImportService.setOnUploadStart(this::updateProgressBar);
-      fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
-      fileImportService.setOnFileError(this::handleFileUploadError);
-
-    });
+          fileImportService.setOnUploadStart(this::updateProgressBar);
+          fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
+          fileImportService.setOnFileError(this::handleFileUploadError);
+        });
   }
 
   @FXML
@@ -68,26 +68,26 @@ public class FileSelectionController {
       logoutButton.setDisable(true);
       skipButton.setDisable(true);
       Thread importDataThread =
-              new Thread(
+          new Thread(
+              () -> {
+                try {
+                  fileImportService.runFullImport();
+                  Platform.runLater(
                       () -> {
-                        try {
-                          fileImportService.runFullImport();
-                          Platform.runLater(
-                                  () -> {
-                                    importProgressLabel.setText("Calculating Metrics...");
-                                    importProgressBar.setProgress(1.0);
-                                  });
-                          Thread.sleep(100);
-                          Platform.runLater(
-                                  () ->
-                                          UIManager.switchScene(
-                                                  UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
-                        } catch (Exception e) {
-                          Platform.runLater(this::resetUI);
-                          throw new RuntimeException(
-                                  "An error occurred during file processing: " + e.getMessage());
-                        }
+                        importProgressLabel.setText("Calculating Metrics...");
+                        importProgressBar.setProgress(1.0);
                       });
+                  Thread.sleep(100);
+                  Platform.runLater(
+                      () ->
+                          UIManager.switchScene(
+                              UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
+                } catch (Exception e) {
+                  Platform.runLater(this::resetUI);
+                  throw new RuntimeException(
+                      "An error occurred during file processing: " + e.getMessage());
+                }
+              });
       importDataThread.start();
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -96,8 +96,6 @@ public class FileSelectionController {
       alert.setContentText("You have not uploaded the 3 required log files.");
       alert.showAndWait();
     }
-
-
   }
 
   @FXML
@@ -134,7 +132,6 @@ public class FileSelectionController {
     } catch (IOException e) {
       logger.info("Error reading FXML file");
     }
-
   }
 
   @FXML
@@ -145,7 +142,8 @@ public class FileSelectionController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
       alert.setHeaderText(null);
-      alert.setContentText("You cannot Skip if data has not already been uploaded into the database.");
+      alert.setContentText(
+          "You cannot Skip if data has not already been uploaded into the database.");
       alert.showAndWait();
     }
   }
@@ -176,17 +174,18 @@ public class FileSelectionController {
 
   /**
    * Called via a listener in the FileProcessor class
+   *
    * @param errorMessage The error message to be shown
    */
   private void handleFileUploadError(String errorMessage) {
-    Platform.runLater(() -> {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Error!");
-      alert.setHeaderText(null);
-      alert.setContentText(errorMessage);
-      alert.showAndWait();
-    });
-
+    Platform.runLater(
+        () -> {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error!");
+          alert.setHeaderText(null);
+          alert.setContentText(errorMessage);
+          alert.showAndWait();
+        });
   }
 
   private void resetUI() {

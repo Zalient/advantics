@@ -12,88 +12,52 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 public class MetricsController {
-  @FXML
-  private Label impressionsLabel;
-  @FXML
-  private Label clicksLabel;
-  @FXML
-  private Label uniquesLabel;
-  @FXML
-  private Label bouncesLabel;
-  @FXML
-  private Label conversionsLabel;
-  @FXML
-  private Label totalLabel;
-  @FXML
-  private Label ctrLabel;
-  @FXML
-  private Label cpaLabel;
-  @FXML
-  private Label cpcLabel;
-  @FXML
-  private Label cpmLabel;
-  @FXML
-  private Label bounceRateLabel;
-  @FXML
-  private Button backButton;
-  @FXML
-  private Button settingsButton;
-  @FXML
-  private Button filterButton;
-  @FXML
-  private Button pdfButton;
-  @FXML
-  private Button csvButton;
+  @FXML private Label impressionsLabel;
+  @FXML private Label clicksLabel;
+  @FXML private Label uniquesLabel;
+  @FXML private Label bouncesLabel;
+  @FXML private Label conversionsLabel;
+  @FXML private Label totalLabel;
+  @FXML private Label ctrLabel;
+  @FXML private Label cpaLabel;
+  @FXML private Label cpcLabel;
+  @FXML private Label cpmLabel;
+  @FXML private Label bounceRateLabel;
+  @FXML private Button filterButton;
+  @FXML private Button pdfButton;
+  @FXML private Button csvButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
-
   public MetricsDTO metricsDTO;
-
 
   @FXML
   private void initialize() {
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
-    calculateMetricsService.setOnFilterStart(progress -> { /* no-op */ });
-    calculateMetricsService.setOnFilterLabelStart(text -> { /* no-op */ });
-
-    this.metricsDTO = calculateMetricsService.getMetrics(null);
-    if (this.metricsDTO == null) {
-      logger.warn("MetricsDTO is null. Creating a new empty MetricsDTO.");
-      this.metricsDTO = new MetricsDTO();
-    }
-    setMetrics(metricsDTO);
-
-
-
-/**
- * Platform.runLater(() -> {
- *       logger.info("Detected role: " + User.getRole());
- *
- *       if (User.getRole().equals("Viewer")) {
- *         backButton.setVisible(false);
- *       } else {
- *         backButton.setVisible(true);
- *       }
- *     });
- */
-
+    calculateMetricsService.setOnFilterStart(
+        progress -> {
+          /* no-op */
+        });
+    calculateMetricsService.setOnFilterLabelStart(
+        text -> {
+          /* no-op */
+        });
+    setMetrics(calculateMetricsService.fetchMetrics(null));
   }
-  
+
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
-    impressionsLabel.setText(String.format("%.2f", metricsDTO.getImpressions()) + " impressions");
-    clicksLabel.setText(String.format("%.2f", metricsDTO.getClicks()) + " clicks");
-    uniquesLabel.setText(String.format("%.2f", metricsDTO.getUniques()) + " unique IDs");
-    bouncesLabel.setText(String.format("%.2f", metricsDTO.getBounces()) + " bounces");
-    conversionsLabel.setText(String.format("%.2f", metricsDTO.getConversions()) + " conversions");
-    totalLabel.setText(String.format("%.2f", metricsDTO.getTotalCost() / 100) + " pounds");
-    ctrLabel.setText(String.format("%.2f%%", metricsDTO.getCtr() * 100));
-    cpaLabel.setText(String.format("%.2f pounds per conversion", metricsDTO.getCpa() / 100));
-    cpcLabel.setText(String.format("%.2f pence per click", metricsDTO.getCpc()));
-    cpmLabel.setText(
-            String.format("%.2f pounds per thousand impressions", metricsDTO.getCpm() / 100));
-    bounceRateLabel.setText(String.format("%.2f bounces per click", metricsDTO.getBounceRate()));
+    impressionsLabel.setText(String.format("%.2f", metricsDTO.impressions()) + " impressions");
+    clicksLabel.setText(String.format("%.2f", metricsDTO.clicks()) + " clicks");
+    uniquesLabel.setText(String.format("%.2f", metricsDTO.uniques()) + " unique IDs");
+    bouncesLabel.setText(String.format("%.2f", metricsDTO.bounces()) + " bounces");
+    conversionsLabel.setText(String.format("%.2f", metricsDTO.conversions()) + " conversions");
+    totalLabel.setText(String.format("%.2f", metricsDTO.totalCost() / 100) + " pounds");
+    ctrLabel.setText(String.format("%.2f%%", metricsDTO.ctr() * 100));
+    cpaLabel.setText(String.format("%.2f pounds per conversion", metricsDTO.cpa() / 100));
+    cpcLabel.setText(String.format("%.2f pence per click", metricsDTO.cpc()));
+    cpmLabel.setText(String.format("%.2f pounds per thousand impressions", metricsDTO.cpm() / 100));
+    bounceRateLabel.setText(String.format("%.2f bounces per click", metricsDTO.bounceRate()));
   }
 
   @FXML
@@ -103,7 +67,6 @@ public class MetricsController {
     } else {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
     }
-
   }
 
   @FXML
@@ -162,7 +125,5 @@ public class MetricsController {
     filterButton.setDisable(status);
     pdfButton.setDisable(status);
     csvButton.setDisable(status);
-
-
   }
 }
