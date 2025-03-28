@@ -31,32 +31,15 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
 
-public class ChartController {
+public class ChartsController extends Navigator {
 
-  @FXML
-  private FlowPane addChartFlowPane;
-  @FXML
-  private Button backButton;
-  @FXML
-  private MenuButton addChartButton;
-
-  private final Logger logger = LogManager.getLogger(ChartController.class);
+  @FXML private FlowPane addChartFlowPane;
+  @FXML private MenuButton addChartButton;
+  private final Logger logger = LogManager.getLogger(ChartsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
   @FXML
-  private void initialize() {
-
-    /**
-     * Platform.runLater(() -> {
-     *       if (User.getRole().equals("Viewer")) {
-     *         backButton.setVisible(false);
-     *       }
-     *     });
-     */
-
-
-  }
-
+  private void initialize() {}
 
   public void disableForViewer() {
     logger.info("disableForViewer called");
@@ -65,40 +48,50 @@ public class ChartController {
 
     addChartButton.setDisable(status);
 
-    addChartFlowPane.getChildren().forEach(node -> {
-      if (node instanceof VBox vbox) {
-        vbox.getChildren().forEach(vBoxElement -> {
-          if (vBoxElement instanceof HBox foundHBox) {
-            foundHBox.getChildren().forEach(foundButton -> {
-              if (foundButton instanceof Button currentButton) {
-                String buttonText = currentButton.getText();
-                if (buttonText.equals("Filter") || buttonText.equals("Export as PDF") || buttonText.equals("Export as CSV")) {
-                  currentButton.setDisable(status);
-                }
+    addChartFlowPane
+        .getChildren()
+        .forEach(
+            node -> {
+              if (node instanceof VBox vbox) {
+                vbox.getChildren()
+                    .forEach(
+                        vBoxElement -> {
+                          if (vBoxElement instanceof HBox foundHBox) {
+                            foundHBox
+                                .getChildren()
+                                .forEach(
+                                    foundButton -> {
+                                      if (foundButton instanceof Button currentButton) {
+                                        String buttonText = currentButton.getText();
+                                        if (buttonText.equals("Filter")
+                                            || buttonText.equals("Export as PDF")
+                                            || buttonText.equals("Export as CSV")) {
+                                          currentButton.setDisable(status);
+                                        }
+                                      }
+                                    });
+                          }
+                        });
               }
             });
-          }
-        });
-      }
-    });
   }
 
   @FXML
   private void showMetrics() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+    UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
     operationLogger.log("Metrics page chosen, displaying metrics dashboard");
   }
 
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
       operationLogger.log("Back button clicked, returned to login page");
     } else {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+      UIManager.switchContent(
+          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
       operationLogger.log("Back button clicked, returned to file upload page");
     }
-
   }
 
   @FXML
@@ -106,15 +99,13 @@ public class ChartController {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter chosen, displaying filter options");
       try {
-        FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
-        loader.load();
+        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+        filterLoader.load();
 
+        FilterSelectionController filterController = filterLoader.getController();
+        filterController.init("Chart", null, chartViewer);
 
-        FilterSelectionController controller = loader.getController();
-        controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
-        controller.setChartViewer(chartViewer);
-
-        UIManager.showModal(loader, false);
+        UIManager.showModalStage("Filter Selection", filterLoader);
       } catch (IOException e) {
         logger.error("Error loading chart filter: " + e.getMessage());
       }
@@ -122,9 +113,9 @@ public class ChartController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
       alert.setHeaderText(null);
-      alert.setContentText("Viewers cannot filter charts. Please contact an editor or administrator.");
+      alert.setContentText(
+          "Viewers cannot filter charts. Please contact an editor or administrator.");
       alert.showAndWait();
-
     }
   }
 
@@ -161,7 +152,6 @@ public class ChartController {
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
     operationLogger.log("Conversions chart chosen and displayed");
-
   }
 
   @FXML
@@ -222,19 +212,19 @@ public class ChartController {
     numBinsDialog.getDialogPane().getButtonTypes().setAll(applyButton, cancelButton);
 
     numBinsDialog.setResultConverter(
-            dialogButton -> {
-              if (dialogButton == applyButton) {
-                String input = numBinsField.getText();
-                try {
-                  return Integer.parseInt(input);
-                } catch (NumberFormatException ex) {
-                  Alert alert = new Alert(Alert.AlertType.ERROR);
-                  alert.setContentText("Input is not an integer, wrong type");
-                  alert.showAndWait();
-                }
-              }
-              return null;
-            });
+        dialogButton -> {
+          if (dialogButton == applyButton) {
+            String input = numBinsField.getText();
+            try {
+              return Integer.parseInt(input);
+            } catch (NumberFormatException ex) {
+              Alert alert = new Alert(Alert.AlertType.ERROR);
+              alert.setContentText("Input is not an integer, wrong type");
+              alert.showAndWait();
+            }
+          }
+          return null;
+        });
 
     Optional<Integer> numBinsRes = numBinsDialog.showAndWait();
     numBinsRes.ifPresent(this::addHistogram);
@@ -254,8 +244,7 @@ public class ChartController {
       CategoryPlot chartPlot = chart.getCategoryPlot();
       CategoryAxis xAxis = chartPlot.getDomainAxis();
       xAxis.setCategoryLabelPositions(
-              CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4)
-      );
+          CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
       filterButton.setOnAction(e -> showFilterSelection(chartViewer));
@@ -263,29 +252,30 @@ public class ChartController {
     }
 
     Button exportPDFButton = new Button("Export as PDF");
-    exportPDFButton.setOnAction(e -> {
-      try {
-        String filePath = ExportService.askForPDFFilename();
-        ExportService.chartToPDF(chartViewer.getChart(), filePath);
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    });
+    exportPDFButton.setOnAction(
+        e -> {
+          try {
+            String filePath = ExportService.askForPDFFilename();
+            ExportService.chartToPDF(chartViewer.getChart(), filePath);
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
+        });
 
     Button exportCSVButton = new Button("Export as CSV");
-    exportCSVButton.setOnAction(e -> {
-      try {
-        String filePath = ExportService.askForCSVFilename();
-        ExportService.chartToCSV(chartViewer.getChart(), filePath);
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    });
+    exportCSVButton.setOnAction(
+        e -> {
+          try {
+            String filePath = ExportService.askForCSVFilename();
+            ExportService.chartToCSV(chartViewer.getChart(), filePath);
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
+        });
 
     buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton);
     buttonBox.setSpacing(10);
     chartBox = new VBox(buttonBox, chartViewer);
-
 
     addChartFlowPane.getChildren().add(chartBox);
   }

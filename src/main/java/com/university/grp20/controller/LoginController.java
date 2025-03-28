@@ -5,30 +5,23 @@ import com.university.grp20.model.LoginService;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LoginController {
+public class LoginController extends Navigator {
   private static final Logger logger = LogManager.getLogger(LoginController.class);
 
-  private LoginService loginService = new LoginService();
+  private final LoginService loginService = new LoginService();
 
-  @FXML
-  private TextField usernameInputBox;
+  @FXML private TextField usernameInputBox;
 
-  @FXML
-  private TextField passwordInputBox;
-
-  @FXML
-  private Button loginButton;
+  @FXML private TextField passwordInputBox;
 
   @FXML
   public void initialize() {
     logger.info("Initialising login screen");
     loginService.setOnLogin(this::processLogin);
-
   }
 
   @FXML
@@ -47,7 +40,7 @@ public class LoginController {
 
       if (enteredUsername.isEmpty() && enteredPassword.isEmpty()) {
         alert.setContentText("You have not entered a username or password.");
-      } else if (!enteredUsername.isEmpty() && enteredPassword.isEmpty()) {
+      } else if (!enteredUsername.isEmpty()) {
         alert.setContentText("You have not entered a password.");
       } else {
         alert.setContentText("You have not entered a username.");
@@ -57,11 +50,6 @@ public class LoginController {
     }
   }
 
-  /**
-   * Called by the listener in the "Login" class
-   *
-   * @param loginStatus Is "Valid" is password matches or "Invalid" if it doesn't
-   */
   public void processLogin(String loginStatus) {
     logger.info("Login Status is " + loginStatus);
 
@@ -71,17 +59,20 @@ public class LoginController {
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
-          UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+        UIManager.switchContent(
+            parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
 
       } else if (role.equals("Viewer")) {
         if (loginService.isDataLoaded()) {
-            UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+          UIManager.switchContent(
+              parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error!");
           alert.setHeaderText(null);
-          alert.setContentText("You do not have stored campaign data. Please contact an administrator or editor to upload this for you.");
+          alert.setContentText(
+              "You do not have stored campaign data. Please contact an administrator or editor to upload this for you.");
           alert.showAndWait();
         }
       } else {
@@ -95,13 +86,11 @@ public class LoginController {
       if (loginStatus.equals("Invalid")) {
         alert.setContentText("Your password was invalid.");
       } else if (loginStatus.equals("Missing")) {
-        alert.setContentText("That username doesn't exist in the database. Please contact an administrator.");
+        alert.setContentText(
+            "That username doesn't exist in the database. Please contact an administrator.");
       }
 
       alert.showAndWait();
-
     }
-
   }
-
 }

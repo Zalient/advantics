@@ -2,6 +2,7 @@ package com.university.grp20;
 
 import com.university.grp20.model.OperationLogger;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,13 +17,16 @@ public class App extends Application {
     logger.info("Starting application");
     operationLogger.initialize(); // Create a new log file for this session
     operationLogger.log("Application started");
-    UIManager.setPrimaryStage(stage);
-    stage.setTitle("Advertising Dashboard");
-    //stage.setMaximized(true);
-    //stage.setFullScreen(true);
-    //stage.setFullScreenExitHint("");
-    //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"));
+
+    UIManager.setMainStage(stage);
+    FXMLLoader loginLoader = UIManager.createFxmlLoader("/fxml/LoginPane.fxml");
+    UIManager.showMainStage("AdVantics", loginLoader);
+
+    // stage.setTitle("Advertising Dashboard");
+    // stage.setMaximized(true);
+    // stage.setFullScreen(true);
+    // stage.setFullScreenExitHint("");
+    // stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
   }
 
   public static void main(String[] args) {

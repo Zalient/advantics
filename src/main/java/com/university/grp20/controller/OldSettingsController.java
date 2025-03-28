@@ -1,10 +1,11 @@
 package com.university.grp20.controller;
-
+/*
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SettingsController {
       private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
@@ -58,6 +58,8 @@ public class SettingsController {
       pagesViewedOpt.setToggleGroup(bounceGroup);
       timeSpentOpt.setToggleGroup(bounceGroup);
 
+      initBounceValueListeners();
+
       ArrayList<String> userList = loginService.getAllUsers();
 
       // Add existing users in the database to the selectUserMenu
@@ -84,6 +86,19 @@ public class SettingsController {
     }
       }
     
+private void initBounceValueListeners() {
+  bounceValField.focusedProperty().addListener((obs, focusGained, focusLost) -> {
+    if (focusLost && !bounceValField.getText().isEmpty()) {
+      bounceChooser.setDisable(false);
+    }
+  });
+
+  bounceValField.setOnKeyPressed(ev -> {
+    if (ev.getCode() == KeyCode.ENTER && !bounceValField.getText().isEmpty()) {
+      bounceChooser.setDisable(false);
+    }
+  });
+}
 
   @FXML
   private void handleBounceChoice(){
@@ -227,7 +242,7 @@ public class SettingsController {
 
   @FXML
   private void handleBack() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+    UIManager.switchContent(UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"));
   }
 
   private void showError(String errorMessage) {
@@ -246,3 +261,4 @@ public class SettingsController {
     alert.showAndWait();
   }
 }
+*/
