@@ -182,7 +182,7 @@ public class GenerateChartService {
 
   private String granularityLabel(FilterCriteriaDTO filterDTO) {
     String granularityLabel;
-    if ("Per Hour".equals(filterDTO.gender())) {
+    if ("Per Hour".equals(filterDTO.timeGranularity())) {
       granularityLabel = "Hour";
     } else if ("Per Week".equals(filterDTO.timeGranularity())) {
       granularityLabel = "Week";
