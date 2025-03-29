@@ -12,222 +12,200 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0"
-            prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
         <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0"
-                        styleClass="blue-button" stylesheets="@../styles/styles.css" text="Back">
+                <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Back">
                     <HBox.margin>
-                        <Insets left="10.0"/>
+                        <Insets left="10.0" />
                     </HBox.margin>
                     <font>
-                        <Font size="24.0"/>
+                        <Font size="24.0" />
                     </font>
                 </Button>
-                <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
+                <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                 <HBox spacing="10.0">
                     <children>
-                        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button"
-                                text="Metrics">
+                        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
                             <font>
-                                <Font size="24.0"/>
+                                <Font size="24.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#showCharts" prefHeight="60.0" prefWidth="140.0"
-                                styleClass="blue-button" text="Charts">
+                        <Button mnemonicParsing="false" onAction="#showCharts" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
                             <font>
-                                <Font size="24.0"/>
+                                <Font size="24.0" />
                             </font>
                         </Button>
                     </children>
                 </HBox>
-                <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#showMetricsFilter" prefHeight="60.0"
-                        prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Filter">
+                <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#showMetricsFilter" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Filter">
                     <HBox.margin>
-                        <Insets right="10.0"/>
+                        <Insets right="10.0" />
                     </HBox.margin>
                     <font>
-                        <Font size="24.0"/>
+                        <Font size="24.0" />
                     </font>
                 </Button>
             </children>
             <padding>
-                <Insets bottom="10.0" top="10.0"/>
+                <Insets bottom="10.0" top="10.0" />
             </padding>
         </HBox>
-        <HBox alignment="CENTER" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="400.0"
-              AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="125.0">
+        <HBox alignment="CENTER" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="125.0">
             <children>
                 <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
                         <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints vgrow="SOMETIMES"/>
-                                <RowConstraints vgrow="SOMETIMES"/>
-                                <RowConstraints vgrow="SOMETIMES"/>
-                                <RowConstraints vgrow="SOMETIMES"/>
-                                <RowConstraints vgrow="SOMETIMES"/>
+                                <RowConstraints vgrow="SOMETIMES" />
+                                <RowConstraints vgrow="SOMETIMES" />
+                                <RowConstraints vgrow="SOMETIMES" />
+                                <RowConstraints vgrow="SOMETIMES" />
+                                <RowConstraints vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <VBox alignment="CENTER" styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.columnIndex="1">
+                                <VBox alignment="CENTER" styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1">
                                     <children>
-                                        <Label fx:id="clicksLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="clicksLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="20.0"/>
+                                                <Font size="20.0" />
                                             </font>
                                         </Label>
                                         <Label text="CLICKS" textFill="WHITE">
                                             <font>
-                                                <Font size="20.0"/>
+                                                <Font size="20.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
                                 <VBox alignment="CENTER" styleClass="metric-vbox" stylesheets="@../styles/styles.css">
                                     <children>
-                                        <Label fx:id="impressionsLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="impressionsLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="20.0"/>
+                                                <Font size="20.0" />
                                             </font>
                                         </Label>
                                         <Label text="IMPRESSIONS" textFill="WHITE">
                                             <font>
-                                                <Font size="20.0"/>
+                                                <Font size="20.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.rowIndex="1">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="uniquesLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="uniquesLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="UNIQUES" textFill="WHITE">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="conversionsLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="conversionsLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="CONVERSIONS" textFill="WHITE">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.rowIndex="2">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="2">
                                     <children>
-                                        <Label fx:id="bouncesLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="bouncesLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="BOUNCES" textFill="WHITE">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                     <children>
                                         <Label fx:id="bounceRateLabel" styleClass="bold-label" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="BOUNCE RATE">
                                             <font>
-                                                <Font size="20.0"/>
+                                                <Font size="20.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.rowIndex="3">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="3">
                                     <children>
-                                        <Label fx:id="ctrLabel" styleClass="bold-label" textFill="WHITE"
-                                               wrapText="true">
+                                        <Label fx:id="ctrLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="CTR" textFill="WHITE">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                     <children>
                                         <Label fx:id="cpaLabel" styleClass="bold-label" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="CPA">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.rowIndex="4">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.rowIndex="4">
                                     <children>
                                         <Label fx:id="cpmLabel" styleClass="bold-label" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="CPM">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                <VBox styleClass="metric-vbox" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                     <children>
                                         <Label fx:id="cpcLabel" styleClass="bold-label" wrapText="true">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                         <Label text="CPC">
                                             <font>
-                                                <Font size="24.0"/>
+                                                <Font size="24.0" />
                                             </font>
                                         </Label>
                                     </children>
@@ -239,12 +217,12 @@
                             <children>
                                 <Label fx:id="totalLabel" styleClass="bold-label" textFill="WHITE" wrapText="true">
                                     <font>
-                                        <Font size="24.0"/>
+                                        <Font size="24.0" />
                                     </font>
                                 </Label>
                                 <Label text="TOTAL COST" textFill="WHITE">
                                     <font>
-                                        <Font size="24.0"/>
+                                        <Font size="24.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -254,68 +232,54 @@
             </children>
         </HBox>
 
-        <HBox alignment="CENTER_RIGHT" layoutX="1117.3333333333333" layoutY="20.0" AnchorPane.leftAnchor="1117.0"
-              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
+        <HBox alignment="CENTER_RIGHT" layoutX="1117.3333333333333" layoutY="20.0" AnchorPane.leftAnchor="1117.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
             <children>
                 <VBox spacing="30.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0"
-                                styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as PDF">
+                        <Button mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as PDF">
                             <font>
-                                <Font size="21.0"/>
+                                <Font size="21.0" />
                             </font>
                             <VBox.margin>
-                                <Insets/>
+                                <Insets />
                             </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0"
-                                styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as CSV">
+                        <Button mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as CSV">
                             <font>
-                                <Font size="21.0"/>
+                                <Font size="21.0" />
                             </font>
                             <VBox.margin>
-                                <Insets/>
+                                <Insets />
                             </VBox.margin>
                         </Button>
                     </children>
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                     <padding>
-                        <Insets right="10.0"/>
+                        <Insets right="10.0" />
                     </padding>
                 </VBox>
             </children>
             <padding>
-                <Insets bottom="10.0" top="10.0"/>
+                <Insets bottom="10.0" top="10.0" />
             </padding>
         </HBox>
-        <HBox alignment="CENTER_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-              AnchorPane.rightAnchor="1110.0">
+        <HBox alignment="CENTER_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1110.0">
             <children>
 
-                <Button mnemonicParsing="false" onAction="#handleSettingsLoad" prefHeight="60.0" prefWidth="140.0"
-                        styleClass="blue-button" stylesheets="@../styles/styles.css" text="Settings">
+                <Button mnemonicParsing="false" onAction="#handleSettingsLoad" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Settings">
                     <font>
-                        <Font size="24.0"/>
+                        <Font size="24.0" />
                     </font>
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                 </Button>
             </children>
             <padding>
-                <Insets bottom="10.0" left="10.0"/>
+                <Insets bottom="10.0" left="10.0" />
             </padding>
-        </HBox>
-        <!-- First row with two columns -->
-        <HBox alignment="CENTER" layoutX="74.0" layoutY="-280.0" spacing="10.0">
-            <children>
-                <!-- First column of metrics -->
-                <VBox maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS"/>
-                <!-- Second column of metrics -->
-                <VBox maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS"/>
-            </children>
         </HBox>
 
     </children>
