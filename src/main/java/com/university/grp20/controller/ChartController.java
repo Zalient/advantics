@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
@@ -39,6 +40,8 @@ public class ChartController {
   private Button backButton;
   @FXML
   private MenuButton addChartButton;
+  @FXML
+  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
 
   private final Logger logger = LogManager.getLogger(ChartController.class);
   private final OperationLogger operationLogger = new OperationLogger();
@@ -86,7 +89,7 @@ public class ChartController {
   @FXML
   private void showMetrics() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
-    operationLogger.log("Metrics page chosen, displaying metrics dashboard");
+    operationLogger.log("Metrics button clicked, displaying metrics dashboard");
   }
 
   @FXML
@@ -104,7 +107,7 @@ public class ChartController {
   @FXML
   private void showFilterSelection(ChartViewer chartViewer) {
     if (!User.getRole().equals("Viewer")) {
-      operationLogger.log("Charts filter chosen, displaying filter options");
+      operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
         FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
         loader.load();
@@ -132,85 +135,73 @@ public class ChartController {
   private void addImpressionsChart() {
     JFreeChart chart = GenerateChartService.impressionsChart();
     addChart(chart, "Impressions");
-    operationLogger.log("Impressions chart chosen and displayed");
   }
 
   @FXML
   private void addClicksChart() {
     JFreeChart chart = GenerateChartService.clicksChart();
     addChart(chart, "Clicks");
-    operationLogger.log("Clicks chart chosen and displayed");
   }
 
   @FXML
   private void addUniquesChart() {
     JFreeChart chart = GenerateChartService.uniquesChart();
     addChart(chart, "Uniques");
-    operationLogger.log("Uniques chart chosen and displayed");
   }
 
   @FXML
   private void addBouncesChart() {
     JFreeChart chart = GenerateChartService.bouncesChart();
     addChart(chart, "Bounces");
-    operationLogger.log("Bounces chart chosen and displayed");
   }
 
   @FXML
   private void addConversionsChart() {
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
-    operationLogger.log("Conversions chart chosen and displayed");
-
   }
 
   @FXML
   private void addTotalCostChart() {
     JFreeChart chart = GenerateChartService.totalCostChart();
     addChart(chart, "Total Cost");
-    operationLogger.log("Total Cost chart chosen and displayed");
   }
 
   @FXML
   private void addCTRChart() {
     JFreeChart chart = GenerateChartService.ctrChart();
     addChart(chart, "CTR");
-    operationLogger.log("CTR chart chosen and displayed");
   }
 
   @FXML
   private void addCPAChart() {
     JFreeChart chart = GenerateChartService.cpaChart();
     addChart(chart, "CPA");
-    operationLogger.log("CPA chart chosen and displayed");
   }
 
   @FXML
   private void addCPCChart() {
     JFreeChart chart = GenerateChartService.cpcChart();
     addChart(chart, "CPC");
-    operationLogger.log("CPC chart chosen and displayed");
   }
 
   @FXML
   private void addCPMChart() {
     JFreeChart chart = GenerateChartService.cpmChart();
     addChart(chart, "CPM");
-    operationLogger.log("CPM chart chosen and displayed");
   }
 
   @FXML
   private void addBounceRateChart() {
     JFreeChart chart = GenerateChartService.bounceRateChart();
     addChart(chart, "Bounce Rate");
-    operationLogger.log("Bounce Rate chart chosen and displayed");
   }
 
   @FXML
   private void binSizePrompt() {
+    operationLogger.log("Click Cost histogram chosen, bin size prompt displayed");
     Dialog<Integer> numBinsDialog = new Dialog<>();
     numBinsDialog.setTitle("Set Number Of Bins");
-    operationLogger.log("Click Cost histogram chosen, bin size prompt displayed");
 
     TextField numBinsField = new TextField();
     numBinsField.setPromptText("Enter Number Of Bins");
@@ -225,8 +216,17 @@ public class ChartController {
             dialogButton -> {
               if (dialogButton == applyButton) {
                 String input = numBinsField.getText();
+                operationLogger.log("Bin input of " + input + "entered");
                 try {
-                  return Integer.parseInt(input);
+                  int bins = Integer.parseInt(input);
+
+                  if (bins <= 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Input is negative, please enter a positive value");
+                    alert.showAndWait();
+                    return null;
+                  }
+                  return bins;
                 } catch (NumberFormatException ex) {
                   Alert alert = new Alert(Alert.AlertType.ERROR);
                   alert.setContentText("Input is not an integer, wrong type");
@@ -241,6 +241,7 @@ public class ChartController {
   }
 
   public void addChart(JFreeChart chart, String metricType) {
+    operationLogger.log(metricType + " chart display option clicked and displayed");
     ChartViewer chartViewer = new ChartViewer(chart);
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.prefHeightProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
@@ -264,9 +265,15 @@ public class ChartController {
 
     Button exportPDFButton = new Button("Export as PDF");
     exportPDFButton.setOnAction(e -> {
+      operationLogger.log("Export as PDF button clicked");
       try {
         String filePath = ExportService.askForPDFFilename();
         ExportService.chartToPDF(chartViewer.getChart(), filePath);
+        if (filePath != null) {
+          operationLogger.log("Chart exported as PDF to " + filePath);
+        } else {
+          operationLogger.log("Chart not exported");
+        }
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -274,9 +281,15 @@ public class ChartController {
 
     Button exportCSVButton = new Button("Export as CSV");
     exportCSVButton.setOnAction(e -> {
+      operationLogger.log("Export as CSV button clicked");
       try {
         String filePath = ExportService.askForCSVFilename();
         ExportService.chartToCSV(chartViewer.getChart(), filePath);
+        if (filePath != null) {
+          operationLogger.log("Chart exported as CSV to " + filePath);
+        } else {
+          operationLogger.log("Chart not exported");
+        }
       } catch (IOException ex) {
         ex.printStackTrace();
       }

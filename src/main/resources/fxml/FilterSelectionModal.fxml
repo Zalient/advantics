@@ -8,11 +8,11 @@
 <?import javafx.scene.text.*?>
 <?import org.controlsfx.control.*?>
 
-<AnchorPane prefHeight="250.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
+<AnchorPane prefHeight="250.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
     <children>
         <VBox prefHeight="300.0" prefWidth="450.0">
             <children>
-                <Label fx:id="chartNameLabel" prefHeight="48.0" prefWidth="231.0" text="Chart Name">
+                <Label fx:id="chartNameLabel" prefHeight="48.0" prefWidth="231.0" text="Chart Filtering">
                     <font>
                         <Font size="24.0" />
                     </font>
@@ -82,9 +82,7 @@
                                 </HBox>
                             </children>
                         </HBox>
-                        <CheckComboBox fx:id="ageGroupSelector" prefHeight="25.0" prefWidth="140.0" title="Age Group"
-                                       GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                                       GridPane.valignment="CENTER">
+                        <CheckComboBox fx:id="ageGroupSelector" prefHeight="25.0" prefWidth="140.0" title="Age Group" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                         </CheckComboBox>
                         <CheckComboBox fx:id="incomeSelector" title="Income " GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <CheckComboBox fx:id="contextSelector" title="Context" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />

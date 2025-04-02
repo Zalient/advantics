@@ -23,7 +23,7 @@
       </Button>
         <VBox alignment="CENTER" layoutY="95.0" prefHeight="505.0" prefWidth="1280.0" spacing="50.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="95.0">
             <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" text="File Import">
+                <Label fx:id="fileImportLabel" alignment="CENTER" contentDisplay="CENTER" text="File Import">
                     <font>
                         <Font size="48.0" />
                     </font>

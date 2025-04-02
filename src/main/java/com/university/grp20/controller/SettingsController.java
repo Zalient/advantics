@@ -10,18 +10,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SettingsController {
-      private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
   private final Logger logger = LogManager.getLogger(MetricsController.class);
-  private ExportLogService exportLogService = new ExportLogService();
-    private OperationLogger operationLogger = new OperationLogger();
+  private OperationLogger operationLogger = new OperationLogger();
 
   @FXML private TextField addUsernameField;
   @FXML private TextField addPasswordField;
@@ -51,7 +52,6 @@ public class SettingsController {
 
     @FXML
     private void initialize() {
-      operationLogger.log("Settings page clicked and displayed");
       selectRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
       selectNewRoleMenu.getItems().addAll("Viewer", "Editor", "Admin");
       bounceGroup = new ToggleGroup();
@@ -77,7 +77,7 @@ public class SettingsController {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(metricsTitleBox, metricsVBox);
       }
-    // If user isn't an admin them remove all of the admin only settings
+    // If user isn't an admin them remove all the admin only settings
     if (!User.getRole().equals("Admin")) {
         VBox content = (VBox) settingsScrollPane.getContent();
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
@@ -87,32 +87,50 @@ public class SettingsController {
 
   @FXML
   private void handleBounceChoice(){
-    bounceChooser.setDisable(false);
-    bounceValField.setDisable(false);
+      operationLogger.log("Bounce option selected, unlocking input fields");
+      bounceChooser.setDisable(false);
+      bounceValField.setDisable(false);
   }
 
   @FXML
   private void bounceApply() {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
+    operationLogger.log("Bounce apply button clicked");
+    Alert inputAlert = new Alert(Alert.AlertType.ERROR);
     RadioButton selectedBounce = (RadioButton) bounceGroup.getSelectedToggle();
     String bounceVal = bounceValField.getText();
 
     if (bounceVal.isEmpty()) {
-      alert.setTitle("Error");
-      alert.setHeaderText(null);
-      alert.setContentText("Invalid, please enter a value");
-      alert.showAndWait();
+      operationLogger.log("Bounce value not entered");
+      inputAlert.setTitle("Error");
+      inputAlert.setHeaderText(null);
+      inputAlert.setContentText("Empty input, please enter a value");
+      inputAlert.showAndWait();
     } else {
       try {
         int bounceValue = Integer.parseInt(bounceVal);
+
+        if (bounceValue < 0) {
+          operationLogger.log("Negative bounce value entered");
+          inputAlert.setContentText("Input is a negative number, please enter positive integer");
+          inputAlert.showAndWait();
+          return;
+        }
 
         GenerateChartService.setBounceType(selectedBounce.getText());
         GenerateChartService.setBounceValue(bounceVal);
         calculateMetricsService.setBounceType(selectedBounce.getText());
         calculateMetricsService.setBounceValue(bounceVal);
+
+        Alert successAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        operationLogger.log("Bounce value redefined as: " + selectedBounce.getText() + " : " + bounceVal);
+        successAlert.setTitle("Confirmation");
+        successAlert.setHeaderText(null);
+        successAlert.setContentText("Bounce successfully redefined");
+        successAlert.showAndWait();
       } catch (NumberFormatException ex) {
-        alert.setContentText("Input is not an integer, wrong type");
-        alert.showAndWait();
+        operationLogger.log("Bounce value of wrong type");
+        inputAlert.setContentText("Input is not an integer, wrong type");
+        inputAlert.showAndWait();
       }
     }
   }
@@ -124,6 +142,12 @@ public class SettingsController {
     String enteredUsername = addUsernameField.getText();
     String enteredPassword = addPasswordField.getText();
 
+    operationLogger.log("New username entered: " + enteredUsername);
+    operationLogger.log("New password entered: " + enteredPassword);
+    operationLogger.log("New role selected: " + selectRoleMenu.getValue());
+
+    operationLogger.log("Add user button clicked");
+
     if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty() && selectRoleMenu.getValue() != null) {
       if (!loginService.doesUserExist(addUsernameField.getText())) {
 
@@ -134,6 +158,7 @@ public class SettingsController {
             alert.setTitle("Confirmation");
             alert.setHeaderText(null);
             alert.setContentText("New user \"" + enteredUsername + "\" was successfully added to the database");
+            operationLogger.log("New user successfully added");
             alert.showAndWait();
 
             addUsernameField.setText("");
@@ -151,9 +176,11 @@ public class SettingsController {
 
       } else {
         showError("A user with that username already exists in the database");
+        operationLogger.log("User already exists in the database");
       }
     } else {
       showError("You have not filled out all the user detail fields..");
+      operationLogger.log("User detail fields are empty");
     }
 
   }
@@ -175,9 +202,11 @@ public class SettingsController {
     if (selectUserMenu.getValue() != null) {
 
       String selectedUser = selectUserMenu.getValue().toString();
+      operationLogger.log("Selected user: " + selectedUser);
 
       if (!enteredPassword.isEmpty()) {
         boolean passwordUpdateSuccess = loginService.changeUserPassword(selectedUser, enteredPassword);
+        operationLogger.log("Updated password: " + enteredPassword);
 
         if (!passwordUpdateSuccess) {
           showError("Something went wrong with updating the user's password");
@@ -186,6 +215,7 @@ public class SettingsController {
 
       if (selectNewRoleMenu.getValue() != null) {
         String selectedRole = selectNewRoleMenu.getValue().toString();
+        operationLogger.log("Updated role: " + selectedRole);
 
         boolean roleUpdateSuccess = loginService.changeUserRole(selectedUser, selectedRole);
 
@@ -199,34 +229,58 @@ public class SettingsController {
       selectNewRoleMenu.getSelectionModel().clearSelection();
       currentPasswordLabel.setText("Current Password: ");
       currentRoleLabel.setText("Current Role: ");
-
+      operationLogger.log("Submit changes button clicked");
+      operationLogger.log("User successfully updated");
     } else {
       showError("You have not selected a user to edit");
+      operationLogger.log("User not yet selected");
     }
   }
 
   @FXML
   public void handleExportLogToPDF(ActionEvent event) {
-    String logFileName = operationLogger.getLogFileName();
-    String timestamp = LocalDateTime.now().format(formatter);
-    //Gives the timestamp in the filename once exported
-    String filePath = "operationLogs/exported_log_" + timestamp + ".pdf";
-    exportLogService.exportLogToPDF(logFileName, filePath);
-    showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setTitle("Select Directory to Save Log");
+    File selectedDirectory = directoryChooser.showDialog(new Stage());
+
+    if (selectedDirectory != null) {
+      String logFileName = operationLogger.getLogFileName();
+      String timestamp = LocalDateTime.now().format(formatter);
+      String filePath = selectedDirectory.getAbsolutePath() + "/exported_log_" + timestamp + ".pdf";
+
+      ExportService.exportLogToPDF(logFileName, filePath);
+      operationLogger.log("User operation log exported as PDF to " + filePath);
+      showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
+    } else {
+      showAlert("Error", "No directory selected. Export canceled.");
+      operationLogger.log("User operation log export cancelled");
+    }
   }
 
   @FXML
   public void handleExportLogToCSV(ActionEvent event) {
-    String logFileName = operationLogger.getLogFileName();
-    String timestamp = LocalDateTime.now().format(formatter);
-    //Gives the timestamp in the filename once exported
-    String filePath = "operationLogs/exported_log_" + timestamp + ".csv";
-    exportLogService.exportLogToCSV(logFileName, filePath);
-    showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setTitle("Select Directory to Save Log");
+    File selectedDirectory = directoryChooser.showDialog(new Stage());
+
+    if (selectedDirectory != null) {
+      String logFileName = operationLogger.getLogFileName();
+      String timestamp = LocalDateTime.now().format(formatter);
+      String filePath = selectedDirectory.getAbsolutePath() + "/exported_log_" + timestamp + ".csv";
+
+      ExportService.exportLogToCSV(logFileName, filePath);
+      operationLogger.log("User operation log exported as PDF to " + filePath);
+      showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);
+    } else {
+      showAlert("Error", "No directory selected. Export canceled.");
+      operationLogger.log("User operation log export cancelled");
+    }
   }
+
 
   @FXML
   private void handleBack() {
+    operationLogger.log("Back button clicked");
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
   }
 

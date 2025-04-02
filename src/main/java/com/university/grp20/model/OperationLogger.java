@@ -11,14 +11,14 @@ public class OperationLogger {
     private static String logFileName;
 
     public void initialize() {
-        String timestamp = LocalDateTime.now().format(formatter);
-        logFileName = "operationLogs/" + "userLog_" + timestamp + ".txt";
+        String timeStamp = LocalDateTime.now().format(formatter);
+        logFileName = "operationLogs/" + "userLog_" + timeStamp + ".txt";
 
         try {
             new java.io.File("operationLogs/").mkdirs();
 
-            try (PrintWriter pw = new PrintWriter(new FileWriter(logFileName, true))) {
-                pw.println("Session Started: " + timestamp);
+            try (PrintWriter printWriter = new PrintWriter(new FileWriter(logFileName, true))) {
+                printWriter.println("Session Started: " + timeStamp);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,12 +26,16 @@ public class OperationLogger {
         log("Operation logger initialized");
     }
 
-    public void log(String action) {
-        try (FileWriter fw = new FileWriter(logFileName, true);
-             PrintWriter pw = new PrintWriter(fw)) {
+    public void log(String activity) {
+        if (logFileName == null) {
+            initialize();
+        }
 
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            pw.println("[" + timestamp + "] " + action);
+        try (FileWriter fileWriter = new FileWriter(logFileName, true);
+             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+
+            String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            printWriter.println("[" + timeStamp + "] " + activity);
         } catch (IOException e) {
             e.printStackTrace();
         }

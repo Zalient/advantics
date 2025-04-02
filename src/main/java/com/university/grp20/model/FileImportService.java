@@ -426,17 +426,17 @@ public class FileImportService {
 
   public void setImpressionLog(File newImpressionLog) {
     this.impressionLog = newImpressionLog;
-    operationLogger.log("File uploaded: " + newImpressionLog);
+    operationLogger.log("Impression log file uploaded: " + newImpressionLog);
   }
 
   public void setClickLog(File newClickLog) {
     this.clickLog = newClickLog;
-    operationLogger.log("File uploaded: " + newClickLog);
+    operationLogger.log("Click log file uploaded: " + newClickLog);
   }
 
   public void setServerLog(File newServerLog) {
     this.serverLog = newServerLog;
-    operationLogger.log("File uploaded: " + newServerLog);
+    operationLogger.log("Server log file uploaded: " + newServerLog);
   }
 
   public void setCampaignStartDate(String newCampaignStartDate) {
