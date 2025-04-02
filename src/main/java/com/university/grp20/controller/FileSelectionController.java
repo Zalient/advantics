@@ -58,6 +58,7 @@ public class FileSelectionController {
 
   @FXML
   private void startImport() {
+    operationLogger.log("Next button clicked, attempting import");
     if (fileImportService.isReady()) {
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
@@ -82,6 +83,7 @@ public class FileSelectionController {
                                   () ->
                                           UIManager.switchScene(
                                                   UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
+                          operationLogger.log("File upload success, dashboard opened");
                         } catch (Exception e) {
                           Platform.runLater(this::resetUI);
                           throw new RuntimeException(
@@ -102,8 +104,7 @@ public class FileSelectionController {
 
   @FXML
   private void handleImpressionUpload() {
-    selectFile(
-        "Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
+    selectFile("Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
     operationLogger.log("Impression log file chooser displayed");
   }
 
@@ -123,6 +124,7 @@ public class FileSelectionController {
   private void handleLogout() {
     // Reset all the attributes of the user class
     User.logOut();
+    operationLogger.log("Logout button clicked");
 
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginScene.fxml"));
@@ -139,6 +141,7 @@ public class FileSelectionController {
 
   @FXML
   private void handleSkip() {
+    operationLogger.log("Skip upload button clicked");
     if (fileImportService.isDataLoaded()) {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
     } else {

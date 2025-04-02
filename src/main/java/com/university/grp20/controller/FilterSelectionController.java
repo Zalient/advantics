@@ -132,8 +132,8 @@ public class FilterSelectionController {
 
   @FXML
   private void quit() {
-    operationLogger.log("Quit button selected");
     UIManager.closeModal();
+    operationLogger.log("Quit button selected");
   }
 
   private void applyFilterModeUI() {
