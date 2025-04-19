@@ -1,5 +1,6 @@
 package com.university.grp20.controller.settings;
 
+import com.university.grp20.UIManager;
 import com.university.grp20.model.ExportLogService;
 import com.university.grp20.model.OperationLogger;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ public class ExportSettingsController {
     String timestamp = LocalDateTime.now().format(formatter);
     String filePath = "operationLogs/exported_log_" + timestamp + ".pdf";
     exportLogService.exportLogToPDF(logFileName, filePath);
+    UIManager.showAlert("Success", "Log exported to PDF\nSaved at: " + filePath);
   }
 
   @FXML
@@ -25,5 +27,6 @@ public class ExportSettingsController {
     String timestamp = LocalDateTime.now().format(formatter);
     String filePath = "operationLogs/exported_log_" + timestamp + ".csv";
     exportLogService.exportLogToCSV(logFileName, filePath);
+    UIManager.showAlert("Success", "Log exported to CSV\nSaved at: " + filePath);
   }
 }

@@ -1,5 +1,6 @@
 package com.university.grp20.controller.settings;
 
+import com.university.grp20.controller.MetricsController;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.GenerateChartService;
 import javafx.fxml.FXML;
@@ -13,7 +14,7 @@ public class MetricSettingsController {
   @FXML private RadioButton pagesViewedButton;
   @FXML private RadioButton timeSpentButton;
   @FXML private TextField bounceValueField;
-  @FXML private Button applyBounceButton;
+  private MetricsController metricsController;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
   private ToggleGroup bounceChoiceGroup;
 
@@ -22,7 +23,6 @@ public class MetricSettingsController {
     bounceChoiceGroup = new ToggleGroup();
     pagesViewedButton.setToggleGroup(bounceChoiceGroup);
     timeSpentButton.setToggleGroup(bounceChoiceGroup);
-    initBounceValueListeners();
   }
 
   @FXML
@@ -41,20 +41,7 @@ public class MetricSettingsController {
     calculateMetricsService.setBounceValue(bounceValue);
   }
 
-  private void initBounceValueListeners() {
-    bounceValueField
-        .focusedProperty()
-        .addListener(
-            (obs, lostFocus, gainedFocus) -> {
-              if (lostFocus && !bounceValueField.getText().isEmpty()) {
-                applyBounceButton.setDisable(false);
-              }
-            });
-    bounceValueField.setOnKeyPressed(
-        ev -> {
-          if (ev.getCode() == KeyCode.ENTER && !bounceValueField.getText().isEmpty()) {
-            applyBounceButton.setDisable(false);
-          }
-        });
+  public void init(MetricsController metricsController) {
+    this.metricsController = metricsController;
   }
 }

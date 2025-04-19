@@ -6,6 +6,7 @@ import com.university.grp20.controller.layout.ModalLayoutController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -122,4 +123,22 @@ public class UIManager {
   public static void showModalStage(String title, FXMLLoader childLoader) {
     showModalStage(title, childLoader, false);
   }
+
+  public static void showError(String errorMessage) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error!");
+    alert.setHeaderText(null);
+    alert.setContentText(errorMessage);
+    alert.showAndWait();
+  }
+
+  public static void showAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
 }
+
+
