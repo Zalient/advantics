@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class UIManager {
+  private static Object controller;
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static final String DEFAULT_MODAL_TITLE = "Filter Selection";
   private static final int CACHE_MAX_SIZE = 5;
@@ -57,6 +58,8 @@ public class UIManager {
       if (useCache && loader.getLocation() != null) {
         key = loader.getLocation().toString();
         root = ROOT_CACHE.get(key);
+        controller = CONTROLLER_CACHE.get(key);
+        setController(controller);
       }
 
       if (root == null) {
@@ -64,6 +67,7 @@ public class UIManager {
         if (useCache && key != null) {
           ROOT_CACHE.put(key, root);
           CONTROLLER_CACHE.put(key, loader.getController());
+          setController(loader.getController());
         }
       }
 
@@ -108,12 +112,14 @@ public class UIManager {
         key = loader.getLocation().toString();
         root = ROOT_CACHE.get(key);
         controller = CONTROLLER_CACHE.get(key);
+        setController(controller);
       }
       if (root == null) {
         root = (loader.getRoot() == null) ? loader.load() : loader.getRoot();
         if (useCache && key != null) {
           ROOT_CACHE.put(key, root);
           CONTROLLER_CACHE.put(key, controller);
+          setController(controller);
         }
       }
       Scene scene = new Scene(root);
@@ -151,5 +157,14 @@ public class UIManager {
       currentModal.close();
       currentModal = null;
     }
+  }
+
+  public static void setController(Object newController) {
+    controller = newController;
+  }
+
+
+  public static Object getController() {
+    return controller;
   }
 }

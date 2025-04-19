@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartController">
+<AnchorPane prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartController">
     <children>
         <VBox prefHeight="720" prefWidth="1280" spacing="10" AnchorPane.topAnchor="0.0">
             <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" prefWidth="1280">
@@ -31,7 +31,7 @@
                             <Insets />
                         </opaqueInsets>
                     </Region>
-                    <ToggleButton mnemonicParsing="false" onAction="#showMetrics" stylesheets="@../styles/styles.css" text="Metrics">
+                    <ToggleButton fx:id="metricsButton" mnemonicParsing="false" onAction="#showMetrics" stylesheets="@../styles/styles.css" text="Metrics">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -42,7 +42,7 @@
                             <Insets left="5.0" right="5.0" />
                         </HBox.margin>
                     </ToggleButton>
-                    <ToggleButton mnemonicParsing="false" stylesheets="@../styles/styles.css" text="Charts">
+                    <ToggleButton fx:id="chartsButton" mnemonicParsing="false" stylesheets="@../styles/styles.css" text="Charts">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -56,18 +56,18 @@
                     <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                     <MenuButton fx:id="addChartButton" stylesheets="@../styles/styles.css" text="Add">
                         <items>
-                            <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
-                            <MenuItem mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks" />
-                            <MenuItem mnemonicParsing="false" onAction="#addUniquesChart" text="No Of Uniques" />
-                            <MenuItem mnemonicParsing="false" onAction="#addBouncesChart" text="No Of Bounces" />
-                            <MenuItem mnemonicParsing="false" onAction="#addConversionsChart" text="No Of Conversions" />
-                            <MenuItem mnemonicParsing="false" onAction="#addTotalCostChart" text="Total" />
-                            <MenuItem mnemonicParsing="false" onAction="#addCTRChart" text="CTR" />
-                            <MenuItem mnemonicParsing="false" onAction="#addCPAChart" text="CPA" />
-                            <MenuItem mnemonicParsing="false" onAction="#addCPCChart" text="CPC" />
-                            <MenuItem mnemonicParsing="false" onAction="#addCPMChart" text="CPM" />
-                            <MenuItem mnemonicParsing="false" onAction="#addBounceRateChart" text="Bounce Rate" />
-                            <MenuItem mnemonicParsing="false" onAction="#binSizePrompt" text="Click Cost Histogram" />
+                            <MenuItem fx:id="addImpressionsChartButton" mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
+                            <MenuItem fx:id="addClicksChartButton" mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks" />
+                            <MenuItem fx:id="addUniquesChartButton" mnemonicParsing="false" onAction="#addUniquesChart" text="No Of Uniques" />
+                            <MenuItem fx:id="addBouncesChartButton" mnemonicParsing="false" onAction="#addBouncesChart" text="No Of Bounces" />
+                            <MenuItem fx:id="addConversionsChartButton" mnemonicParsing="false" onAction="#addConversionsChart" text="No Of Conversions" />
+                            <MenuItem fx:id="addTotalCostChartButton" mnemonicParsing="false" onAction="#addTotalCostChart" text="Total" />
+                            <MenuItem fx:id="addCTRChartButton" mnemonicParsing="false" onAction="#addCTRChart" text="CTR" />
+                            <MenuItem fx:id="addCPAChartButton" mnemonicParsing="false" onAction="#addCPAChart" text="CPA" />
+                            <MenuItem fx:id="addCPCChartButton" mnemonicParsing="false" onAction="#addCPCChart" text="CPC" />
+                            <MenuItem fx:id="addCPMChartButton" mnemonicParsing="false" onAction="#addCPMChart" text="CPM" />
+                            <MenuItem fx:id="addBounceRateChartButton" mnemonicParsing="false" onAction="#addBounceRateChart" text="Bounce Rate" />
+                            <MenuItem fx:id="addClickCostHistogramButton" mnemonicParsing="false" onAction="#binSizePrompt" text="Click Cost Histogram" />
                         </items>
                         <HBox.margin>
                             <Insets right="10.0" />

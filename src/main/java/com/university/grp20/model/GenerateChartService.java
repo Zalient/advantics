@@ -62,12 +62,12 @@ public class GenerateChartService {
     return histogramDataset;
   }
 
-  private String applyCommonFilter(
-      String baseSQL,
-      FilterCriteriaDTO filterDTO,
-      String dateAlias,
-      String dateColumn,
-      String userAlias) {
+  public String applyCommonFilter(
+          String baseSQL,
+          FilterCriteriaDTO filterDTO,
+          String dateAlias,
+          String dateColumn,
+          String userAlias) {
 
     StringBuilder sb = new StringBuilder(baseSQL);
 

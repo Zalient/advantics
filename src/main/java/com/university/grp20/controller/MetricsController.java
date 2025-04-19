@@ -64,16 +64,18 @@ public class MetricsController {
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
+      operationLogger.log("Back button clicked, returning to login page");
     } else {
       UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+      operationLogger.log("Back button clicked, returning to file upload page");
     }
   }
 
   @FXML
   private void showMetricsFilter() {
-    operationLogger.log("Metrics filter chosen, displaying filter options");
     try {
       logger.info("Filter button clicked");
+      operationLogger.log("Metrics filter button clicked, displaying filter options");
       FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
       loader.load();
 
@@ -89,6 +91,7 @@ public class MetricsController {
 
   @FXML
   private void saveAsPDF() throws IOException {
+    operationLogger.log("Save as PDF button clicked");
     if (metricsDTO == null) {
       logger.error("Cannot export to PDF: metricsDTO is null.");
       return;
@@ -98,24 +101,34 @@ public class MetricsController {
     if (filePath != null) {
       ExportService.dashboardToPDF(metricsDTO, filePath);
       logger.info("Metrics exported successfully to PDF.");
+      operationLogger.log("Metrics report saved to PDF at " + filePath);
+    } else {
+      operationLogger.log("Metrics report not saved");
     }
   }
 
   @FXML
   private void saveAsCSV() throws IOException {
+    operationLogger.log("Save as CSV button clicked");
     String filePath = ExportService.askForCSVFilename();
     ExportService.dashboardToCSV(metricsDTO, filePath);
+    if (filePath != null) {
+      operationLogger.log("Metrics report saved to CSV at " + filePath);
+    } else {
+      operationLogger.log("Metrics report not saved");
+    }
   }
 
   @FXML
   private void showCharts() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
-    operationLogger.log("Charts page chosen, displaying charts page");
+    operationLogger.log("Charts button clicked, displaying charts page");
   }
 
   @FXML
   private void handleSettingsLoad() {
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/SettingsScene.fxml"), false);
+    operationLogger.log("Settings button clicked, displaying settings page");
   }
 
   public void disableForViewer() {

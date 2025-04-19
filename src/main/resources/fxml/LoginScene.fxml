@@ -9,8 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="291.0" layoutY="121.0" prefHeight="50.0" prefWidth="699.0" text="Welcome to the Advertising Dashboard!">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="281.0" layoutY="120.0" prefHeight="58.0" prefWidth="747.0" text="Welcome to the Advertising Dashboard!">
         <font>
             <Font size="40.0" />
         </font>
