@@ -22,20 +22,20 @@ public class UIManager {
   private static Stage primaryStage;
   private static Stage currentModal = null;
   private static final Map<String, Parent> ROOT_CACHE =
-          new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
-              return size() > CACHE_MAX_SIZE;
-            }
-          };
+      new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
+          return size() > CACHE_MAX_SIZE;
+        }
+      };
 
   private static final Map<String, Object> CONTROLLER_CACHE =
-          new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
-              return size() > CACHE_MAX_SIZE;
-            }
-          };
+      new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+          return size() > CACHE_MAX_SIZE;
+        }
+      };
 
   public static void setPrimaryStage(Stage stage) {
     primaryStage = stage;
@@ -53,7 +53,7 @@ public class UIManager {
     try {
       Parent root = null;
       String key = null;
-      Object controller = null;
+      Object controller;
 
       if (useCache && loader.getLocation() != null) {
         key = loader.getLocation().toString();
@@ -94,7 +94,7 @@ public class UIManager {
 
     } catch (IOException e) {
       String loaderLocation =
-              (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
+          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
       logger.error("Error switching scene using loader: " + loaderLocation, e);
     }
   }
@@ -134,7 +134,7 @@ public class UIManager {
       return modalStage;
     } catch (IOException e) {
       String loaderLocation =
-              (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
+          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
       logger.error("Error showing modal scene using loader: " + loaderLocation, e);
       return null;
     }

@@ -22,11 +22,11 @@ public class GenerateChartService {
   private static String bounceType = "Pages Viewed";
   private static String bounceValue = "1";
 
-  public static void setBounceType(String bounceType){
+  public static void setBounceType(String bounceType) {
     GenerateChartService.bounceType = bounceType;
   }
 
-  public static void setBounceValue(String bounceValue){
+  public static void setBounceValue(String bounceValue) {
     GenerateChartService.bounceValue = bounceValue;
   }
 
@@ -45,7 +45,8 @@ public class GenerateChartService {
     return dataset;
   }
 
-  private static HistogramDataset getHistogramDataset(String query, String metricLine, int binSize) {
+  private static HistogramDataset getHistogramDataset(
+      String query, String metricLine, int binSize) {
     List<Double> dataPoints = new ArrayList<>();
     try (Connection conn = DBHelper.getConnection();
         ResultSet rs = DBHelper.executeQuery(conn, query)) {
@@ -68,99 +69,100 @@ public class GenerateChartService {
           String dateColumn,
           String userAlias) {
 
-
     StringBuilder sb = new StringBuilder(baseSQL);
 
-    if (filterDTO.getStartDate() != null) {
+    if (filterDTO.startDate() != null) {
       sb.append(" AND ")
           .append(dateAlias)
           .append(".")
           .append(dateColumn)
           .append(" >= '")
-          .append(filterDTO.getStartDate())
+          .append(filterDTO.startDate())
           .append("'");
     }
-    if (filterDTO.getEndDate() != null) {
+    if (filterDTO.endDate() != null) {
       sb.append(" AND ")
           .append(dateAlias)
           .append(".")
           .append(dateColumn)
           .append(" <= '")
-          .append(filterDTO.getEndDate())
+          .append(filterDTO.endDate())
           .append("'");
     }
 
-
     if (userAlias != null && !userAlias.isEmpty()) {
 
-      if (filterDTO.getGender() != null) {
+      if (filterDTO.gender() != null) {
         sb.append(" AND ")
             .append(userAlias)
             .append(".Gender = '")
-            .append(filterDTO.getGender())
+            .append(filterDTO.gender())
             .append("'");
       }
-      if (filterDTO.getAgeRanges() != null && !filterDTO.getAgeRanges().isEmpty()) {
+      if (filterDTO.ageRanges() != null && !filterDTO.ageRanges().isEmpty()) {
         sb.append(" AND ").append(userAlias).append(".Age IN (");
-        for (int i = 0; i < filterDTO.getAgeRanges().size(); i++) {
-          String age = filterDTO.getAgeRanges().get(i);
+        for (int i = 0; i < filterDTO.ageRanges().size(); i++) {
+          String age = filterDTO.ageRanges().get(i);
           if ("Below 25".equals(age)) {
             age = "<25";
           } else if ("Above 54".equals(age)) {
             age = ">54";
           }
           sb.append("'").append(age).append("'");
-          if (i < filterDTO.getAgeRanges().size() - 1) {
+          if (i < filterDTO.ageRanges().size() - 1) {
             sb.append(", ");
           }
         }
         sb.append(")");
       }
-      if (filterDTO.getIncomes() != null && !filterDTO.getIncomes().isEmpty()) {
+      if (filterDTO.incomes() != null && !filterDTO.incomes().isEmpty()) {
         sb.append(" AND ").append(userAlias).append(".Income IN (");
         sb.append(
-            filterDTO.getIncomes().stream()
+            filterDTO.incomes().stream()
                 .map(income -> "'" + income + "'")
                 .collect(Collectors.joining(", ")));
         sb.append(")");
       }
-      if (filterDTO.getContexts() != null && !filterDTO.getContexts().isEmpty()) {
+      if (filterDTO.contexts() != null && !filterDTO.contexts().isEmpty()) {
         sb.append(" AND ").append(userAlias).append(".Context IN (");
         sb.append(
-            filterDTO.getContexts().stream()
+            filterDTO.contexts().stream()
                 .map(context -> "'" + context + "'")
                 .collect(Collectors.joining(", ")));
         sb.append(")");
       }
-      if (filterDTO.getTimeGranularity() == null || filterDTO.getTimeGranularity().isEmpty() || "Per Day".equals(filterDTO.getTimeGranularity())) {
+      if (filterDTO.timeGranularity() == null
+          || filterDTO.timeGranularity().isEmpty()
+          || "Per Day".equals(filterDTO.timeGranularity())) {
         sb.append(" GROUP BY STRFTIME('%Y-%m-%d', ")
             .append(dateAlias)
             .append(".")
             .append(dateColumn)
             .append(") ");
-      } else if ("Per Week".equals(filterDTO.getTimeGranularity())) {
+      } else if ("Per Week".equals(filterDTO.timeGranularity())) {
         sb.append(" GROUP BY STRFTIME('%Y-%W', ")
             .append(dateAlias)
             .append(".")
             .append(dateColumn)
             .append(") ");
-      } else if ("Per Hour".equals(filterDTO.getTimeGranularity())) {
+      } else if ("Per Hour".equals(filterDTO.timeGranularity())) {
         sb.append(" GROUP BY STRFTIME('%Y-%m-%d %H', ")
             .append(dateAlias)
             .append(".")
             .append(dateColumn)
             .append(") ");
-
-        }
+      }
     }
     return sb.toString();
   }
 
-  private String applyGranularitySelect(FilterCriteriaDTO filterDTO, String dateAlias, String dateColumn){
+  private String applyGranularitySelect(
+      FilterCriteriaDTO filterDTO, String dateAlias, String dateColumn) {
     String selectStmt;
-    if ("Per Hour".equals(filterDTO.getTimeGranularity())) {
-      selectStmt = "SELECT strftime('%Y-%m-%d %H:00:00', " + dateAlias + "." + dateColumn + ") AS time";
-    } else if ("Per Week".equals(filterDTO.getTimeGranularity())) {
+    if ("Per Hour".equals(filterDTO.timeGranularity())) {
+      selectStmt =
+          "SELECT strftime('%Y-%m-%d %H:00:00', " + dateAlias + "." + dateColumn + ") AS time";
+    } else if ("Per Week".equals(filterDTO.timeGranularity())) {
       selectStmt = "SELECT strftime('%Y-%W', " + dateAlias + "." + dateColumn + ") AS time";
     } else {
       selectStmt = "SELECT strftime('%Y-%m-%d', " + dateAlias + "." + dateColumn + ") AS time";
@@ -168,21 +170,21 @@ public class GenerateChartService {
     return selectStmt;
   }
 
-  private static String applyBounceDef(){
+  private static String applyBounceDef() {
     String bounceStmt = "";
-    if (bounceType.equals("Pages Viewed")){
+    if (bounceType.equals("Pages Viewed")) {
       bounceStmt = "s.PagesViewed <= " + bounceValue;
-    } else if (bounceType.equals("Time Spent on Page")){
+    } else if (bounceType.equals("Time Spent on Page")) {
       bounceStmt = "s.TimeSpent >= 0 AND s.TimeSpent < " + bounceValue;
     }
     return bounceStmt;
   }
 
-  private String granularityLabel(FilterCriteriaDTO filterDTO){
+  private String granularityLabel(FilterCriteriaDTO filterDTO) {
     String granularityLabel;
-    if ("Per Hour".equals(filterDTO.getTimeGranularity())) {
+    if ("Per Hour".equals(filterDTO.timeGranularity())) {
       granularityLabel = "Hour";
-    } else if ("Per Week".equals(filterDTO.getTimeGranularity())) {
+    } else if ("Per Week".equals(filterDTO.timeGranularity())) {
       granularityLabel = "Week";
     } else {
       granularityLabel = "Day";
@@ -212,8 +214,9 @@ public class GenerateChartService {
 
   private void rotateXAxisLabels(JFreeChart chart) {
     if (chart.getPlot() instanceof CategoryPlot categoryPlot) {
-        CategoryAxis xAxis = categoryPlot.getDomainAxis();
-      xAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
+      CategoryAxis xAxis = categoryPlot.getDomainAxis();
+      xAxis.setCategoryLabelPositions(
+          CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
     }
   }
 
@@ -224,15 +227,13 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    String finalSQL =
-
-        applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
-
+    String finalSQL = applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Impressions");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Impressions Per " + label, label, "Impressions", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Impressions Per " + label, label, "Impressions", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -244,15 +245,13 @@ public class GenerateChartService {
             + "FROM clickLog c "
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
-    String finalSQL =
-
-        applyCommonFilter(baseSQL, filterDTO, "c", "Date", "u") + " ORDER BY time";
-
+    String finalSQL = applyCommonFilter(baseSQL, filterDTO, "c", "Date", "u") + " ORDER BY time";
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Clicks");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart =  ChartFactory.createLineChart("Clicks Per " + label, label, "Clicks", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Clicks Per " + label, label, "Clicks", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -264,14 +263,13 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    String finalSQL =
-        applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
-
+    String finalSQL = applyCommonFilter(baseSQL, filterDTO, "i", "Date", "u") + " ORDER BY time";
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Uniques");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Uniques Per " + label, label, "Uniques", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Uniques Per " + label, label, "Uniques", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -283,15 +281,16 @@ public class GenerateChartService {
             + "FROM serverLog s "
             + "JOIN userData u ON u.ID = s.ID "
             + "WHERE 1=1 "
-            + "AND " + applyBounceDef();
+            + "AND "
+            + applyBounceDef();
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "u") + " ORDER BY time";
-
 
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Bounces");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Bounces Per " + label, label, "Bounces", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Bounces Per " + label, label, "Bounces", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -306,11 +305,11 @@ public class GenerateChartService {
     String finalSQL =
         applyCommonFilter(baseSQL, filterDTO, "s", "EntryDate", "u") + " ORDER BY time";
 
-
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Conversions");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Conversions Per " + label, label, "Conversions", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Conversions Per " + label, label, "Conversions", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -322,9 +321,7 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
-
+    impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -333,9 +330,7 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
 
-
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
-
 
     String finalSQL =
         "SELECT time, SUM(total_amount) AS combined_total FROM ("
@@ -346,7 +341,8 @@ public class GenerateChartService {
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Total Cost");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Total Cost Per " + label, label, "Total Cost", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Total Cost Per " + label, label, "Total Cost", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -358,10 +354,7 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    impressionSQL =
-
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
-
+    impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -371,8 +364,6 @@ public class GenerateChartService {
             + "WHERE 1=1 ";
 
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
-
-
 
     String finalSQL =
         "SELECT imp.time, (cli.Num_Of_Clicks * 100.0 / imp.Num_Of_Imp) AS ctr "
@@ -399,7 +390,6 @@ public class GenerateChartService {
 
     impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
-
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
             + ", SUM(c.ClickCost) AS total_cost "
@@ -408,8 +398,6 @@ public class GenerateChartService {
             + "WHERE 1=1 ";
 
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
-
-
 
     String unionCost =
         "SELECT time, SUM(total_cost) AS Daily_Cost FROM ("
@@ -426,7 +414,6 @@ public class GenerateChartService {
             + "WHERE s.Conversion = 'Yes' ";
 
     conversionSQL = applyCommonFilter(conversionSQL, filterDTO, "s", "EntryDate", "u");
-
 
     String finalSQL =
         "SELECT cost.time, (cost.Daily_Cost * 1.0 / conv.Total_Conversions) AS CPA "
@@ -451,10 +438,7 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    impressionSQL =
-
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
-
+    impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -462,9 +446,7 @@ public class GenerateChartService {
             + "FROM clickLog c "
             + "JOIN userData u ON u.ID = c.ID "
             + "WHERE 1=1 ";
-    clickSQL =
-        applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
-
+    clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
 
     String unionCost =
         "SELECT time, SUM(total_cost) AS Daily_Cost FROM ("
@@ -479,9 +461,7 @@ public class GenerateChartService {
             + "FROM clickLog c2 "
             + "JOIN userData u ON u.ID = c2.ID "
             + "WHERE 1=1 ";
-    totalClickSQL =
-        applyCommonFilter(totalClickSQL, filterDTO, "c2", "Date", "u");
-
+    totalClickSQL = applyCommonFilter(totalClickSQL, filterDTO, "c2", "Date", "u");
 
     String finalSQL =
         "SELECT cost.time, (cost.Daily_Cost * 1.0 / clicks.Total_Clicks) AS CPC "
@@ -505,9 +485,7 @@ public class GenerateChartService {
             + "FROM impressionLog i "
             + "JOIN userData u ON u.ID = i.ID "
             + "WHERE 1=1 ";
-    impressionSQL =
-        applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
-
+    impressionSQL = applyCommonFilter(impressionSQL, filterDTO, "i", "Date", "u");
 
     String impressionCountSQL =
         applyGranularitySelect(filterDTO, "i2", "Date")
@@ -516,7 +494,6 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = i2.ID "
             + "WHERE 1=1 ";
     impressionCountSQL = applyCommonFilter(impressionCountSQL, filterDTO, "i2", "Date", "u");
-
 
     String finalSQL =
         "SELECT cost.time, ((cost.total_cost * 1.0 / impression.Total_Impressions) * 1000) AS CPM "
@@ -540,9 +517,9 @@ public class GenerateChartService {
             + "FROM serverLog s "
             + "JOIN userData u ON u.ID = s.ID "
             + "WHERE 1=1 "
-            + "AND " + applyBounceDef();
+            + "AND "
+            + applyBounceDef();
     bounceSQL = applyCommonFilter(bounceSQL, filterDTO, "s", "EntryDate", "u");
-
 
     String clickSQL =
         applyGranularitySelect(filterDTO, "c", "Date")
@@ -551,7 +528,6 @@ public class GenerateChartService {
             + "JOIN userData u ON u.ID = c.ID ";
 
     clickSQL = applyCommonFilter(clickSQL, filterDTO, "c", "Date", "u");
-
 
     String finalSQL =
         "SELECT bounces.time, "
@@ -567,7 +543,8 @@ public class GenerateChartService {
     logger.info(finalSQL);
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "Bounce Rate");
     String label = granularityLabel(filterDTO);
-    JFreeChart chart = ChartFactory.createLineChart("Bounce Rate Per " + label, label, "Bounce Rate", dataset);
+    JFreeChart chart =
+        ChartFactory.createLineChart("Bounce Rate Per " + label, label, "Bounce Rate", dataset);
     rotateXAxisLabels(chart);
     return chart;
   }
@@ -606,7 +583,9 @@ public class GenerateChartService {
   public static JFreeChart bouncesChart() {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
-            "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE " + applyBounceDef() +" GROUP BY Day ORDER BY Day",
+            "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE "
+                + applyBounceDef()
+                + " GROUP BY Day ORDER BY Day",
             "Bounces");
     return ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
   }
@@ -687,7 +666,9 @@ public class GenerateChartService {
     DefaultCategoryDataset dataset =
         getCategoryDataset(
             "SELECT bounce.Day, (bounce.Total_Bounces * 1.0 / cli.Total_Clicks) AS Bounce_Rate "
-                + "FROM (SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE "+ applyBounceDef() +" GROUP BY Day) bounce "
+                + "FROM (SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Bounces FROM serverLog s WHERE "
+                + applyBounceDef()
+                + " GROUP BY Day) bounce "
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day) cli "
                 + "ON bounce.Day = cli.Day ORDER BY bounce.Day",
             "Bounce Rate");

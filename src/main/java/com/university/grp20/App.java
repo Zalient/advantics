@@ -18,10 +18,10 @@ public class App extends Application {
     operationLogger.log("Application started");
     UIManager.setPrimaryStage(stage);
     stage.setTitle("Advertising Dashboard");
-    //stage.setMaximized(true);
-    //stage.setFullScreen(true);
-    //stage.setFullScreenExitHint("");
-    //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    // stage.setMaximized(true);
+    // stage.setFullScreen(true);
+    // stage.setFullScreenExitHint("");
+    // stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
     UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"));
   }
 

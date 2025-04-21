@@ -2,7 +2,9 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
-import javafx.event.ActionEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -13,21 +15,15 @@ import org.apache.logging.log4j.Logger;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.ArrayList;
-
 public class SettingsController {
-  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-  private final Logger logger = LogManager.getLogger(MetricsController.class);
-  private OperationLogger operationLogger = new OperationLogger();
-
+  private static final DateTimeFormatter formatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+  private final Logger logger = LogManager.getLogger(SettingsController.class);
+  private final ExportLogService exportLogService = new ExportLogService();
+  private final OperationLogger operationLogger = new OperationLogger();
   @FXML private TextField addUsernameField;
   @FXML private TextField addPasswordField;
   @FXML private ComboBox selectRoleMenu;
-  @FXML private Button addUserButton;
   @FXML private HBox userManagementTitleBox;
   @FXML private GridPane userManagementGridPane;
   @FXML private ScrollPane settingsScrollPane;
@@ -43,11 +39,10 @@ public class SettingsController {
   @FXML private ToggleGroup bounceGroup;
   @FXML private TextField bounceValField;
   @FXML private HBox exportLogHBox;
-    @FXML private HBox metricsTitleBox;
-    @FXML private VBox metricsVBox;
+  @FXML private HBox metricsTitleBox;
+  @FXML private VBox metricsVBox;
 
-  private LoginService loginService = new LoginService();
-
+  private final LoginService loginService = new LoginService();
   private CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
 
     @FXML
@@ -83,7 +78,6 @@ public class SettingsController {
         content.getChildren().removeAll(userManagementTitleBox,userManagementGridPane,userEditGridPane);
     }
       }
-    
 
   @FXML
   private void handleBounceChoice(){
@@ -151,28 +145,28 @@ public class SettingsController {
     if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty() && selectRoleMenu.getValue() != null) {
       if (!loginService.doesUserExist(addUsernameField.getText())) {
 
-          boolean bSuccessful = loginService.addUser(enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
+        boolean bSuccessful =
+            loginService.addUser(
+                enteredUsername, enteredPassword, selectRoleMenu.getValue().toString());
 
-          if (bSuccessful) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("New user \"" + enteredUsername + "\" was successfully added to the database");
-            operationLogger.log("New user successfully added");
-            alert.showAndWait();
+        if (bSuccessful) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Confirmation");
+          alert.setHeaderText(null);
+          alert.setContentText(
+              "New user \"" + enteredUsername + "\" was successfully added to the database");
+          operationLogger.log("New user successfully added");
+          alert.showAndWait();
 
-            addUsernameField.setText("");
-            addPasswordField.setText("");
-            selectRoleMenu.getSelectionModel().clearSelection();
+          addUsernameField.setText("");
+          addPasswordField.setText("");
+          selectRoleMenu.getSelectionModel().clearSelection();
 
-            selectUserMenu.getItems().add(enteredUsername);
+          selectUserMenu.getItems().add(enteredUsername);
 
-          } else {
-            showError("Something went wrong when adding the user to the database.");
-          }
-
-
-
+        } else {
+          showError("Something went wrong when adding the user to the database.");
+        }
 
       } else {
         showError("A user with that username already exists in the database");
@@ -182,16 +176,17 @@ public class SettingsController {
       showError("You have not filled out all the user detail fields..");
       operationLogger.log("User detail fields are empty");
     }
-
   }
 
   @FXML
   private void updateEditUserLabels() {
     if (selectUserMenu.getValue() != null) {
-      currentPasswordLabel.setText("Current Password: " + loginService.getUserPassword(selectUserMenu.getValue().toString()));
-      currentRoleLabel.setText("Current Role: " + loginService.getUserRole(selectUserMenu.getValue().toString()));
+      currentPasswordLabel.setText(
+          "Current Password: "
+              + loginService.getUserPassword(selectUserMenu.getValue().toString()));
+      currentRoleLabel.setText(
+          "Current Role: " + loginService.getUserRole(selectUserMenu.getValue().toString()));
     }
-
   }
 
   @FXML
@@ -237,46 +232,26 @@ public class SettingsController {
     }
   }
 
-  @FXML
-  public void handleExportLogToPDF(ActionEvent event) {
-    DirectoryChooser directoryChooser = new DirectoryChooser();
-    directoryChooser.setTitle("Select Directory to Save Log");
-    File selectedDirectory = directoryChooser.showDialog(new Stage());
-
-    if (selectedDirectory != null) {
-      String logFileName = operationLogger.getLogFileName();
-      String timestamp = LocalDateTime.now().format(formatter);
-      String filePath = selectedDirectory.getAbsolutePath() + "/exported_log_" + timestamp + ".pdf";
-
-      ExportService.exportLogToPDF(logFileName, filePath);
-      operationLogger.log("User operation log exported as PDF to " + filePath);
-      showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
-    } else {
-      showAlert("Error", "No directory selected. Export canceled.");
-      operationLogger.log("User operation log export cancelled");
-    }
+  public void handleExportLogToPDF() {
+    String logFileName = OperationLogger.getLogFileName();
+    String timestamp = LocalDateTime.now().format(formatter);
+    // Gives the timestamp in the filename once exported
+    String filePath = "operationLogs/exported_log_" + timestamp + ".pdf";
+    exportLogService.exportLogToPDF(logFileName, filePath);
+    operationLogger.log("User operation log exported as PDF to " + filePath);
+    showAlert("Success", "Log exported to PDF successfully.\nSaved at: " + filePath);
   }
 
   @FXML
-  public void handleExportLogToCSV(ActionEvent event) {
-    DirectoryChooser directoryChooser = new DirectoryChooser();
-    directoryChooser.setTitle("Select Directory to Save Log");
-    File selectedDirectory = directoryChooser.showDialog(new Stage());
-
-    if (selectedDirectory != null) {
-      String logFileName = operationLogger.getLogFileName();
-      String timestamp = LocalDateTime.now().format(formatter);
-      String filePath = selectedDirectory.getAbsolutePath() + "/exported_log_" + timestamp + ".csv";
-
-      ExportService.exportLogToCSV(logFileName, filePath);
-      operationLogger.log("User operation log exported as PDF to " + filePath);
-      showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);
-    } else {
-      showAlert("Error", "No directory selected. Export canceled.");
-      operationLogger.log("User operation log export cancelled");
-    }
+  public void handleExportLogToCSV() {
+    String logFileName = OperationLogger.getLogFileName();
+    String timestamp = LocalDateTime.now().format(formatter);
+    // Gives the timestamp in the filename once exported
+    String filePath = "operationLogs/exported_log_" + timestamp + ".csv";
+    exportLogService.exportLogToCSV(logFileName, filePath);
+    operationLogger.log("User operation log exported as CSV to " + filePath);
+    showAlert("Success", "Log exported to CSV successfully.\nSaved at: " + filePath);
   }
-
 
   @FXML
   private void handleBack() {

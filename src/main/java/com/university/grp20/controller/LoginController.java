@@ -6,27 +6,17 @@ import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LoginController {
+  @FXML private TextField usernameInputBox;
+  @FXML private TextField passwordInputBox;
   private static final Logger logger = LogManager.getLogger(LoginController.class);
   private final OperationLogger operationLogger = new OperationLogger();
-
   private LoginService loginService = new LoginService();
-
   private String loginStatus;
-
-  @FXML
-  private TextField usernameInputBox;
-
-  @FXML
-  private TextField passwordInputBox;
-
-  @FXML
-  private Button loginButton;
 
   @FXML
   public void initialize() {
@@ -56,8 +46,7 @@ public class LoginController {
       if (enteredUsername.isEmpty() && enteredPassword.isEmpty()) {
         operationLogger.log("Username and password fields are empty");
         alert.setContentText("You have not entered a username or password.");
-      } else if (!enteredUsername.isEmpty() && enteredPassword.isEmpty()) {
-        operationLogger.log("Password field is empty");
+      } else if (!enteredUsername.isEmpty()) {
         alert.setContentText("You have not entered a password.");
       } else {
         operationLogger.log("Username field is empty");
@@ -85,17 +74,18 @@ public class LoginController {
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
-          UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+        UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
 
       } else if (role.equals("Viewer")) {
         if (loginService.isDataLoaded()) {
-            UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+          UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error!");
           alert.setHeaderText(null);
-          alert.setContentText("You do not have stored campaign data. Please contact an administrator or editor to upload this for you.");
+          alert.setContentText(
+              "You do not have stored campaign data. Please contact an administrator or editor to upload this for you.");
           alert.showAndWait();
         }
       } else {
@@ -110,14 +100,14 @@ public class LoginController {
         alert.setContentText("Your password was invalid.");
         operationLogger.log("Login failed: Invalid password entered");
       } else if (loginStatus.equals("Missing")) {
+        alert.setContentText(
+            "That username doesn't exist in the database. Please contact an administrator.");
         alert.setContentText("That username doesn't exist in the database. Please contact an administrator.");
         operationLogger.log("Login failed: Username does not exist in database");
       }
 
       alert.showAndWait();
-
     }
-
   }
   public void clearFields() {
     usernameInputBox.setText("");

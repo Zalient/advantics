@@ -2,12 +2,9 @@ package com.university.grp20.model;
 
 public class User {
   private static String username;
-
   // I'm not sure if the name is necessary at the moment
   private static String name;
-
   private static String password;
-
   private static String role;
 
   public static void logOut() {
@@ -48,5 +45,4 @@ public class User {
   public static String getRole() {
     return role;
   }
-
 }
