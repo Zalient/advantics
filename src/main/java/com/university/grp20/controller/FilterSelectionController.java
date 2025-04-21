@@ -16,6 +16,8 @@ import org.controlsfx.control.CheckComboBox;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.title.TextTitle;
+import java.util.List;
+import java.time.LocalDate;
 
 public class FilterSelectionController extends Navigator {
   @FXML private CheckComboBox<String> ageGroupSelector, contextSelector, incomeSelector;
@@ -72,23 +74,7 @@ public class FilterSelectionController extends Navigator {
 
     if (filterMode == FilterMode.METRICS) {
       logger.info("Calculating filtered metrics");
-      Task<MetricsDTO> task =
-          new Task<>() {
-            @Override
-            protected MetricsDTO call() {
-              return calculateMetricsService.getMetrics(filterCriteriaDTO);
-            }
-          };
-
-      task.setOnSucceeded(
-          e -> {
-            metricsController.setMetrics(task.getValue());
-            stage.close();
-            logger.info("Testing - clicks: " + task.getValue().getClicks());
-          });
-
-      task.setOnFailed(
-          e -> logger.error("Error calculating metrics: " + task.getException().getMessage()));
+      Task<MetricsDTO> task = getMetricsDTOTask(calculateMetricsService, filterCriteriaDTO);
 
       new Thread(task).start();
     } else if (filterMode == FilterMode.CHART) {
@@ -103,37 +89,35 @@ public class FilterSelectionController extends Navigator {
       if (newFilteredChart != null && chartViewer != null) {
         String filterApplied =
             "Time granularity: "
-                + filterCriteriaDTO.getTimeGranularity()
+                + filterCriteriaDTO.timeGranularity()
                 + "   "
                 + "Start Date: "
-                + (filterCriteriaDTO.getStartDate() != null
-                    ? filterCriteriaDTO.getStartDate().toString()
+                + (filterCriteriaDTO.startDate() != null
+                    ? filterCriteriaDTO.startDate().toString()
                     : " ")
                 + "   "
                 + "End Date: "
-                + (filterCriteriaDTO.getEndDate() != null
-                    ? filterCriteriaDTO.getEndDate().toString()
+                + (filterCriteriaDTO.endDate() != null
+                    ? filterCriteriaDTO.endDate().toString()
                     : " ")
                 + "   "
                 + "\n"
                 + "Gender: "
-                + (filterCriteriaDTO.getGender() != null
-                    ? filterCriteriaDTO.getGender()
-                    : "All Gender")
+                + (filterCriteriaDTO.gender() != null ? filterCriteriaDTO.gender() : "All Gender")
                 + "   "
                 + "Age Ranges: "
-                + (filterCriteriaDTO.getAgeRanges() != null
-                    ? filterCriteriaDTO.getAgeRanges().toString()
+                + (filterCriteriaDTO.ageRanges() != null
+                    ? filterCriteriaDTO.ageRanges().toString()
                     : "All Age Range")
                 + "   "
                 + "Income: "
-                + (filterCriteriaDTO.getIncomes() != null
-                    ? filterCriteriaDTO.getIncomes().toString()
+                + (filterCriteriaDTO.incomes() != null
+                    ? filterCriteriaDTO.incomes().toString()
                     : "All Income Levels")
                 + "   "
                 + "Contexts: "
-                + (filterCriteriaDTO.getContexts() != null
-                    ? filterCriteriaDTO.getContexts().toString()
+                + (filterCriteriaDTO.contexts() != null
+                    ? filterCriteriaDTO.contexts().toString()
                     : "All Context");
 
         TextTitle subtitle = new TextTitle(filterApplied);
@@ -162,6 +146,29 @@ public class FilterSelectionController extends Navigator {
   private void setFilterMode(FilterMode mode) {
     this.filterMode = mode;
     applyFilterModeUI();
+    }
+
+  private Task<MetricsDTO> getMetricsDTOTask(
+      CalculateMetricsService calculateMetricsService, FilterCriteriaDTO filterCriteriaDTO) {
+    Stage stage = (Stage) parentPane.getScene().getWindow();
+    Task<MetricsDTO> task =
+        new Task<>() {
+          @Override
+          protected MetricsDTO call() {
+            return calculateMetricsService.fetchMetrics(filterCriteriaDTO);
+          }
+        };
+
+    task.setOnSucceeded(
+        e -> {
+          metricsController.setMetrics(task.getValue());
+          stage.close();
+          logger.info("Testing - clicks: " + task.getValue().clicks());
+        });
+
+    task.setOnFailed(
+        e -> logger.error("Error calculating metrics: " + task.getException().getMessage()));
+    return task;
   }
 
   private void applyFilterModeUI() {
@@ -176,26 +183,36 @@ public class FilterSelectionController extends Navigator {
   }
 
   private FilterCriteriaDTO buildFilterCriteria() {
-    FilterCriteriaDTO filterCriteriaDTO = new FilterCriteriaDTO();
-    filterCriteriaDTO.setAgeRanges(ageGroupSelector.getCheckModel().getCheckedItems());
-    filterCriteriaDTO.setIncomes(incomeSelector.getCheckModel().getCheckedItems());
-    filterCriteriaDTO.setContexts(contextSelector.getCheckModel().getCheckedItems());
+    List<String> ageRanges =
+        ageGroupSelector.getCheckModel().getCheckedItems() != null
+            ? List.copyOf(ageGroupSelector.getCheckModel().getCheckedItems())
+            : List.of();
+    List<String> incomes =
+        incomeSelector.getCheckModel().getCheckedItems() != null
+            ? List.copyOf(incomeSelector.getCheckModel().getCheckedItems())
+            : List.of();
+    List<String> contexts =
+        contextSelector.getCheckModel().getCheckedItems() != null
+            ? List.copyOf(contextSelector.getCheckModel().getCheckedItems())
+            : List.of();
 
-    if (granularityChooser.getValue() != null) {
-      filterCriteriaDTO.setTimeGranularity(granularityChooser.getValue());
-    }
-    if (startDatePicker.getValue() != null) {
-      filterCriteriaDTO.setStartDate(startDatePicker.getValue());
-    }
-    if (endDatePicker.getValue() != null) {
-      filterCriteriaDTO.setEndDate(endDatePicker.getValue());
-    }
-
+    LocalDate startDate = startDatePicker.getValue();
+    LocalDate endDate = endDatePicker.getValue();
+    String timeGranularity = granularityChooser.getValue();
     Toggle selectedToggle = genderGroup.getSelectedToggle();
-    filterCriteriaDTO.setGender(
-        selectedToggle != null ? selectedToggle.getUserData().toString() : null);
+    String gender = selectedToggle != null ? selectedToggle.getUserData().toString() : null;
 
-    return filterCriteriaDTO;
+    logger.info("Building filter criteria with:");
+    logger.info("Age Ranges: " + ageRanges);
+    logger.info("Incomes: " + incomes);
+    logger.info("Contexts: " + contexts);
+    logger.info("Time Granularity: " + timeGranularity);
+    logger.info("Start Date: " + startDate);
+    logger.info("End Date: " + endDate);
+    logger.info("Gender: " + gender);
+
+    return new FilterCriteriaDTO(
+        ageRanges, incomes, contexts, timeGranularity, gender, startDate, endDate);
   }
 
   public void updateProgressBar(Double progress) {
@@ -213,3 +230,4 @@ public class FilterSelectionController extends Navigator {
     CHART
   }
 }
+

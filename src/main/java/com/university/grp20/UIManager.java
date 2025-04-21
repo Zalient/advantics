@@ -19,10 +19,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class UIManager {
+  private static Object controller;
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static Stage mainStage;
   private static final int CACHE_MAX_SIZE = 5;
-
   private static final Map<String, Parent> ROOT_CACHE = new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
@@ -53,7 +53,7 @@ public class UIManager {
       }
       return root;
     } catch (IOException e) {
-      logger.error("Error resolving FXML root:", e);
+      logger.error("Error resolving FXML root: " + childLoader.getLocation(), e);
       throw new RuntimeException();
     }
   }
@@ -138,6 +138,15 @@ public class UIManager {
     alert.setHeaderText(null);
     alert.setContentText(message);
     alert.showAndWait();
+  }
+
+  public static void setController(Object newController) {
+    controller = newController;
+  }
+
+
+  public static Object getController() {
+    return controller;
   }
 }
 

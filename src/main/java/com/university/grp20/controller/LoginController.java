@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.LoginService;
+import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,26 +11,31 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LoginController extends Navigator {
-  private static final Logger logger = LogManager.getLogger(LoginController.class);
-
-  private final LoginService loginService = new LoginService();
-
   @FXML private TextField usernameInputBox;
 
   @FXML private TextField passwordInputBox;
+  private static final Logger logger = LogManager.getLogger(LoginController.class);
+  private final OperationLogger operationLogger = new OperationLogger();
+  private LoginService loginService = new LoginService();
+  private String loginStatus;
 
   @FXML
   public void initialize() {
     logger.info("Initialising login screen");
     loginService.setOnLogin(this::processLogin);
+    loginStatus = "Default";
   }
 
   @FXML
   private void handleLogin() {
     logger.info("Login button pressed");
+    operationLogger.log("Login button pressed");
 
     String enteredUsername = usernameInputBox.getText();
+    operationLogger.log("Username entered: " + enteredUsername);
     String enteredPassword = passwordInputBox.getText();
+    operationLogger.log("Password entered: " + enteredPassword);
+
 
     if (!enteredUsername.isEmpty() && !enteredPassword.isEmpty()) {
       loginService.login(usernameInputBox.getText(), passwordInputBox.getText());
@@ -39,10 +45,12 @@ public class LoginController extends Navigator {
       alert.setHeaderText(null);
 
       if (enteredUsername.isEmpty() && enteredPassword.isEmpty()) {
+        operationLogger.log("Username and password fields are empty");
         alert.setContentText("You have not entered a username or password.");
       } else if (!enteredUsername.isEmpty()) {
         alert.setContentText("You have not entered a password.");
       } else {
+        operationLogger.log("Username field is empty");
         alert.setContentText("You have not entered a username.");
       }
 
@@ -52,10 +60,12 @@ public class LoginController extends Navigator {
 
   public void processLogin(String loginStatus) {
     logger.info("Login Status is " + loginStatus);
+    this.loginStatus = loginStatus;
 
     if (loginStatus.equals("Valid")) {
       String role = User.getRole();
       logger.info("Role is " + role);
+      operationLogger.log("Successful login: Logged in as " + role);
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
@@ -85,9 +95,12 @@ public class LoginController extends Navigator {
 
       if (loginStatus.equals("Invalid")) {
         alert.setContentText("Your password was invalid.");
+        operationLogger.log("Login failed: Invalid password entered");
       } else if (loginStatus.equals("Missing")) {
         alert.setContentText(
             "That username doesn't exist in the database. Please contact an administrator.");
+        alert.setContentText("That username doesn't exist in the database. Please contact an administrator.");
+        operationLogger.log("Login failed: Username does not exist in database");
       }
 
       alert.showAndWait();

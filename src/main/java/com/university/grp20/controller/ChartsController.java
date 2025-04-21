@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ChartsController extends Navigator {
-
   @FXML private FlowPane addChartFlowPane;
   @FXML private MenuButton addChartButton;
   private final Logger logger = LogManager.getLogger(ChartsController.class);
@@ -41,6 +41,8 @@ public class ChartsController extends Navigator {
   @FXML
   private void initialize() {}
 
+  @FXML
+  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
   public void disableForViewer() {
     logger.info("disableForViewer called");
 
@@ -79,7 +81,7 @@ public class ChartsController extends Navigator {
   @FXML
   private void showMetrics() {
     UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
-    operationLogger.log("Metrics page chosen, displaying metrics dashboard");
+    operationLogger.log("Metrics button clicked, displaying metrics dashboard");
   }
 
   @FXML
@@ -97,7 +99,7 @@ public class ChartsController extends Navigator {
   @FXML
   private void showFilterSelection(ChartViewer chartViewer) {
     if (!User.getRole().equals("Viewer")) {
-      operationLogger.log("Charts filter chosen, displaying filter options");
+      operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
         FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
         filterLoader.load();
@@ -123,28 +125,24 @@ public class ChartsController extends Navigator {
   private void addImpressionsChart() {
     JFreeChart chart = GenerateChartService.impressionsChart();
     addChart(chart, "Impressions");
-    operationLogger.log("Impressions chart chosen and displayed");
   }
 
   @FXML
   private void addClicksChart() {
     JFreeChart chart = GenerateChartService.clicksChart();
     addChart(chart, "Clicks");
-    operationLogger.log("Clicks chart chosen and displayed");
   }
 
   @FXML
   private void addUniquesChart() {
     JFreeChart chart = GenerateChartService.uniquesChart();
     addChart(chart, "Uniques");
-    operationLogger.log("Uniques chart chosen and displayed");
   }
 
   @FXML
   private void addBouncesChart() {
     JFreeChart chart = GenerateChartService.bouncesChart();
     addChart(chart, "Bounces");
-    operationLogger.log("Bounces chart chosen and displayed");
   }
 
   @FXML
@@ -158,49 +156,43 @@ public class ChartsController extends Navigator {
   private void addTotalCostChart() {
     JFreeChart chart = GenerateChartService.totalCostChart();
     addChart(chart, "Total Cost");
-    operationLogger.log("Total Cost chart chosen and displayed");
   }
 
   @FXML
   private void addCTRChart() {
     JFreeChart chart = GenerateChartService.ctrChart();
     addChart(chart, "CTR");
-    operationLogger.log("CTR chart chosen and displayed");
   }
 
   @FXML
   private void addCPAChart() {
     JFreeChart chart = GenerateChartService.cpaChart();
     addChart(chart, "CPA");
-    operationLogger.log("CPA chart chosen and displayed");
   }
 
   @FXML
   private void addCPCChart() {
     JFreeChart chart = GenerateChartService.cpcChart();
     addChart(chart, "CPC");
-    operationLogger.log("CPC chart chosen and displayed");
   }
 
   @FXML
   private void addCPMChart() {
     JFreeChart chart = GenerateChartService.cpmChart();
     addChart(chart, "CPM");
-    operationLogger.log("CPM chart chosen and displayed");
   }
 
   @FXML
   private void addBounceRateChart() {
     JFreeChart chart = GenerateChartService.bounceRateChart();
     addChart(chart, "Bounce Rate");
-    operationLogger.log("Bounce Rate chart chosen and displayed");
   }
 
   @FXML
   private void binSizePrompt() {
+    operationLogger.log("Click Cost histogram chosen, bin size prompt displayed");
     Dialog<Integer> numBinsDialog = new Dialog<>();
     numBinsDialog.setTitle("Set Number Of Bins");
-    operationLogger.log("Click Cost histogram chosen, bin size prompt displayed");
 
     TextField numBinsField = new TextField();
     numBinsField.setPromptText("Enter Number Of Bins");
@@ -231,6 +223,7 @@ public class ChartsController extends Navigator {
   }
 
   public void addChart(JFreeChart chart, String metricType) {
+    operationLogger.log(metricType + " chart display option clicked and displayed");
     ChartViewer chartViewer = new ChartViewer(chart);
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
     chartViewer.prefHeightProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
@@ -258,7 +251,7 @@ public class ChartsController extends Navigator {
             String filePath = ExportService.askForPDFFilename();
             ExportService.chartToPDF(chartViewer.getChart(), filePath);
           } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error("Error exporting as PDF: " + ex);
           }
         });
 
@@ -269,7 +262,7 @@ public class ChartsController extends Navigator {
             String filePath = ExportService.askForCSVFilename();
             ExportService.chartToCSV(chartViewer.getChart(), filePath);
           } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error("Error exporting as CSV " + ex);
           }
         });
 

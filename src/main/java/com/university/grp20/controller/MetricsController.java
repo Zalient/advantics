@@ -40,28 +40,23 @@ public class MetricsController extends Navigator {
         text -> {
           /* no-op */
         });
-
-    this.metricsDTO = calculateMetricsService.getMetrics(null);
-    if (this.metricsDTO == null) {
-      logger.warn("MetricsDTO is null. Creating a new empty MetricsDTO.");
-      this.metricsDTO = new MetricsDTO();
-    }
+    metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
-    impressionsLabel.setText(String.format("%.0f", metricsDTO.getImpressions()));
-    clicksLabel.setText(String.format("%.0f", metricsDTO.getClicks()));
-    uniquesLabel.setText(String.format("%.0f", metricsDTO.getUniques()));
-    bouncesLabel.setText(String.format("%.0f", metricsDTO.getBounces()));
-    conversionsLabel.setText(String.format("%.0f", metricsDTO.getConversions()));
-    totalLabel.setText(String.format("£%.2f", metricsDTO.getTotalCost() / 100));
-    ctrLabel.setText(String.format("%.2f%%", metricsDTO.getCtr() * 100));
-    cpaLabel.setText(String.format("£%.2f", metricsDTO.getCpa() / 100));
-    cpcLabel.setText(String.format("£%.2f", metricsDTO.getCpc() / 100));
-    cpmLabel.setText(String.format("£%.2f", metricsDTO.getCpm() / 100));
-    bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.getBounceRate() * 100));
+    impressionsLabel.setText(String.format("%.0f", metricsDTO.impressions()));
+    clicksLabel.setText(String.format("%.0f", metricsDTO.clicks()));
+    uniquesLabel.setText(String.format("%.0f", metricsDTO.uniques()));
+    bouncesLabel.setText(String.format("%.0f", metricsDTO.bounces()));
+    conversionsLabel.setText(String.format("%.0f", metricsDTO.conversions()));
+    totalLabel.setText(String.format("£%.2f", metricsDTO.totalCost() / 100));
+    ctrLabel.setText(String.format("%.2f%%", metricsDTO.ctr() * 100));
+    cpaLabel.setText(String.format("£%.2f", metricsDTO.cpa() / 100));
+    cpcLabel.setText(String.format("£%.2f", metricsDTO.cpc() / 100));
+    cpmLabel.setText(String.format("£%.2f", metricsDTO.cpm() / 100));
+    bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.bounceRate() * 100));
   }
 
   @FXML
@@ -76,11 +71,13 @@ public class MetricsController extends Navigator {
 
   @FXML
   private void showMetricsFilter() {
-    operationLogger.log("Metrics filter chosen, displaying filter options");
     try {
       logger.info("Filter button clicked");
       FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
       filterLoader.load();
+      operationLogger.log("Metrics filter button clicked, displaying filter options");
+      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      loader.load();
 
       FilterSelectionController controller = filterLoader.getController();
       controller.init("Metrics", this, null);
@@ -93,6 +90,7 @@ public class MetricsController extends Navigator {
 
   @FXML
   private void saveAsPDF() throws IOException {
+    operationLogger.log("Save as PDF button clicked");
     if (metricsDTO == null) {
       logger.error("Cannot export to PDF: metricsDTO is null.");
       return;
@@ -102,13 +100,22 @@ public class MetricsController extends Navigator {
     if (filePath != null) {
       ExportService.dashboardToPDF(metricsDTO, filePath);
       logger.info("Metrics exported successfully to PDF.");
+      operationLogger.log("Metrics report saved to PDF at " + filePath);
+    } else {
+      operationLogger.log("Metrics report not saved");
     }
   }
 
   @FXML
   private void saveAsCSV() throws IOException {
+    operationLogger.log("Save as CSV button clicked");
     String filePath = ExportService.askForCSVFilename();
     ExportService.dashboardToCSV(metricsDTO, filePath);
+    if (filePath != null) {
+      operationLogger.log("Metrics report saved to CSV at " + filePath);
+    } else {
+      operationLogger.log("Metrics report not saved");
+    }
   }
 
   @FXML
@@ -121,6 +128,7 @@ public class MetricsController extends Navigator {
   private void handleSettingsLoad() {
     UIManager.switchContent(
         parentPane, UIManager.createFxmlLoader("/fxml/settings/SettingsPane.fxml"));
+    operationLogger.log("Settings button clicked, displaying settings page");
   }
 
   public void disableForViewer() {

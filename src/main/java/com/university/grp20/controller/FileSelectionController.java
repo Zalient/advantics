@@ -53,6 +53,7 @@ public class FileSelectionController extends Navigator {
 
   @FXML
   private void startImport() {
+    operationLogger.log("Next button clicked, attempting import");
     if (fileImportService.isReady()) {
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
@@ -97,8 +98,7 @@ public class FileSelectionController extends Navigator {
 
   @FXML
   private void handleImpressionUpload() {
-    selectFile(
-        "Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
+    selectFile("Select Impression Log File", fileImportService::setImpressionLog, impressionLogButton);
     operationLogger.log("Impression log file chooser displayed");
   }
 
@@ -118,12 +118,14 @@ public class FileSelectionController extends Navigator {
   private void handleLogout() {
     // Reset all the attributes of the user class
     User.logOut();
+    operationLogger.log("Logout button clicked");
 
     UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
   }
 
   @FXML
   private void handleSkip() {
+    operationLogger.log("Skip upload button clicked");
     if (fileImportService.isDataLoaded()) {
       UIManager.switchContent(
           parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
