@@ -10,8 +10,9 @@ import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LoginController {
+public class LoginController extends Navigator {
   @FXML private TextField usernameInputBox;
+
   @FXML private TextField passwordInputBox;
   private static final Logger logger = LogManager.getLogger(LoginController.class);
   private final OperationLogger operationLogger = new OperationLogger();
@@ -22,7 +23,7 @@ public class LoginController {
   public void initialize() {
     logger.info("Initialising login screen");
     loginService.setOnLogin(this::processLogin);
-    this.loginStatus = "Default";
+    loginStatus = "Default";
   }
 
   @FXML
@@ -57,15 +58,9 @@ public class LoginController {
     }
   }
 
-  /**
-   * Called by the listener in the "Login" class
-   *
-   * @param loginStatus Is "Valid" is password matches or "Invalid" if it doesn't
-   */
   public void processLogin(String loginStatus) {
     logger.info("Login Status is " + loginStatus);
     this.loginStatus = loginStatus;
-    operationLogger.log("Attempting login");
 
     if (loginStatus.equals("Valid")) {
       String role = User.getRole();
@@ -74,11 +69,13 @@ public class LoginController {
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
-        UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+        UIManager.switchContent(
+            parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
 
       } else if (role.equals("Viewer")) {
         if (loginService.isDataLoaded()) {
-          UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+          UIManager.switchContent(
+              parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -108,17 +105,5 @@ public class LoginController {
 
       alert.showAndWait();
     }
-  }
-  public void clearFields() {
-    usernameInputBox.setText("");
-    passwordInputBox.setText("");
-  }
-
-  public void setLoginService(LoginService newLoginService) {
-    this.loginService = newLoginService;
-  }
-
-  public String getLoginStatus() {
-    return this.loginStatus;
   }
 }

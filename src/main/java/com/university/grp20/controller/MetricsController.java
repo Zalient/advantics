@@ -2,6 +2,7 @@ package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -9,9 +10,7 @@ import javafx.scene.control.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-
-public class MetricsController {
+public class MetricsController extends Navigator {
   @FXML private Label impressionsLabel;
   @FXML private Label clicksLabel;
   @FXML private Label uniquesLabel;
@@ -28,8 +27,7 @@ public class MetricsController {
   @FXML private Button csvButton;
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
-
-  public MetricsDTO metricsDTO;
+  private MetricsDTO metricsDTO;
 
   @FXML
   private void initialize() {
@@ -42,32 +40,32 @@ public class MetricsController {
         text -> {
           /* no-op */
         });
-    setMetrics(calculateMetricsService.fetchMetrics(null));
+    metricsDTO = calculateMetricsService.fetchMetrics(null);
+    setMetrics(metricsDTO);
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
-    impressionsLabel.setText(String.format("%.2f", metricsDTO.impressions()) + " impressions");
-    clicksLabel.setText(String.format("%.2f", metricsDTO.clicks()) + " clicks");
-    uniquesLabel.setText(String.format("%.2f", metricsDTO.uniques()) + " unique IDs");
-    bouncesLabel.setText(String.format("%.2f", metricsDTO.bounces()) + " bounces");
-    conversionsLabel.setText(String.format("%.2f", metricsDTO.conversions()) + " conversions");
-    totalLabel.setText(String.format("%.2f", metricsDTO.totalCost() / 100) + " pounds");
+    impressionsLabel.setText(String.format("%.0f", metricsDTO.impressions()));
+    clicksLabel.setText(String.format("%.0f", metricsDTO.clicks()));
+    uniquesLabel.setText(String.format("%.0f", metricsDTO.uniques()));
+    bouncesLabel.setText(String.format("%.0f", metricsDTO.bounces()));
+    conversionsLabel.setText(String.format("%.0f", metricsDTO.conversions()));
+    totalLabel.setText(String.format("£%.2f", metricsDTO.totalCost() / 100));
     ctrLabel.setText(String.format("%.2f%%", metricsDTO.ctr() * 100));
-    cpaLabel.setText(String.format("%.2f pounds per conversion", metricsDTO.cpa() / 100));
-    cpcLabel.setText(String.format("%.2f pence per click", metricsDTO.cpc()));
-    cpmLabel.setText(String.format("%.2f pounds per thousand impressions", metricsDTO.cpm() / 100));
-    bounceRateLabel.setText(String.format("%.2f bounces per click", metricsDTO.bounceRate()));
+    cpaLabel.setText(String.format("£%.2f", metricsDTO.cpa() / 100));
+    cpcLabel.setText(String.format("£%.2f", metricsDTO.cpc() / 100));
+    cpmLabel.setText(String.format("£%.2f", metricsDTO.cpm() / 100));
+    bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.bounceRate() * 100));
   }
 
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
-      operationLogger.log("Back button clicked, returning to login page");
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
     } else {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
-      operationLogger.log("Back button clicked, returning to file upload page");
+      UIManager.switchContent(
+          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
     }
   }
 
@@ -75,17 +73,18 @@ public class MetricsController {
   private void showMetricsFilter() {
     try {
       logger.info("Filter button clicked");
+      FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      filterLoader.load();
       operationLogger.log("Metrics filter button clicked, displaying filter options");
-      FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
+      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
       loader.load();
 
-      FilterSelectionController controller = loader.getController();
-      controller.setFilterMode(FilterSelectionController.FilterMode.METRICS);
-      controller.setMetricsController(this);
+      FilterSelectionController controller = filterLoader.getController();
+      controller.init("Metrics", this, null);
 
-      UIManager.showModal(loader, false);
+      UIManager.showModalStage("Metrics Filtering", filterLoader, false);
     } catch (IOException e) {
-      logger.error("Error loading metrics filter: " + e.getMessage());
+      logger.error("Error loading metrics filter:", e);
     }
   }
 
@@ -121,13 +120,14 @@ public class MetricsController {
 
   @FXML
   private void showCharts() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/ChartsScene.fxml"));
-    operationLogger.log("Charts button clicked, displaying charts page");
+    UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/ChartsPane.fxml"), true);
+    operationLogger.log("Charts page chosen, displaying charts page");
   }
 
   @FXML
   private void handleSettingsLoad() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/SettingsScene.fxml"), false);
+    UIManager.switchContent(
+        parentPane, UIManager.createFxmlLoader("/fxml/settings/SettingsPane.fxml"));
     operationLogger.log("Settings button clicked, displaying settings page");
   }
 

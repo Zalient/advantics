@@ -1,15 +1,19 @@
 package com.university.grp20;
 
-import com.university.grp20.controller.ChartController;
-import com.university.grp20.controller.MetricsController;
+import com.university.grp20.controller.Navigator;
+import com.university.grp20.controller.layout.MainLayoutController;
+import com.university.grp20.controller.layout.ModalLayoutController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,146 +21,123 @@ import java.util.Map;
 public class UIManager {
   private static Object controller;
   private static final Logger logger = LogManager.getLogger(UIManager.class);
-  private static final String DEFAULT_MODAL_TITLE = "Filter Selection";
+  private static Stage mainStage;
   private static final int CACHE_MAX_SIZE = 5;
-  private static Stage primaryStage;
-  private static Stage currentModal = null;
-  private static final Map<String, Parent> ROOT_CACHE =
-      new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
-          return size() > CACHE_MAX_SIZE;
-        }
-      };
+  private static final Map<String, Parent> ROOT_CACHE = new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
+      return size() > CACHE_MAX_SIZE;
+    }
+  };
 
-  private static final Map<String, Object> CONTROLLER_CACHE =
-      new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
-          return size() > CACHE_MAX_SIZE;
-        }
-      };
-
-  public static void setPrimaryStage(Stage stage) {
-    primaryStage = stage;
+  public static void setMainStage(Stage stage) {
+    mainStage = stage;
   }
 
-  public static FXMLLoader createFXMLLoader(String fxmlPath) {
+  public static FXMLLoader createFxmlLoader(String fxmlPath) {
     return new FXMLLoader(UIManager.class.getResource(fxmlPath));
   }
 
-  public static void switchScene(FXMLLoader loader, boolean useCache) {
-    if (primaryStage == null) {
-      logger.error("Primary stage is not set");
-      return;
-    }
+  private static Parent resolveFxmlRoot(FXMLLoader childLoader, boolean useCache) {
     try {
-      Parent root = null;
-      String key = null;
-      Object controller;
-
-      if (useCache && loader.getLocation() != null) {
-        key = loader.getLocation().toString();
-        root = ROOT_CACHE.get(key);
-        controller = CONTROLLER_CACHE.get(key);
-        setController(controller);
+      String key = (useCache && childLoader.getLocation() != null)
+              ? childLoader.getLocation().toString()
+              : null;
+      if (key != null && ROOT_CACHE.containsKey(key)) {
+        return ROOT_CACHE.get(key);
       }
-
-      if (root == null) {
-        root = (loader.getRoot() == null) ? loader.load() : loader.getRoot();
-        if (useCache && key != null) {
-          ROOT_CACHE.put(key, root);
-          CONTROLLER_CACHE.put(key, loader.getController());
-          setController(loader.getController());
-        }
+      // If the loader has already loaded its content, reuse it
+      Parent root = (childLoader.getRoot() == null) ? childLoader.load() : childLoader.getRoot();
+      if (key != null) {
+        ROOT_CACHE.put(key, root);
       }
-
-      Scene currentScene = primaryStage.getScene();
-
-      if (currentScene == null) {
-        currentScene = new Scene(root);
-        primaryStage.setScene(currentScene);
-      } else {
-        currentScene.setRoot(root);
-      }
-
-      primaryStage.show();
-
-      if (loader.getLocation().toString().contains("ChartsScene.fxml")) {
-        logger.info("CHARTS SCENE IDENTIFIED");
-        controller = CONTROLLER_CACHE.get(key);
-        ((ChartController) controller).disableForViewer();
-      } else if (loader.getLocation().toString().contains("MetricsScene.fxml")) {
-        logger.info("METRICS SCENE IDENTIFIED");
-        controller = CONTROLLER_CACHE.get(key);
-        ((MetricsController) controller).disableForViewer();
-      }
-
+      return root;
     } catch (IOException e) {
-      String loaderLocation =
-          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
-      logger.error("Error switching scene using loader: " + loaderLocation, e);
+      logger.error("Error resolving FXML root: " + childLoader.getLocation(), e);
+      throw new RuntimeException();
+    }
+  }
+  private static Parent resolveFxmlRoot(FXMLLoader childLoader) {
+    return resolveFxmlRoot(childLoader, false);
+  }
+
+  public static void switchContent(Pane contentPane, FXMLLoader childLoader, boolean useCache) {
+    Parent childRoot = resolveFxmlRoot(childLoader, useCache);
+    contentPane.getChildren().clear();
+    contentPane.getChildren().setAll(childRoot);
+
+    // If the controller is a Navigator it needs to know its parent container
+    Object controller = childLoader.getController();
+    if (controller instanceof Navigator) {
+      ((Navigator) controller).init(contentPane);
     }
   }
 
-  public static void switchScene(FXMLLoader loader) {
-    switchScene(loader, true);
+  public static void switchContent(Pane contentPane, FXMLLoader childLoader) {
+    switchContent(contentPane, childLoader, false);
   }
 
-  public static Stage showModal(FXMLLoader loader, String title, boolean useCache) {
-    try {
-      Parent root = null;
-      String key = null;
-      Object controller = null;
-      if (useCache && loader.getLocation() != null) {
-        key = loader.getLocation().toString();
-        root = ROOT_CACHE.get(key);
-        controller = CONTROLLER_CACHE.get(key);
-        setController(controller);
-      }
-      if (root == null) {
-        root = (loader.getRoot() == null) ? loader.load() : loader.getRoot();
-        if (useCache && key != null) {
-          ROOT_CACHE.put(key, root);
-          CONTROLLER_CACHE.put(key, controller);
-          setController(controller);
-        }
-      }
-      Scene scene = new Scene(root);
-      Stage modalStage = new Stage();
-      modalStage.initModality(Modality.WINDOW_MODAL);
-      modalStage.initOwner(primaryStage);
-      modalStage.setScene(scene);
-      modalStage.setTitle(title);
-      currentModal = modalStage;
-      modalStage.showAndWait();
-      currentModal = null;
-      return modalStage;
-    } catch (IOException e) {
-      String loaderLocation =
-          (loader.getLocation() != null) ? loader.getLocation().toString() : "unknown";
-      logger.error("Error showing modal scene using loader: " + loaderLocation, e);
-      return null;
-    }
+  public static void showMainStage(String title, FXMLLoader childLoader, boolean useCache) {
+    FXMLLoader mainLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/MainLayout.fxml");
+    Parent mainLayoutRoot = resolveFxmlRoot(mainLayoutLoader);
+
+    MainLayoutController mainLayoutController = mainLayoutLoader.getController();
+    Pane mainLayoutContentPane = mainLayoutController.getContentPane();
+
+    switchContent(mainLayoutContentPane, childLoader, useCache);
+
+    mainStage.initStyle(StageStyle.TRANSPARENT);
+    mainStage.setTitle(title);
+    mainStage.setScene(new Scene(mainLayoutRoot));
+    mainStage.getScene().setFill(Color.TRANSPARENT);
+    mainLayoutController.setMainTitle(title);
+    mainLayoutController.setMainStage(mainStage);
+    mainStage.show();
   }
 
-  public static Stage showModal(FXMLLoader loader, String title) {
-    return showModal(loader, title, true);
+  public static void showMainStage(String title, FXMLLoader childLoader) {
+    showMainStage(title, childLoader, false);
   }
 
-  public static Stage showModal(FXMLLoader loader, boolean useCache) {
-    return showModal(loader, DEFAULT_MODAL_TITLE, useCache);
+  public static void showModalStage(String title, FXMLLoader childLoader, boolean useCache) {
+    FXMLLoader modalLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/ModalLayout.fxml");
+    Parent modalLayoutRoot = resolveFxmlRoot(modalLayoutLoader);
+
+    ModalLayoutController modalLayoutController = modalLayoutLoader.getController();
+    Pane modalLayoutContentPane = modalLayoutController.getContentPane();
+
+    switchContent(modalLayoutContentPane, childLoader, useCache);
+
+    Stage modalStage = new Stage();
+    modalStage.initStyle(StageStyle.TRANSPARENT);
+    modalStage.initModality(Modality.WINDOW_MODAL);
+    modalStage.initOwner(mainStage);
+    modalStage.setTitle(title);
+    modalStage.setScene(new Scene(modalLayoutRoot));
+    modalStage.getScene().setFill(Color.TRANSPARENT);
+    modalLayoutController.setModalTitle(title);
+    modalLayoutController.setModalStage(modalStage);
+    modalStage.showAndWait();
   }
 
-  public static Stage showModal(FXMLLoader loader) {
-    return showModal(loader, DEFAULT_MODAL_TITLE, true);
+  public static void showModalStage(String title, FXMLLoader childLoader) {
+    showModalStage(title, childLoader, false);
   }
 
-  public static void closeModal() {
-    if (currentModal != null) {
-      currentModal.close();
-      currentModal = null;
-    }
+  public static void showError(String errorMessage) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error!");
+    alert.setHeaderText(null);
+    alert.setContentText(errorMessage);
+    alert.showAndWait();
+  }
+
+  public static void showAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 
   public static void setController(Object newController) {
@@ -168,3 +149,5 @@ public class UIManager {
     return controller;
   }
 }
+
+

@@ -1,59 +1,39 @@
 package com.university.grp20.controller;
 
-import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
+import java.awt.*;
+import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.title.TextTitle;
-
-import java.awt.*;
-
-import java.time.LocalDate;
 import java.util.List;
+import java.time.LocalDate;
 
-public class FilterSelectionController {
-  public enum FilterMode {
-    METRICS,
-    CHART
-  }
-
+public class FilterSelectionController extends Navigator {
   @FXML private CheckComboBox<String> ageGroupSelector, contextSelector, incomeSelector;
   @FXML private RadioButton maleRadioButton, femaleRadioButton;
-  @FXML private ToggleGroup genderGroup;
   @FXML private ComboBox<String> granularityChooser;
   @FXML private DatePicker startDatePicker, endDatePicker;
   @FXML private Button applyChangesButton;
   @FXML private Label chartNameLabel;
   @FXML private ProgressBar filterProgressBar;
   @FXML private Label filterProgressLabel;
+  private ToggleGroup genderGroup;
   private final Logger logger = LogManager.getLogger(FilterSelectionController.class);
   private FilterMode filterMode;
   private MetricsController metricsController;
   private ChartViewer chartViewer;
   private final OperationLogger operationLogger = new OperationLogger();
-
-  public void setFilterMode(FilterMode mode) {
-    this.filterMode = mode;
-    applyFilterModeUI();
-  }
-
-  public void setMetricsController(MetricsController metricsController) {
-    this.metricsController = metricsController;
-  }
-
-  public void setChartViewer(ChartViewer chartViewer) {
-    this.chartViewer = chartViewer;
-  }
 
   @FXML
   private void initialize() {
@@ -68,10 +48,23 @@ public class FilterSelectionController {
     contextSelector
         .getItems()
         .addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
+    Platform.runLater(
+        () -> {
+          ageGroupSelector.getStyleClass().add("blue-check-combo-box");
+          incomeSelector.getStyleClass().add("blue-check-combo-box");
+          contextSelector.getStyleClass().add("blue-check-combo-box");
+        });
+  }
+
+  public void init(
+      String filterMode, MetricsController metricsController, ChartViewer chartViewer) {
+    if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
+    else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
   }
 
   @FXML
   private void applyChanges() {
+    Stage stage = (Stage) parentPane.getScene().getWindow();
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     calculateMetricsService.setOnFilterStart(this::updateProgressBar);
     calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
@@ -136,13 +129,28 @@ public class FilterSelectionController {
       if (newFilteredChart != null && chartViewer != null) {
         chartViewer.setChart(newFilteredChart);
       }
-
-      UIManager.closeModal();
+      stage.close();
     }
   }
 
+  private void initMetrics(MetricsController metricsController) {
+    this.metricsController = metricsController;
+    setFilterMode(FilterMode.METRICS);
+  }
+
+  private void initChart(ChartViewer chartViewer) {
+    this.chartViewer = chartViewer;
+    setFilterMode(FilterMode.CHART);
+  }
+
+  private void setFilterMode(FilterMode mode) {
+    this.filterMode = mode;
+    applyFilterModeUI();
+    }
+
   private Task<MetricsDTO> getMetricsDTOTask(
       CalculateMetricsService calculateMetricsService, FilterCriteriaDTO filterCriteriaDTO) {
+    Stage stage = (Stage) parentPane.getScene().getWindow();
     Task<MetricsDTO> task =
         new Task<>() {
           @Override
@@ -154,19 +162,13 @@ public class FilterSelectionController {
     task.setOnSucceeded(
         e -> {
           metricsController.setMetrics(task.getValue());
-          UIManager.closeModal();
+          stage.close();
           logger.info("Testing - clicks: " + task.getValue().clicks());
         });
 
     task.setOnFailed(
         e -> logger.error("Error calculating metrics: " + task.getException().getMessage()));
     return task;
-  }
-
-  @FXML
-  private void quit() {
-    UIManager.closeModal();
-    operationLogger.log("Quit button selected");
   }
 
   private void applyFilterModeUI() {
@@ -181,7 +183,6 @@ public class FilterSelectionController {
   }
 
   private FilterCriteriaDTO buildFilterCriteria() {
-    // Create immutable copies of the UI list selections
     List<String> ageRanges =
         ageGroupSelector.getCheckModel().getCheckedItems() != null
             ? List.copyOf(ageGroupSelector.getCheckModel().getCheckedItems())
@@ -195,14 +196,12 @@ public class FilterSelectionController {
             ? List.copyOf(contextSelector.getCheckModel().getCheckedItems())
             : List.of();
 
-    // Get other filter values from the UI controls.
     LocalDate startDate = startDatePicker.getValue();
     LocalDate endDate = endDatePicker.getValue();
     String timeGranularity = granularityChooser.getValue();
     Toggle selectedToggle = genderGroup.getSelectedToggle();
     String gender = selectedToggle != null ? selectedToggle.getUserData().toString() : null;
 
-    // Log the filter criteria for debugging.
     logger.info("Building filter criteria with:");
     logger.info("Age Ranges: " + ageRanges);
     logger.info("Incomes: " + incomes);
@@ -212,7 +211,6 @@ public class FilterSelectionController {
     logger.info("End Date: " + endDate);
     logger.info("Gender: " + gender);
 
-    // Create and return the immutable FilterCriteriaDTO.
     return new FilterCriteriaDTO(
         ageRanges, incomes, contexts, timeGranularity, gender, startDate, endDate);
   }
@@ -226,4 +224,10 @@ public class FilterSelectionController {
     logger.info("Updating progress label to " + text);
     Platform.runLater(() -> filterProgressLabel.setText(text));
   }
+
+  private enum FilterMode {
+    METRICS,
+    CHART
+  }
 }
+

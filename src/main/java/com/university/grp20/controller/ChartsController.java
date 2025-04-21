@@ -32,15 +32,17 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
 
-public class ChartController {
-
+public class ChartsController extends Navigator {
   @FXML private FlowPane addChartFlowPane;
   @FXML private MenuButton addChartButton;
-  @FXML
-  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
-  private final Logger logger = LogManager.getLogger(ChartController.class);
+  private final Logger logger = LogManager.getLogger(ChartsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
 
+  @FXML
+  private void initialize() {}
+
+  @FXML
+  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
   public void disableForViewer() {
     logger.info("disableForViewer called");
 
@@ -78,17 +80,18 @@ public class ChartController {
 
   @FXML
   private void showMetrics() {
-    UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+    UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
     operationLogger.log("Metrics button clicked, displaying metrics dashboard");
   }
 
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/LoginScene.fxml"), false);
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
       operationLogger.log("Back button clicked, returned to login page");
     } else {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/FileSelectionScene.fxml"), false);
+      UIManager.switchContent(
+          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
       operationLogger.log("Back button clicked, returned to file upload page");
     }
   }
@@ -98,14 +101,13 @@ public class ChartController {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
-        FXMLLoader loader = UIManager.createFXMLLoader("/fxml/FilterSelectionModal.fxml");
-        loader.load();
+        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+        filterLoader.load();
 
-        FilterSelectionController controller = loader.getController();
-        controller.setFilterMode(FilterSelectionController.FilterMode.CHART);
-        controller.setChartViewer(chartViewer);
+        FilterSelectionController filterController = filterLoader.getController();
+        filterController.init("Chart", null, chartViewer);
 
-        UIManager.showModal(loader, false);
+        UIManager.showModalStage("Filter Selection", filterLoader);
       } catch (IOException e) {
         logger.error("Error loading chart filter: " + e.getMessage());
       }
@@ -147,6 +149,7 @@ public class ChartController {
   private void addConversionsChart() {
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
+    operationLogger.log("Conversions chart chosen and displayed");
   }
 
   @FXML

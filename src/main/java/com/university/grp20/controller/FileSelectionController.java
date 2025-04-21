@@ -6,23 +6,18 @@ import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.function.Consumer;
 
-public class FileSelectionController {
+public class FileSelectionController extends Navigator {
   @FXML private Button impressionLogButton;
   @FXML private Button clickLogButton;
   @FXML private Button serverLogButton;
@@ -81,8 +76,10 @@ public class FileSelectionController {
                   Thread.sleep(100);
                   Platform.runLater(
                       () ->
-                          UIManager.switchScene(
-                              UIManager.createFXMLLoader("/fxml/MetricsScene.fxml")));
+                          UIManager.switchContent(
+                              parentPane,
+                              UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
+                              true));
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
                   throw new RuntimeException(
@@ -123,23 +120,15 @@ public class FileSelectionController {
     User.logOut();
     operationLogger.log("Logout button clicked");
 
-    try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginScene.fxml"));
-      Parent root = loader.load();
-      Stage stage = (Stage) nextButton.getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.setTitle("Advertising Dashboard");
-      stage.show();
-    } catch (IOException e) {
-      logger.info("Error reading FXML file");
-    }
+    UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
   }
 
   @FXML
   private void handleSkip() {
     operationLogger.log("Skip upload button clicked");
     if (fileImportService.isDataLoaded()) {
-      UIManager.switchScene(UIManager.createFXMLLoader("/fxml/MetricsScene.fxml"));
+      UIManager.switchContent(
+          parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
@@ -174,11 +163,6 @@ public class FileSelectionController {
     }
   }
 
-  /**
-   * Called via a listener in the FileProcessor class
-   *
-   * @param errorMessage The error message to be shown
-   */
   private void handleFileUploadError(String errorMessage) {
     Platform.runLater(
         () -> {
