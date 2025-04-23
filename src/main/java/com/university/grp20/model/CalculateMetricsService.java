@@ -1,5 +1,6 @@
 package com.university.grp20.model;
 
+import com.university.grp20.UIManager;
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
 import org.apache.logging.log4j.LogManager;
@@ -16,18 +17,7 @@ public class CalculateMetricsService {
   private final Logger logger = LogManager.getLogger(CalculateMetricsService.class);
   private ProgressBarListener filterProgressBar;
   private ProgressLabel filterProgressLabel;
-  private static String bounceType = "Pages Viewed";
-  private static String bounceValue = "1";
-
   private record MetricResult(String metricName, double value) {}
-
-  public void setBounceType(String bounceType) {
-    CalculateMetricsService.bounceType = bounceType;
-  }
-
-  public void setBounceValue(String bounceValue) {
-    CalculateMetricsService.bounceValue = bounceValue;
-  }
 
   public void setOnFilterStart(ProgressBarListener listener) {
     this.filterProgressBar = listener;
@@ -336,6 +326,9 @@ public class CalculateMetricsService {
 
   private static String applyBounceDef(String alias) {
     String bounceStmt = null;
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
+    String bounceType = globalSettings.getBounceType();
+    String bounceValue = globalSettings.getBounceValue();
     if (bounceType.equals("Pages Viewed")) {
       bounceStmt = alias + ".PagesViewed <= " + bounceValue;
     } else if (bounceType.equals("Time Spent on Page")) {

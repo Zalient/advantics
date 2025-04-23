@@ -1,5 +1,6 @@
 package com.university.grp20.model;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
@@ -7,27 +8,24 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.HistogramDataset;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.List;
 
 public class GenerateChartService {
   private final Logger logger = LogManager.getLogger(GenerateChartService.class);
-  private static String bounceType = "Pages Viewed";
-  private static String bounceValue = "1";
-
-  public static void setBounceType(String bounceType) {
-    GenerateChartService.bounceType = bounceType;
-  }
-
-  public static void setBounceValue(String bounceValue) {
-    GenerateChartService.bounceValue = bounceValue;
+  private Integer numOfDays;
+  public void setNumOfDays(int days){
+    numOfDays = days;
   }
 
   private static DefaultCategoryDataset getCategoryDataset(String query, String metricLine) {
@@ -172,6 +170,9 @@ public class GenerateChartService {
 
   private static String applyBounceDef() {
     String bounceStmt = "";
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
+    String bounceType = globalSettings.getBounceType();
+    String bounceValue = globalSettings.getBounceValue();
     if (bounceType.equals("Pages Viewed")) {
       bounceStmt = "s.PagesViewed <= " + bounceValue;
     } else if (bounceType.equals("Time Spent on Page")) {
@@ -212,12 +213,53 @@ public class GenerateChartService {
     };
   }
 
-  private void rotateXAxisLabels(JFreeChart chart) {
+  private void configXAxisLabels (JFreeChart chart, FilterCriteriaDTO filterDTO) {
+    if (numOfDays == null) {
+      getNumOfDays();
+    }
+    logger.info("Day count: " + numOfDays);
     if (chart.getPlot() instanceof CategoryPlot categoryPlot) {
       CategoryAxis xAxis = categoryPlot.getDomainAxis();
-      xAxis.setCategoryLabelPositions(
-          CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
+      xAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
+
+      String timeGranularity = filterDTO.timeGranularity();
+      if (timeGranularity != null && timeGranularity.equals("Per Hour")) {
+        DefaultCategoryDataset dataset = (DefaultCategoryDataset) categoryPlot.getDataset();
+        List<?> categories = dataset.getColumnKeys();
+        int step = (int) Math.ceil((numOfDays * 24.0) / 15.0);
+
+        for (int i = 0; i < categories.size(); i++) {
+          String label = categories.get(i).toString();
+          if (i % 120 != 0) {
+            xAxis.setTickLabelPaint(label, new Color(0, 0, 0, 0));
+          }
+        }
+      }
     }
+  }
+
+  private void getNumOfDays (){
+    String query = "SELECT COUNT(DISTINCT strftime('%Y-%m-%d', Date)) AS count FROM clickLog";
+    try (Connection conn = DBHelper.getConnection();
+         ResultSet rs = DBHelper.executeQuery(conn, query)) {
+      if (rs != null && rs.next()) {
+        numOfDays = rs.getInt("count");
+
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Error fetching number of days", e);
+    }
+  }
+
+  private static void showDefaultFilters(JFreeChart chart){
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
+    String filterApplied = "Time Granularity: Per Day   Start Date: []   End Date: []\n" +
+            "Gender: All Gender   Age Ranges: []   Income: []   Contexts: []\n" +
+            "Bounce Type " + globalSettings.getBounceType() + "   Bounce Value: " + globalSettings.getBounceValue();
+    TextTitle subtitle = new TextTitle(filterApplied);
+    subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+    subtitle.setPaint(new Color(0, 0, 140));
+    chart.addSubtitle(subtitle);
   }
 
   public JFreeChart filteredImpressionsChart(FilterCriteriaDTO filterDTO) {
@@ -234,7 +276,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Impressions Per " + label, label, "Impressions", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -252,7 +294,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Clicks Per " + label, label, "Clicks", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -270,7 +312,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Uniques Per " + label, label, "Uniques", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -291,7 +333,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Bounces Per " + label, label, "Bounces", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -310,7 +352,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Conversions Per " + label, label, "Conversions", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -343,7 +385,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Total Cost Per " + label, label, "Total Cost", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -376,7 +418,7 @@ public class GenerateChartService {
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CTR");
     String label = granularityLabel(filterDTO);
     JFreeChart chart = ChartFactory.createLineChart("CTR Per " + label, label, "CTR", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -427,7 +469,7 @@ public class GenerateChartService {
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CPA");
     String label = granularityLabel(filterDTO);
     JFreeChart chart = ChartFactory.createLineChart("CPA Per " + label, label, "CPA", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -474,7 +516,7 @@ public class GenerateChartService {
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CPC");
     String label = granularityLabel(filterDTO);
     JFreeChart chart = ChartFactory.createLineChart("CPC Per " + label, label, "CPC", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -506,7 +548,7 @@ public class GenerateChartService {
     DefaultCategoryDataset dataset = getCategoryDataset(finalSQL, "CPM");
     String label = granularityLabel(filterDTO);
     JFreeChart chart = ChartFactory.createLineChart("CPM Per " + label, label, "CPM", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -545,7 +587,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Bounce Rate Per " + label, label, "Bounce Rate", dataset);
-    rotateXAxisLabels(chart);
+    configXAxisLabels(chart, filterDTO);
     return chart;
   }
 
@@ -561,7 +603,9 @@ public class GenerateChartService {
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Impressions FROM impressionLog GROUP BY Day ORDER BY Day",
             "Impressions By Day");
-    return ChartFactory.createLineChart("Impressions Per Day", "Day", "Impressions", dataset);
+    JFreeChart chart = ChartFactory.createLineChart("Impressions Per Day", "Day", "Impressions", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart clicksChart() {
@@ -569,7 +613,9 @@ public class GenerateChartService {
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day ORDER BY Day",
             "Clicks");
-    return ChartFactory.createLineChart("Clicks Per Day", "Day", "Clicks", dataset);
+    JFreeChart chart = ChartFactory.createLineChart("Clicks Per Day", "Day", "Clicks", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart uniquesChart() {
@@ -577,7 +623,9 @@ public class GenerateChartService {
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(DISTINCT ID) AS Total_Unique_IDs FROM impressionLog GROUP BY Day ORDER BY Day",
             "Uniques");
-    return ChartFactory.createLineChart("Uniques Per Day", "Day", "Uniques", dataset);
+    JFreeChart chart = ChartFactory.createLineChart("Uniques Per Day", "Day", "Uniques", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart bouncesChart() {
@@ -587,7 +635,9 @@ public class GenerateChartService {
                 + applyBounceDef()
                 + " GROUP BY Day ORDER BY Day",
             "Bounces");
-    return ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart conversionsChart() {
@@ -595,7 +645,9 @@ public class GenerateChartService {
         getCategoryDataset(
             "SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Conversions FROM serverLog WHERE Conversion = 'Yes' GROUP BY Day ORDER BY Day",
             "Conversions");
-    return ChartFactory.createLineChart("Conversions Per Day", "Day", "Conversions", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("Conversions Per Day", "Day", "Conversions", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart totalCostChart() {
@@ -607,7 +659,9 @@ public class GenerateChartService {
                 + "SELECT strftime('%Y-%m-%d', Date) AS Day, SUM(clickCost) AS Total_Cost FROM clickLog GROUP BY Day"
                 + ") GROUP BY Day ORDER BY Day",
             "Total Cost");
-    return ChartFactory.createLineChart("Total Cost Per Day", "Day", "Total Cost", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("Total Cost Per Day", "Day", "Total Cost", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart ctrChart() {
@@ -618,7 +672,9 @@ public class GenerateChartService {
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day) cli "
                 + "ON imp.Day = cli.Day ORDER BY imp.Day",
             "CTR");
-    return ChartFactory.createLineChart("CTR Per Day", "Day", "CTR", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("CTR Per Day", "Day", "CTR", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart cpaChart() {
@@ -633,7 +689,9 @@ public class GenerateChartService {
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', EntryDate) AS Day, COUNT(*) AS Total_Conversions FROM serverLog WHERE Conversion = 'Yes' GROUP BY Day) AS conv "
                 + "ON total.Day = conv.Day ORDER BY total.Day",
             "CPA");
-    return ChartFactory.createLineChart("CPA Per Day", "Day", "CPA", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("CPA Per Day", "Day", "CPA", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart cpcChart() {
@@ -648,7 +706,9 @@ public class GenerateChartService {
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day) cli "
                 + "ON total.Day = cli.Day ORDER BY total.Day",
             "CPC");
-    return ChartFactory.createLineChart("CPC Per Day", "Day", "CPC", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("CPC Per Day", "Day", "CPC", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart cpmChart() {
@@ -659,7 +719,9 @@ public class GenerateChartService {
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Impressions FROM impressionLog GROUP BY Day) AS imp "
                 + "ON c_imp.Day = imp.Day ORDER BY c_imp.Day",
             "CPM");
-    return ChartFactory.createLineChart("CPM Per Day", "Day", "CPM", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("CPM Per Day", "Day", "CPM", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 
   public static JFreeChart bounceRateChart() {
@@ -672,6 +734,8 @@ public class GenerateChartService {
                 + "INNER JOIN (SELECT strftime('%Y-%m-%d', Date) AS Day, COUNT(*) AS Total_Clicks FROM clickLog GROUP BY Day) cli "
                 + "ON bounce.Day = cli.Day ORDER BY bounce.Day",
             "Bounce Rate");
-    return ChartFactory.createLineChart("Bounce Rate Per Day", "Day", "Bounce Rate", dataset);
+    JFreeChart chart =  ChartFactory.createLineChart("Bounce Rate Per Day", "Day", "Bounce Rate", dataset);
+    showDefaultFilters(chart);
+    return chart;
   }
 }

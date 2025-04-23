@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.PasswordField?>
 <ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane"
             stylesheets="@../../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -52,17 +53,17 @@
                                                 <Font size="14.0"/>
                                             </font>
                                         </Label>
-                                        <TextField fx:id="newPasswordField" prefWidth="300.0" promptText="Password"
-                                                   styleClass="custom-text-field">
+                                        <PasswordField fx:id="newPasswordField" prefWidth="300.0" promptText="Password"
+                                                       styleClass="custom-text-field">
                                             <font>
                                                 <Font size="14.0"/>
                                             </font>
-                                        </TextField>
+                                        </PasswordField>
                                     </children>
                                 </VBox>
                                 <ComboBox fx:id="newRoleMenu" prefWidth="150.0" promptText="Select Role"
                                           styleClass="blue-combo-box"/>
-                                <Button fx:id="addUserButton" disable="true" mnemonicParsing="false" onAction="#addUser"
+                                <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#addUser"
                                         prefWidth="150.0" styleClass="blue-button"
                                         stylesheets="@../../styles/styles.css" text="Add User">
                                     <font>
@@ -91,17 +92,17 @@
                                                 <Font size="14.0"/>
                                             </font>
                                         </Label>
-                                        <TextField fx:id="changePasswordField" prefWidth="300.0"
+                                        <PasswordField fx:id="changePasswordField" prefWidth="300.0"
                                                    promptText="New Password" styleClass="custom-text-field">
                                             <font>
                                                 <Font size="14.0"/>
                                             </font>
-                                        </TextField>
+                                        </PasswordField>
                                     </children>
                                 </VBox>
                                 <ComboBox fx:id="changeRoleMenu" prefWidth="150.0" promptText="New Role"
                                           styleClass="blue-combo-box"/>
-                                <Button fx:id="editUserButton" disable="true" mnemonicParsing="false"
+                                <Button fx:id="editUserButton" mnemonicParsing="false"
                                         onAction="#editUser" prefWidth="150.0" styleClass="blue-button"
                                         stylesheets="@../../styles/styles.css" text="Edit User">
                                     <font>

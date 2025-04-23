@@ -7,10 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MetricsController extends Navigator {
+  @FXML private Button resetDashButton;
   @FXML private Label impressionsLabel;
   @FXML private Label clicksLabel;
   @FXML private Label uniquesLabel;
@@ -28,10 +30,12 @@ public class MetricsController extends Navigator {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
   private MetricsDTO metricsDTO;
+  @FXML private VBox bounceMsgBox;
+  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+
 
   @FXML
   private void initialize() {
-    CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     calculateMetricsService.setOnFilterStart(
         progress -> {
           /* no-op */
@@ -42,6 +46,11 @@ public class MetricsController extends Navigator {
         });
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
+    bounceMsgBox.setVisible(false);
+  }
+
+  public void showBounceMsgBox(){
+    bounceMsgBox.setVisible(true);
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
@@ -101,6 +110,7 @@ public class MetricsController extends Navigator {
       ExportService.dashboardToPDF(metricsDTO, filePath);
       logger.info("Metrics exported successfully to PDF.");
       operationLogger.log("Metrics report saved to PDF at " + filePath);
+      UIManager.showAlert("Success", "Metrics report saved to PDF at " + filePath);
     } else {
       operationLogger.log("Metrics report not saved");
     }
@@ -113,6 +123,7 @@ public class MetricsController extends Navigator {
     ExportService.dashboardToCSV(metricsDTO, filePath);
     if (filePath != null) {
       operationLogger.log("Metrics report saved to CSV at " + filePath);
+      UIManager.showAlert("Success", "Metrics report saved to CSV at " + filePath);
     } else {
       operationLogger.log("Metrics report not saved");
     }
@@ -138,5 +149,12 @@ public class MetricsController extends Navigator {
     filterButton.setDisable(status);
     pdfButton.setDisable(status);
     csvButton.setDisable(status);
+  }
+
+  @FXML
+  private void handleResetClick(){
+    MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
+    setMetrics(defaultMetrics);
+    UIManager.showAlert("Success", "Dashboard successfully reset to default");
   }
 }
