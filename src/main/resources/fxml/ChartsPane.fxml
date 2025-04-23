@@ -12,78 +12,69 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="626.0" prefWidth="1280" stylesheets="@../styles/styles.css"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.university.grp20.controller.ChartsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartsController">
     <children>
-        <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+        <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0"
-                            styleClass="blue-button" stylesheets="@../styles/styles.css" text="Back">
+                    <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Back">
                         <font>
-                            <Font size="24.0"/>
+                            <Font size="24.0" />
                         </font>
                         <HBox.margin>
-                            <Insets left="10.0"/>
+                            <Insets left="10.0" />
                         </HBox.margin>
                     </Button>
                     <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
                         <opaqueInsets>
-                            <Insets/>
+                            <Insets />
                         </opaqueInsets>
                     </Region>
                     <HBox spacing="10.0">
                         <children>
-                            <Button mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0"
-                                    styleClass="blue-button" stylesheets="@../styles/styles.css" text="Metrics">
+                            <Button mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Metrics">
                                 <font>
-                                    <Font size="24.0"/>
+                                    <Font size="24.0" />
                                 </font>
                             </Button>
-                            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button"
-                                    stylesheets="@../styles/styles.css" text="Charts">
+                            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Charts">
                                 <font>
-                                    <Font size="24.0"/>
+                                    <Font size="24.0" />
                                 </font>
                             </Button>
                         </children>
                     </HBox>
-                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
-                    <MenuButton fx:id="addChartButton" alignment="CENTER" prefHeight="60.0" prefWidth="140.0"
-                                styleClass="blue-menu-button" stylesheets="@../styles/styles.css" text="Add">
+                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                    <MenuButton fx:id="addChartButton" alignment="CENTER" prefHeight="60.0" prefWidth="140.0" styleClass="blue-menu-button" stylesheets="@../styles/styles.css" text="Add">
                         <items>
-                            <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addUniquesChart" text="No Of Uniques"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addBouncesChart" text="No Of Bounces"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addConversionsChart" text="No Of Conversions"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addTotalCostChart" text="Total"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addCTRChart" text="CTR"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addCPAChart" text="CPA"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addCPCChart" text="CPC"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addCPMChart" text="CPM"/>
-                            <MenuItem mnemonicParsing="false" onAction="#addBounceRateChart" text="Bounce Rate"/>
-                            <MenuItem mnemonicParsing="false" onAction="#binSizePrompt" text="Click Cost Histogram"/>
+                            <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
+                            <MenuItem mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks" />
+                            <MenuItem mnemonicParsing="false" onAction="#addUniquesChart" text="No Of Uniques" />
+                            <MenuItem mnemonicParsing="false" onAction="#addBouncesChart" text="No Of Bounces" />
+                            <MenuItem mnemonicParsing="false" onAction="#addConversionsChart" text="No Of Conversions" />
+                            <MenuItem mnemonicParsing="false" onAction="#addTotalCostChart" text="Total" />
+                            <MenuItem mnemonicParsing="false" onAction="#addCTRChart" text="CTR" />
+                            <MenuItem mnemonicParsing="false" onAction="#addCPAChart" text="CPA" />
+                            <MenuItem mnemonicParsing="false" onAction="#addCPCChart" text="CPC" />
+                            <MenuItem mnemonicParsing="false" onAction="#addCPMChart" text="CPM" />
+                            <MenuItem mnemonicParsing="false" onAction="#addBounceRateChart" text="Bounce Rate" />
+                            <MenuItem mnemonicParsing="false" onAction="#binSizePrompt" text="Click Cost Histogram" />
                         </items>
                         <HBox.margin>
-                            <Insets right="10.0"/>
+                            <Insets right="10.0" />
                         </HBox.margin>
                         <font>
-                            <Font size="24.0"/>
+                            <Font size="24.0" />
                         </font>
                     </MenuButton>
                 </children>
                 <padding>
-                    <Insets bottom="10.0" top="10.0"/>
+                    <Insets bottom="10.0" top="10.0" />
                 </padding>
             </HBox>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="custom-scroll-pane"
-                        stylesheets="@../styles/styles.css" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="custom-scroll-pane" stylesheets="@../styles/styles.css" VBox.vgrow="ALWAYS">
                 <content>
-                    <FlowPane fx:id="addChartFlowPane" prefWrapLength="620" styleClass="root"
-                              stylesheets="@../styles/styles.css"/>
+                    <FlowPane fx:id="addChartFlowPane" prefWrapLength="620" styleClass="root" stylesheets="@../styles/styles.css" />
                 </content>
             </ScrollPane>
         </VBox>

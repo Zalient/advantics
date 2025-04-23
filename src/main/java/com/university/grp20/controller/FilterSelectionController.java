@@ -64,6 +64,7 @@ public class FilterSelectionController extends Navigator {
 
   @FXML
   private void applyChanges() {
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
     Stage stage = (Stage) parentPane.getScene().getWindow();
     CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
     calculateMetricsService.setOnFilterStart(this::updateProgressBar);
@@ -88,40 +89,20 @@ public class FilterSelectionController extends Navigator {
 
       if (newFilteredChart != null && chartViewer != null) {
         String filterApplied =
-            "Time granularity: "
-                + filterCriteriaDTO.timeGranularity()
-                + "   "
-                + "Start Date: "
-                + (filterCriteriaDTO.startDate() != null
-                    ? filterCriteriaDTO.startDate().toString()
-                    : " ")
-                + "   "
-                + "End Date: "
-                + (filterCriteriaDTO.endDate() != null
-                    ? filterCriteriaDTO.endDate().toString()
-                    : " ")
-                + "   "
-                + "\n"
-                + "Gender: "
-                + (filterCriteriaDTO.gender() != null ? filterCriteriaDTO.gender() : "All Gender")
-                + "   "
-                + "Age Ranges: "
-                + (filterCriteriaDTO.ageRanges() != null
-                    ? filterCriteriaDTO.ageRanges().toString()
-                    : "All Age Range")
-                + "   "
-                + "Income: "
-                + (filterCriteriaDTO.incomes() != null
-                    ? filterCriteriaDTO.incomes().toString()
-                    : "All Income Levels")
-                + "   "
-                + "Contexts: "
-                + (filterCriteriaDTO.contexts() != null
-                    ? filterCriteriaDTO.contexts().toString()
-                    : "All Context");
+            "Time granularity: " + filterCriteriaDTO.timeGranularity() + "   " +
+                    "Start Date: " + (filterCriteriaDTO.startDate() != null ? filterCriteriaDTO.startDate().toString() : " ") + "   " +
+                    "End Date: " + (filterCriteriaDTO.endDate() != null ? filterCriteriaDTO.endDate().toString() : " ") + "   " +
+                    "\n" +
+                    "Gender: " + (filterCriteriaDTO.gender() != null ? filterCriteriaDTO.gender() : "All Gender") + "   " +
+                    "Age Ranges: " + (filterCriteriaDTO.ageRanges() != null ? filterCriteriaDTO.ageRanges().toString() : "All Age Range") + "   " +
+                    "Income: " + (filterCriteriaDTO.incomes() != null ? filterCriteriaDTO.incomes().toString() : "All Income Levels") + "   " +
+                    "Contexts: " + (filterCriteriaDTO.contexts() != null ? filterCriteriaDTO.contexts().toString() : "All Context") + "   " +
+                    "\n" +
+                    "Bounce Type: " + globalSettings.getBounceType() + "   " +
+                    "Bounce Value: " + globalSettings.getBounceValue() + "   ";
 
         TextTitle subtitle = new TextTitle(filterApplied);
-        subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
         subtitle.setPaint(new Color(0, 0, 140));
         newFilteredChart.addSubtitle(subtitle);
       }

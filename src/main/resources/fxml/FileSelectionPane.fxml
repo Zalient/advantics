@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="626.0" prefWidth="1280" stylesheets="@../styles/styles.css"
+<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>

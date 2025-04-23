@@ -8,6 +8,7 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DBHelper {
   private static final int BATCH_SIZE = 15000;
   private static final HikariDataSource dataSource;
+  private static Connection testConnection = null;
 
   static {
     HikariConfig config = new HikariConfig();
@@ -21,7 +22,18 @@ public class DBHelper {
   }
 
   public static Connection getConnection() throws SQLException {
+    if (testConnection != null) {
+      return testConnection;
+    }
     return dataSource.getConnection();
+  }
+
+  public static void useTestConnection(Connection conn) {
+    testConnection = conn;
+  }
+
+  public static void resetTestConnection() {
+    testConnection = null;
   }
 
   public static ResultSet executeQuery(Connection conn, String sql, Object... params)

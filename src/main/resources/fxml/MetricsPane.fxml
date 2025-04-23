@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
         <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -281,6 +281,13 @@
                 <Insets bottom="10.0" left="10.0" />
             </padding>
         </HBox>
+      <VBox fx:id="bounceMsgBox" layoutX="54.0" layoutY="105.0" prefHeight="273.0" prefWidth="194.0" />
+      <HBox layoutX="991.0" layoutY="666.0" />
+      <Button fx:id="resetDashButton" layoutX="1054.0" layoutY="665.0" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="218.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Reset Dashboard">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
 
     </children>
 </AnchorPane>
