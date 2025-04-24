@@ -10,4 +10,7 @@ public record FilterCriteriaDTO(
     String timeGranularity,
     String gender,
     LocalDate startDate,
-    LocalDate endDate) {}
+    LocalDate endDate,
+    List<String> daysOfWeek,
+    List<String> timeOfDay
+){}

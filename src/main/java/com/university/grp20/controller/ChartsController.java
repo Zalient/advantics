@@ -149,7 +149,6 @@ public class ChartsController extends Navigator {
   private void addConversionsChart() {
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
-    operationLogger.log("Conversions chart chosen and displayed");
   }
 
   @FXML
@@ -247,22 +246,32 @@ public class ChartsController extends Navigator {
     Button exportPDFButton = new Button("Export as PDF");
     exportPDFButton.setOnAction(
         e -> {
+          operationLogger.log(metricType + " chart export as PDF button clicked");
           try {
             String filePath = ExportService.askForPDFFilename();
             ExportService.chartToPDF(chartViewer.getChart(), filePath);
+            operationLogger.log( metricType + " chart successfully exported as PDF to " + filePath);
+            UIManager.showAlert("Success", metricType + " chart successfully exported as PDF to " + filePath);
           } catch (IOException ex) {
             logger.error("Error exporting as PDF: " + ex);
+            operationLogger.log("Error exporting " + metricType + " chart as PDF " + ex);
+            UIManager.showAlert("Error", "Error exporting as PDF " + ex);
           }
         });
 
     Button exportCSVButton = new Button("Export as CSV");
     exportCSVButton.setOnAction(
         e -> {
+          operationLogger.log(metricType + " chart export as CSV button clicked");
           try {
             String filePath = ExportService.askForCSVFilename();
             ExportService.chartToCSV(chartViewer.getChart(), filePath);
+            operationLogger.log( metricType + " chart successfully exported as CSV to " + filePath);
+            UIManager.showAlert("Success", metricType + " chart successfully exported as CSV to " + filePath);
           } catch (IOException ex) {
             logger.error("Error exporting as CSV " + ex);
+            operationLogger.log("Error exporting " + metricType + " chart as CSV " + ex);
+            UIManager.showAlert("Error", "Error exporting as CSV " + ex);
           }
         });
 
@@ -276,7 +285,7 @@ public class ChartsController extends Navigator {
   private void addHistogram(int numBins) {
     JFreeChart chart = GenerateChartService.clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
-    operationLogger.log("Bin size chosen and histogram displayed");
+    operationLogger.log("Bin size of "+ numBins +" chosen and histogram displayed");
 
     XYPlot plot = (XYPlot) chart.getPlot();
     XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();

@@ -12,6 +12,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
         <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -39,7 +41,12 @@
                         </Button>
                     </children>
                 </HBox>
-                <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                <Region prefHeight="60.0" prefWidth="282.0" />
+            <Button fx:id="helpButton" mnemonicParsing="false" text="Click Me!">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
                 <Button fx:id="filterButton" mnemonicParsing="false" onAction="#showMetricsFilter" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Filter">
                     <HBox.margin>
                         <Insets right="10.0" />
@@ -281,7 +288,6 @@
                 <Insets bottom="10.0" left="10.0" />
             </padding>
         </HBox>
-      <VBox fx:id="bounceMsgBox" layoutX="54.0" layoutY="105.0" prefHeight="273.0" prefWidth="194.0" />
       <HBox layoutX="991.0" layoutY="666.0" />
       <Button fx:id="resetDashButton" layoutX="1054.0" layoutY="665.0" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="218.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Reset Dashboard">
          <font>

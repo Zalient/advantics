@@ -44,7 +44,16 @@
                             </Button>
                         </children>
                     </HBox>
-                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+               <Region prefHeight="60.0" prefWidth="282.0">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+               </Region>
+               <Button fx:id="helpButton" mnemonicParsing="false" text="Click Me!">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin>
+               </Button>
                     <MenuButton fx:id="addChartButton" alignment="CENTER" prefHeight="60.0" prefWidth="140.0" styleClass="blue-menu-button" stylesheets="@../styles/styles.css" text="Add">
                         <items>
                             <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
