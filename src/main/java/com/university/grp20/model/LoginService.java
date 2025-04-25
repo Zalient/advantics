@@ -365,12 +365,15 @@ public class LoginService {
     Connection conn = null;
 
     try {
+      String[] hashedArray = hashPassword(newPassword);
+      String hashedPassword = hashedArray[0];
+      String salt = hashedArray[1];
       conn = connectDatabase();
-
       PreparedStatement statement =
-              conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
-      statement.setString(1, newPassword);
-      statement.setString(2, username);
+              conn.prepareStatement("UPDATE users SET password = ?, salt = ? WHERE username = ?");
+      statement.setString(1, hashedPassword);
+      statement.setString(2, salt);
+      statement.setString(3, username);
 
       statement.executeUpdate();
 
