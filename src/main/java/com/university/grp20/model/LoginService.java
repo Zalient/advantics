@@ -4,13 +4,74 @@ import com.university.grp20.controller.LoginListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class LoginService {
   private static final Logger logger = LogManager.getLogger(LoginService.class);
 
   private LoginListener loginListener;
+
+  public String[] hashPassword(String plainTextPassword) {
+    String[] stringArray = new String[2];
+    try {
+      SecureRandom random = new SecureRandom();
+      byte[] salt = new byte[16];
+      random.nextBytes(salt);
+
+      KeySpec spec = new PBEKeySpec(plainTextPassword.toCharArray(), salt, 65536, 128);
+      SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+      byte[] hash = factory.generateSecret(spec).getEncoded();
+      Base64.Encoder encoder = Base64.getEncoder();
+
+      String hashedPassword = encoder.encodeToString(hash);
+      String saltString = encoder.encodeToString(salt);
+
+      stringArray[0] = hashedPassword;
+      stringArray[1] = saltString;
+    } catch (NoSuchAlgorithmException e) {
+      System.err.println("Hash algorithm could not be found.");
+    } catch (InvalidKeySpecException e) {
+      System.err.println("The key spec was invalid.");
+    }
+    return stringArray;
+  }
+
+  public boolean validatePassword(String enteredPassword, String storedHashedPassword, String storedSalt) {
+    String enteredHashedPassword = null;
+    try {
+      Base64.Decoder decoder = Base64.getDecoder();
+
+      byte[] salt = decoder.decode(storedSalt);
+
+      KeySpec spec = new PBEKeySpec(enteredPassword.toCharArray(), salt, 65536, 128);
+      SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+      byte[] hash = factory.generateSecret(spec).getEncoded();
+      Base64.Encoder encoder = Base64.getEncoder();
+
+      enteredHashedPassword = encoder.encodeToString(hash);
+
+    } catch (NoSuchAlgorithmException e) {
+      System.err.println("Hash algorithm could not be found.");
+    } catch (InvalidKeySpecException e) {
+      System.err.println("The key spec was invalid.");
+    }
+
+    if (enteredHashedPassword != null) {
+      return enteredHashedPassword.equals(storedHashedPassword);
+    } else {
+      return false;
+    }
+
+  }
 
   public void login(String enteredUsername, String enteredPassword) {
     logger.info("Attempting login");
@@ -21,19 +82,23 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("SELECT username FROM users WHERE username == ?");
+              conn.prepareStatement("SELECT username FROM users WHERE username == ?");
       statement.setString(1, enteredUsername);
       boolean userExists = statement.executeQuery().next();
 
       if (userExists) {
-        statement = conn.prepareStatement("SELECT password FROM users WHERE username == ?");
+        statement = conn.prepareStatement("SELECT password, salt FROM users WHERE username == ?");
         statement.setString(1, enteredUsername);
 
-        String storedPassword = statement.executeQuery().getString("password");
+        ResultSet resultSet = statement.executeQuery();
+        String storedPassword = resultSet.getString("password");
+        String storedSalt = resultSet.getString("salt");
 
         logger.info("Stored password for username " + enteredUsername + " is " + storedPassword);
+        logger.info("Stored salt for username " + enteredUsername + " is " + storedSalt);
 
-        if (enteredPassword.equals(storedPassword)) {
+
+        if (validatePassword(enteredPassword, storedPassword, storedSalt)) {
           User.setUsername(enteredUsername);
           User.setPassword(enteredPassword);
           // Get the role of the user
@@ -68,7 +133,7 @@ public class LoginService {
     Connection conn;
     try {
       // Connect to the database and commence setup
-      conn = DriverManager.getConnection("jdbc:sqlite:./statsDatabase.db");
+      conn = DriverManager.getConnection("jdbc:sqlite:./users.db");
       setupDatabase(conn);
       logger.info("Database connected");
     } catch (SQLException e) {
@@ -81,7 +146,7 @@ public class LoginService {
     try {
       // Determine is users table already exists
       PreparedStatement statement =
-          conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+              conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
       statement.setString(1, "users");
       boolean tableExists = statement.executeQuery().next();
 
@@ -91,41 +156,58 @@ public class LoginService {
 
         // Create table to store the users in the database
         statement =
-            conn.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS users ("
-                    + "username TEXT PRIMARY KEY, "
-                    + "password TEXT, "
-                    + "name TEXT, "
-                    + "role TEXT);");
+                conn.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS users ("
+                                + "username TEXT PRIMARY KEY, "
+                                + "password TEXT, "
+                                + "salt TEXT, "
+                                + "role TEXT);");
         statement.executeUpdate();
 
+        String password;
+        String[] hashedArray;
+        String hashedPassword;
+        String salt;
+
         // Insert example admin
+        password = "1";
+        hashedArray = hashPassword(password);
+        hashedPassword = hashedArray[0];
+        salt = hashedArray[1];
         statement =
-            conn.prepareStatement(
-                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+                conn.prepareStatement(
+                        "INSERT INTO users (username, password, salt, role) values (?, ?, ?, ?)");
         statement.setString(1, "Admin");
-        statement.setString(2, "1");
-        statement.setString(3, "Mr Admin");
+        statement.setString(2, hashedPassword);
+        statement.setString(3, salt);
         statement.setString(4, "Admin");
         statement.executeUpdate();
 
         // Insert example editor
+        password = "2";
+        hashedArray = hashPassword(password);
+        hashedPassword = hashedArray[0];
+        salt = hashedArray[1];
         statement =
-            conn.prepareStatement(
-                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+                conn.prepareStatement(
+                        "INSERT INTO users (username, password, salt, role) values (?, ?, ?, ?)");
         statement.setString(1, "Editor");
-        statement.setString(2, "2");
-        statement.setString(3, "Mr Editor");
+        statement.setString(2, hashedPassword);
+        statement.setString(3, salt);
         statement.setString(4, "Editor");
         statement.executeUpdate();
 
         // Insert example viewer
+        password = "3";
+        hashedArray = hashPassword(password);
+        hashedPassword = hashedArray[0];
+        salt = hashedArray[1];
         statement =
-            conn.prepareStatement(
-                "INSERT INTO users (username, password, name, role) values (?, ?, ?, ?)");
+                conn.prepareStatement(
+                        "INSERT INTO users (username, password, salt, role) values (?, ?, ?, ?)");
         statement.setString(1, "Viewer");
-        statement.setString(2, "3");
-        statement.setString(3, "Mr Viewer");
+        statement.setString(2, hashedPassword);
+        statement.setString(3, salt);
         statement.setString(4, "Viewer");
         statement.executeUpdate();
       }
@@ -141,7 +223,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
+              conn.prepareStatement("SELECT name FROM sqlite_master WHERE name = ?");
       statement.setString(1, "impressionLog");
       impressionTableExists = statement.executeQuery().next();
 
@@ -168,8 +250,8 @@ public class LoginService {
     }
 
     logger.info(
-        "isDataLoaded is returning "
-            + (impressionTableExists && clickTableExists && serverTableExists));
+            "isDataLoaded is returning "
+                    + (impressionTableExists && clickTableExists && serverTableExists));
 
     return (impressionTableExists && clickTableExists && serverTableExists);
   }
@@ -186,7 +268,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("SELECT username FROM users WHERE username == ?");
+              conn.prepareStatement("SELECT username FROM users WHERE username == ?");
       statement.setString(1, enteredUsername);
       userExists = statement.executeQuery().next();
     } catch (Exception e) {
@@ -212,13 +294,17 @@ public class LoginService {
     Connection conn = null;
 
     try {
+      String[] hashedArray = hashPassword(password);
+      String hashedPassword = hashedArray[0];
+      String salt = hashedArray[1];
+
       conn = connectDatabase();
       PreparedStatement statement =
-          conn.prepareStatement(
-              "INSERT INTO users (username, password, name, role) VALUES (?, ?, ?, ?)");
+              conn.prepareStatement(
+                      "INSERT INTO users (username, password, salt, role) VALUES (?, ?, ?, ?)");
       statement.setString(1, username);
-      statement.setString(2, password);
-      statement.setString(3, "");
+      statement.setString(2, hashedPassword);
+      statement.setString(3, salt);
       statement.setString(4, role);
 
       statement.executeUpdate();
@@ -282,7 +368,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
+              conn.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
       statement.setString(1, newPassword);
       statement.setString(2, username);
 
@@ -316,7 +402,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("UPDATE users SET role = ? WHERE username = ?");
+              conn.prepareStatement("UPDATE users SET role = ? WHERE username = ?");
       statement.setString(1, newRole);
       statement.setString(2, username);
 
@@ -350,7 +436,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("SELECT password FROM users WHERE username = ?");
+              conn.prepareStatement("SELECT password FROM users WHERE username = ?");
       statement.setString(1, username);
       password = statement.executeQuery().getString("password");
 
@@ -380,7 +466,7 @@ public class LoginService {
       conn = connectDatabase();
 
       PreparedStatement statement =
-          conn.prepareStatement("SELECT role FROM users WHERE username = ?");
+              conn.prepareStatement("SELECT role FROM users WHERE username = ?");
       statement.setString(1, username);
       role = statement.executeQuery().getString("role");
 
