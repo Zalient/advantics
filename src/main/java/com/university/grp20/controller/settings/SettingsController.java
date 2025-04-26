@@ -4,6 +4,7 @@ import com.university.grp20.UIManager;
 import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +18,8 @@ public class SettingsController extends Navigator {
   @FXML private Button exportSettingsButton;
   @FXML private StackPane contentPane;
   private static boolean bounceChanged = false;
+  OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
 
   @FXML
   private void initialize() {
@@ -30,7 +33,14 @@ public class SettingsController extends Navigator {
   }
 
   @FXML
+  private void showHelpGuide() {
+    UIManager.showModalStage("Settings Help Guide", UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml"), false);
+    operationLogger.log("Help Guide Icon clicked");
+  }
+
+  @FXML
   private void displayMetrics() {
+    operationLogger.log("Back button clicked");
     if (bounceChanged) {
       UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"));
     }
@@ -39,18 +49,21 @@ public class SettingsController extends Navigator {
 
   @FXML
   private void displayMetricSettings() {
+    operationLogger.log("Metric settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/MetricSettingsPane.fxml"));
   }
 
   @FXML
   private void displayUserSettings() {
+    operationLogger.log("User settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/UserSettingsPane.fxml"));
   }
 
   @FXML
   private void displayExportSettings() {
+    operationLogger.log("Export settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/ExportSettingsPane.fxml"));
   }

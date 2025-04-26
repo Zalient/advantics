@@ -14,66 +14,67 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280.0" stylesheets="@../styles/styles.css"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.university.grp20.controller.LoginController">
-    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+<AnchorPane prefHeight="735.0" prefWidth="1280.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
+    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
-            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="50.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="50.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
             <HBox alignment="CENTER" GridPane.columnIndex="1">
                 <children>
-                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label"
-                           stylesheets="@../styles/styles.css" text="Login">
+                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Login">
                         <font>
-                            <Font size="40.0"/>
+                            <Font size="40.0" />
                         </font>
+                  <HBox.margin>
+                     <Insets />
+                  </HBox.margin>
                     </Label>
+               <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!">
+                  <HBox.margin>
+                     <Insets bottom="100.0" left="450.0" />
+                  </HBox.margin>
+               </Button>
                 </children>
             </HBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <children>
                     <Label stylesheets="@../styles/styles.css" text="Username:">
                         <font>
-                            <Font size="24.0"/>
+                            <Font size="24.0" />
                         </font>
                     </Label>
-                    <TextField fx:id="usernameInputBox" prefWidth="300.0" promptText="Username"
-                               styleClass="custom-text-field" stylesheets="@../styles/styles.css"/>
+                    <TextField fx:id="usernameInputBox" prefWidth="300.0" promptText="Username" styleClass="custom-text-field" stylesheets="@../styles/styles.css" />
                 </children>
                 <padding>
-                    <Insets left="20.0" right="20.0"/>
+                    <Insets left="20.0" right="20.0" />
                 </padding>
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
                     <Label stylesheets="@../styles/styles.css" text="Password:">
                         <font>
-                            <Font size="24.0"/>
+                            <Font size="24.0" />
                         </font>
                     </Label>
-                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field"
-                                   stylesheets="@../styles/styles.css"/>
+                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field" stylesheets="@../styles/styles.css" />
                 </children>
                 <padding>
-                    <Insets left="20.0" right="20.0"/>
+                    <Insets left="20.0" right="20.0" />
                 </padding>
             </VBox>
             <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="140.0"
-                            styleClass="blue-button" stylesheets="@../styles/styles.css" text="Login">
+                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Login">
                         <font>
-                            <Font size="22.0"/>
+                            <Font size="22.0" />
                         </font>
                     </Button>
                 </children>
@@ -82,14 +83,14 @@
                 <children>
                     <Label style="-fx-font-weight: bold;" text="AdVantics" textFill="#e1e8f8">
                         <font>
-                            <Font size="40.0"/>
+                            <Font size="40.0" />
                         </font>
                     </Label>
-                    <Label text="Analysis of Ad Campaigns" textFill="#e1e8f8"/>
+                    <Label text="Analysis of Ad Campaigns" textFill="#e1e8f8" />
                 </children>
             </VBox>
-            <Pane styleClass="big-logo" GridPane.rowIndex="1" GridPane.rowSpan="2"/>
-            <Pane style="-fx-background-color: #1e3c78;" GridPane.rowIndex="3"/>
+            <Pane styleClass="big-logo" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+            <Pane style="-fx-background-color: #1e3c78;" GridPane.rowIndex="3" />
         </children>
     </GridPane>
 </AnchorPane>

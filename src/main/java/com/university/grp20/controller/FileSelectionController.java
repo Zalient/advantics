@@ -30,6 +30,7 @@ public class FileSelectionController extends Navigator {
   @FXML private Label clickPathLabel;
   @FXML private Label serverPathLabel;
   @FXML private Button skipButton;
+  @FXML private Button helpButton;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
@@ -53,7 +54,7 @@ public class FileSelectionController extends Navigator {
 
   @FXML
   private void startImport() {
-    operationLogger.log("Next button clicked, attempting import");
+    operationLogger.log("Next button clicked, attempting file upload");
     if (fileImportService.isReady()) {
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
@@ -80,6 +81,7 @@ public class FileSelectionController extends Navigator {
                               parentPane,
                               UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
                               true));
+                  operationLogger.log("Upload success, displaying metrics");
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
                   throw new RuntimeException(
@@ -93,6 +95,7 @@ public class FileSelectionController extends Navigator {
       alert.setHeaderText(null);
       alert.setContentText("You have not uploaded the 3 required log files.");
       alert.showAndWait();
+      operationLogger.log("Upload failed, log files not uploaded");
     }
   }
 
@@ -136,6 +139,7 @@ public class FileSelectionController extends Navigator {
       alert.setContentText(
           "You cannot Skip if data has not already been uploaded into the database.");
       alert.showAndWait();
+      operationLogger.log("Skip button failure, data not yet uploaded to database");
     }
   }
 
@@ -170,6 +174,7 @@ public class FileSelectionController extends Navigator {
           alert.setTitle("Error!");
           alert.setHeaderText(null);
           alert.setContentText(errorMessage);
+          operationLogger.log("File upload error: " + errorMessage);
           alert.showAndWait();
         });
   }
