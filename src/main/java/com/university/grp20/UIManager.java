@@ -100,7 +100,7 @@ public class UIManager {
   }
 
   public static void showModalStage(String title, FXMLLoader childLoader, boolean useCache) {
-    FXMLLoader modalLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/ModalLayout.fxml");
+    FXMLLoader modalLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/PopupLayout.fxml");
     Parent modalLayoutRoot = resolveFxmlRoot(modalLayoutLoader);
 
     ModalLayoutController modalLayoutController = modalLayoutLoader.getController();
