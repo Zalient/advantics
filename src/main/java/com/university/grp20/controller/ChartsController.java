@@ -39,6 +39,7 @@ public class ChartsController extends Navigator {
   private final OperationLogger operationLogger = new OperationLogger();
   @FXML private Button helpButton;
 
+
   @FXML
   private void initialize() {}
 
@@ -78,6 +79,24 @@ public class ChartsController extends Navigator {
               }
             });
   }
+
+  @FXML
+  private void exportAllChartsAsPDF() {
+    operationLogger.log("exportAllChartsAsPDF button clicked");
+    try {
+      String filePath = ExportService.askForPDFFilename();
+      if (filePath != null) {
+        operationLogger.log("export all charts as pdf, filepath: " + filePath);
+      } else {
+        operationLogger.log("Chart export canceled");
+        return;
+      }
+      ExportService.exportAllChartAsPDF(addChartFlowPane, filePath);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   @FXML
   private void showMetrics() {
@@ -230,7 +249,7 @@ public class ChartsController extends Navigator {
     chartViewer.setUserData(metricType);
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    VBox chartBox;
+    VBox chartBox = new VBox();
     HBox buttonBox = new HBox();
 
     if (chart.getPlot() instanceof CategoryPlot) {
@@ -240,11 +259,15 @@ public class ChartsController extends Navigator {
           CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
+      filterButton.getStyleClass().add("chart-button");
+      filterButton.setPrefSize(70, 25);
       filterButton.setOnAction(e -> showFilterSelection(chartViewer));
       buttonBox.getChildren().add(0, filterButton);
     }
 
     Button exportPDFButton = new Button("Export as PDF");
+    exportPDFButton.getStyleClass().add("export-button");
+    exportPDFButton.setPrefSize(110, 25);
     exportPDFButton.setOnAction(
         e -> {
           operationLogger.log(metricType + " chart export as PDF button clicked");
@@ -261,6 +284,8 @@ public class ChartsController extends Navigator {
         });
 
     Button exportCSVButton = new Button("Export as CSV");
+    exportCSVButton.getStyleClass().add("export-button");
+    exportCSVButton.setPrefSize(110, 25);
     exportCSVButton.setOnAction(
         e -> {
           operationLogger.log(metricType + " chart export as CSV button clicked");
@@ -276,9 +301,18 @@ public class ChartsController extends Navigator {
           }
         });
 
-    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton);
+    Button deleteButton = new Button("Delete");
+    deleteButton.getStyleClass().add("chart-button");
+    deleteButton.setPrefSize(70, 25);
+    deleteButton.setOnAction(e -> {
+      operationLogger.log("Delete button clicked");
+      addChartFlowPane.getChildren().remove(chartBox);
+    });
+
+    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, deleteButton);
+
     buttonBox.setSpacing(10);
-    chartBox = new VBox(buttonBox, chartViewer);
+    chartBox.getChildren().addAll(buttonBox, chartViewer);
 
     addChartFlowPane.getChildren().add(chartBox);
   }

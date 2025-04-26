@@ -69,7 +69,11 @@ public class SettingsController extends Navigator {
   }
 
   @FXML
-  private void displayThemeSettings() {}
+  private void displayThemeSettings() {
+    operationLogger.log("Theme settings button clicked");
+    UIManager.switchContent(
+        contentPane, UIManager.createFxmlLoader("/fxml/settings/ThemeSettingsPane.fxml"));
+  }
 
   @FXML
   private void displayLanguageSettings() {}
