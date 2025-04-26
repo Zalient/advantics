@@ -4,7 +4,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +20,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
@@ -328,6 +332,67 @@ public class ExportService {
           writer.newLine();
         }
       }
+    }
+  }
+
+  public static void exportAllChartAsPDF(FlowPane charts, String filePath) throws IOException {
+
+    if (filePath == null) {
+      logger.info("User cancelled export");
+      return;
+    }
+    File file = new File(filePath);
+    try (PDDocument document = new PDDocument()) {
+      for (Node child : charts.getChildren()) {
+        if (child instanceof VBox vBox) {
+          ChartViewer chartViewer = null;
+          for (Node vboxChild : vBox.getChildren()) {
+            if (vboxChild instanceof ChartViewer chart) {
+              chartViewer = chart;
+              break;
+            }
+          }
+          if (chartViewer == null) continue;
+          JFreeChart jFreeChart = chartViewer.getChart();
+          if (jFreeChart == null) continue;
+
+          int width = 1050;
+          int height = 700;
+
+          BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+          Graphics2D g2d = image.createGraphics();
+
+          g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+          g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+          g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+          jFreeChart.draw(g2d, new Rectangle(0, 0, width, height));
+          g2d.dispose();
+
+          PDPage page = new PDPage(new PDRectangle(width+20, height+20));
+          document.addPage(page);
+
+          File tempImage = File.createTempFile("tempChart", ".png");
+          ChartUtils.saveChartAsPNG(tempImage, jFreeChart, width, height);
+
+          try(PDPageContentStream cs = new PDPageContentStream(document, page)) {
+
+            PDImageXObject pdImageXObject = PDImageXObject.createFromFile(tempImage.getAbsolutePath(), document);
+
+            float imageWidth = pdImageXObject.getWidth();
+            float imageHeight = pdImageXObject.getHeight();
+
+            float x = (page.getMediaBox().getWidth() - imageWidth) / 2;
+            float y = (page.getMediaBox().getHeight() - imageHeight) / 2;
+            cs.drawImage(pdImageXObject, x, y,imageWidth, imageHeight);
+
+          }
+          tempImage.delete();
+        }
+      }
+      document.save(file);
+      logger.info("Save PDF to " + filePath);
+      System.out.println("Exported to PDF: " + filePath);
     }
   }
 

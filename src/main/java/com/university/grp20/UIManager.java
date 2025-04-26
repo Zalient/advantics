@@ -4,6 +4,7 @@ import com.university.grp20.controller.Navigator;
 import com.university.grp20.controller.layout.MainLayoutController;
 import com.university.grp20.controller.layout.ModalLayoutController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,6 +24,9 @@ public class UIManager {
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static Stage mainStage;
   private static final int CACHE_MAX_SIZE = 5;
+
+  private static String currentTheme = "/styles/styles.css";
+
   private static final Map<String, Parent> ROOT_CACHE = new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, Parent> eldest) {
@@ -88,10 +92,14 @@ public class UIManager {
 
     mainStage.initStyle(StageStyle.TRANSPARENT);
     mainStage.setTitle(title);
-    mainStage.setScene(new Scene(mainLayoutRoot));
-    mainStage.getScene().setFill(Color.TRANSPARENT);
+
+    Scene scene = new Scene(mainLayoutRoot);
+    scene.setFill(Color.TRANSPARENT);
+    mainStage.setScene(scene);
+
     mainLayoutController.setMainTitle(title);
     mainLayoutController.setMainStage(mainStage);
+
     mainStage.show();
   }
 
@@ -113,10 +121,17 @@ public class UIManager {
     modalStage.initModality(Modality.WINDOW_MODAL);
     modalStage.initOwner(mainStage);
     modalStage.setTitle(title);
-    modalStage.setScene(new Scene(modalLayoutRoot));
-    modalStage.getScene().setFill(Color.TRANSPARENT);
+
+    Scene scene = new Scene(modalLayoutRoot);
+    scene.setFill(Color.TRANSPARENT);
+
+    scene.getRoot().getStylesheets().clear();
+    applyCurrentTheme(scene);
+
+    modalStage.setScene(scene);
     modalLayoutController.setModalTitle(title);
     modalLayoutController.setModalStage(modalStage);
+
     modalStage.showAndWait();
   }
 
@@ -147,6 +162,52 @@ public class UIManager {
 
   public static Object getController() {
     return controller;
+  }
+
+  public static void applyCurrentTheme(Scene scene) {
+
+    scene.getStylesheets().clear();
+    scene.getStylesheets().add(UIManager.class.getResource(currentTheme).toExternalForm());
+    cssUpdate(scene.getRoot());
+    scene.getRoot().layout();
+  }
+
+  private static void cssUpdate(Node node) {
+    node.applyCss();
+    if (node instanceof Parent) {
+      for (Node child : ((Parent)node).getChildrenUnmodifiable()) {
+        cssUpdate(child);
+      }
+    }
+  }
+
+
+  public static void setTheme(String theme) {
+    switch (theme) {
+      case "Default Mode":
+        currentTheme = "/styles/styles.css";
+        break;
+      case "Dark Mode":
+        currentTheme = "/styles/dark.css";
+        break;
+      case "High Contrast Mode":
+        currentTheme = "/styles/highContrast.css";
+        break;
+      default:
+        currentTheme = "/styles/styles.css";
+    }
+    if (mainStage != null && mainStage.getScene() != null) {
+      Scene scene = mainStage.getScene();
+
+      Parent root = scene.getRoot();
+      root.getStylesheets().clear();
+
+      scene.getStylesheets().clear();
+      scene.getStylesheets().add(UIManager.class.getResource(currentTheme).toExternalForm());
+
+      cssUpdate(root);
+      root.layout();
+    }
   }
 }
 

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="735.0" prefWidth="1280.0" stylesheets="@../../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
+<GridPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" percentWidth="14.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -60,7 +60,7 @@
         <StackPane fx:id="contentPane" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2" />
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
             <children>
-                <Label styleClass="bold-label" stylesheets="@../../styles/styles.css" text="Settings">
+                <Label styleClass="bold-label" text="Settings">
                     <font>
                         <Font size="40.0" />
                     </font>
