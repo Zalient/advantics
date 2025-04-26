@@ -121,7 +121,7 @@ public class ChartsController extends Navigator {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
-        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
         filterLoader.load();
 
         FilterSelectionController filterController = filterLoader.getController();
