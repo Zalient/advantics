@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,10 +77,10 @@ public class MetricsController extends Navigator {
   private void showMetricsFilter() {
     try {
       logger.info("Filter button clicked");
-      FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
       filterLoader.load();
       operationLogger.log("Metrics filter button clicked, displaying filter options");
-      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
       loader.load();
 
       FilterSelectionController controller = filterLoader.getController();
