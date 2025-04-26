@@ -34,6 +34,7 @@ public class MetricsController extends Navigator {
   @FXML private Button helpButton;
 
 
+
   @FXML
   private void initialize() {
     calculateMetricsService.setOnFilterStart(

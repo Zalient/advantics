@@ -194,13 +194,14 @@ public class FilterSelectionController extends Navigator {
   private void applyFilterModeUI() {
     if (filterMode == FilterMode.METRICS) {
       granularityChooser.setVisible(false);
-      chartNameLabel.setVisible(false);
+      chartNameLabel.setText("Metrics Filtering");
       dayOfWeekSelector.setVisible(false);
       timeOfDaySelector.setVisible(false);
     }
     if (filterMode == FilterMode.CHART) {
       filterProgressBar.setVisible(false);
       filterProgressLabel.setVisible(false);
+      chartNameLabel.setText("Chart Filtering");
     }
   }
 

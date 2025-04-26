@@ -33,6 +33,12 @@ public class SettingsController extends Navigator {
   }
 
   @FXML
+  private void showHelpGuide() {
+    UIManager.showModalStage("Settings Help Guide", UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml"), false);
+    operationLogger.log("Help Guide Icon clicked");
+  }
+
+  @FXML
   private void displayMetrics() {
     operationLogger.log("Back button clicked");
     if (bounceChanged) {
