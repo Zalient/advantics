@@ -1,6 +1,7 @@
 package com.university.grp20.model;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -77,5 +78,32 @@ public class DBHelper {
 
   public static int getBatchSize() {
     return BATCH_SIZE;
+  }
+
+  public static LocalDate fetchMinDate() {
+    String query = "SELECT MIN(Date)" +
+            " FROM impressionLog";
+    return getLocalDate(query);
+  }
+
+  public static LocalDate fetchMaxDate() {
+    String query = "SELECT MAX(Date)" +
+            " FROM impressionLog";
+    return getLocalDate(query);
+  }
+
+  private static LocalDate getLocalDate(String query) {
+    ResultSet rs;
+    try {
+      rs = executeQuery(getConnection(), query);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    try {
+      String[] dateTime = rs.getString(1).split(" ");
+      return LocalDate.parse(dateTime[0]);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
