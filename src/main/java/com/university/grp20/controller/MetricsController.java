@@ -31,6 +31,7 @@ public class MetricsController extends Navigator {
   private final OperationLogger operationLogger = new OperationLogger();
   private MetricsDTO metricsDTO;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+  @FXML private Button helpButton;
 
 
   @FXML

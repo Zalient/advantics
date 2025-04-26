@@ -19,6 +19,7 @@ public class SettingsController extends Navigator {
   @FXML private StackPane contentPane;
   private static boolean bounceChanged = false;
   OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
 
   @FXML
   private void initialize() {

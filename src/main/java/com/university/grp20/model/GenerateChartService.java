@@ -129,42 +129,28 @@ public class GenerateChartService {
         sb.append(")");
       }
 
-      //CHATGPT
-      if ("Per Day".equals(filterDTO.timeGranularity()) && filterDTO.daysOfWeek() != null){
+      if ("Per Day".equals(filterDTO.timeGranularity()) && filterDTO.daysOfWeek() != null && !filterDTO.daysOfWeek().isEmpty()){
         sb.append(" AND strftime('%w', ").append(dateAlias).append(".").append(dateColumn).append(") IN (" );
-        sb.append(filterDTO.daysOfWeek().stream()
-                .map(this::mapDayNameToNumber)
-                .map(n -> "'" + n + "'")
-                .collect(Collectors.joining(", ")));
+        sb.append(formatChosenDays(filterDTO.daysOfWeek()));
         sb.append(")");
       }
-      //CHATGPT
-      if ("Per Hour".equals(filterDTO.timeGranularity())
-              && filterDTO.timeOfDay() != null
-              && !filterDTO.timeOfDay().isEmpty()) {
-
+      if ("Per Hour".equals(filterDTO.timeGranularity()) && filterDTO.timeOfDay() != null && !filterDTO.timeOfDay().contains("None") && !filterDTO.timeOfDay().isEmpty()) {
         List<Integer> range = getTimeRange(filterDTO);
-
-        if (range != null && range.size() >= 2) {
+        if (range.size() >= 2) {
           int start = range.get(0);
           int end = range.get(1);
 
           sb.append(" AND (");
           if (start > end) {
-            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn)
-                    .append(") >= '").append(String.format("%02d", start)).append("' OR ");
-            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn)
-                    .append(") < '").append(String.format("%02d", end)).append("'");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") >= '").append(String.format("%02d", start)).append("' OR ");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") < '").append(String.format("%02d", end)).append("'");
           } else {
-            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn)
-                    .append(") >= '").append(String.format("%02d", start)).append("' AND ");
-            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn)
-                    .append(") < '").append(String.format("%02d", end)).append("'");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") >= '").append(String.format("%02d", start)).append("' AND ");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") < '").append(String.format("%02d", end)).append("'");
           }
           sb.append(")");
         }
       }
-
 
       if (filterDTO.timeGranularity() == null
           || filterDTO.timeGranularity().isEmpty()
@@ -191,18 +177,28 @@ public class GenerateChartService {
     return sb.toString();
   }
 
-  //CHATGPT
-  private String mapDayNameToNumber(String day) {
+  private String getDayNumber (String day){
     return switch (day) {
-      case "Sunday" -> "0";
       case "Monday" -> "1";
       case "Tuesday" -> "2";
       case "Wednesday" -> "3";
       case "Thursday" -> "4";
       case "Friday" -> "5";
       case "Saturday" -> "6";
+      case "Sunday" -> "0";
       default -> throw new IllegalArgumentException("Invalid day: " + day);
     };
+  }
+
+  private String formatChosenDays (List<String> chosenDays){
+    StringBuilder sqlRes = new StringBuilder();
+    for (String day : chosenDays){
+      sqlRes.append("'").append(getDayNumber(day)).append("'").append(",");
+    }
+    if (!chosenDays.isEmpty()) {
+      sqlRes.deleteCharAt(sqlRes.length() - 1);
+    }
+    return sqlRes.toString();
   }
 
 
@@ -349,7 +345,7 @@ public class GenerateChartService {
 
   private static void showDefaultFilters(JFreeChart chart){
     GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
-    String filterApplied = "Time Granularity: Per Day   Start Date: []   End Date: []\n" +
+    String filterApplied = "Time Granularity: Per Day   Start Date:    End Date: \n" +
             "Gender: All Gender   Age Ranges: []   Income: []   Contexts: []\n" +
             "Bounce Type " + globalSettings.getBounceType() + "   Bounce Value: " + globalSettings.getBounceValue();
     TextTitle subtitle = new TextTitle(filterApplied);

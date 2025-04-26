@@ -30,6 +30,7 @@ public class FileSelectionController extends Navigator {
   @FXML private Label clickPathLabel;
   @FXML private Label serverPathLabel;
   @FXML private Button skipButton;
+  @FXML private Button helpButton;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();

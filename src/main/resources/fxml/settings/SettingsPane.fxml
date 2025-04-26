@@ -79,7 +79,7 @@
                 </Button>
             </children>
         </HBox>
-      <Button fx:id="helpButton" mnemonicParsing="false" text="Click Me!" GridPane.columnIndex="2">
+      <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" GridPane.columnIndex="2">
          <GridPane.margin>
             <Insets bottom="50.0" left="110.0" />
          </GridPane.margin>

@@ -37,6 +37,7 @@ public class ChartsController extends Navigator {
   @FXML private MenuButton addChartButton;
   private final Logger logger = LogManager.getLogger(ChartsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
 
   @FXML
   private void initialize() {}

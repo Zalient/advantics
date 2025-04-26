@@ -35,6 +35,7 @@ public class FilterSelectionController extends Navigator {
   private MetricsController metricsController;
   private ChartViewer chartViewer;
   private final OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
 
   @FXML
   private void initialize() {
@@ -45,7 +46,7 @@ public class FilterSelectionController extends Navigator {
     femaleRadioButton.setUserData("Female");
 
     dayOfWeekSelector.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-    timeOfDaySelector.getItems().addAll("Morning 06:00 - 11:59", "Afternoon 12:00 - 17:59", "Night 18:00 - 05:59");
+    timeOfDaySelector.getItems().addAll("Morning 06:00 - 11:59", "Afternoon 12:00 - 17:59", "Night 18:00 - 05:59", "None");
     ageGroupSelector.getItems().addAll("<25", "25-34", "35-44", "45-54", ">54");
     incomeSelector.getItems().addAll("Low", "Medium", "High");
     contextSelector.getItems().addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
@@ -54,7 +55,25 @@ public class FilterSelectionController extends Navigator {
           ageGroupSelector.getStyleClass().add("blue-check-combo-box");
           incomeSelector.getStyleClass().add("blue-check-combo-box");
           contextSelector.getStyleClass().add("blue-check-combo-box");
+          dayOfWeekSelector.getStyleClass().add("blue-check-combo-box");
+          timeOfDaySelector.getStyleClass().add("blue-combo-box");
         });
+
+    dayOfWeekSelector.setDisable(true);
+    timeOfDaySelector.setDisable(true);
+    granularityChooser.setOnAction(event -> {
+      String chosenGranularity = granularityChooser.getValue();
+      if (chosenGranularity.equals("Per Day")) {
+        dayOfWeekSelector.setDisable(false);
+        timeOfDaySelector.setDisable(true);
+      } else if (chosenGranularity.equals("Per Hour")) {
+        timeOfDaySelector.setDisable(false);
+        dayOfWeekSelector.setDisable(true);
+      } else {
+        timeOfDaySelector.setDisable(true);
+        dayOfWeekSelector.setDisable(true);
+      }
+    });
   }
 
   public void init(
@@ -90,7 +109,7 @@ public class FilterSelectionController extends Navigator {
 
       if (newFilteredChart != null && chartViewer != null) {
         String filterApplied =
-            "Time granularity: " + filterCriteriaDTO.timeGranularity() + "   " +
+            "Time granularity: " + defaultTimeGranularity(filterCriteriaDTO) + "   " +
                     "Start Date: " + (filterCriteriaDTO.startDate() != null ? filterCriteriaDTO.startDate().toString() : " ") + "   " +
                     "End Date: " + (filterCriteriaDTO.endDate() != null ? filterCriteriaDTO.endDate().toString() : " ") + "   " +
                     "\n" +
@@ -100,7 +119,8 @@ public class FilterSelectionController extends Navigator {
                     "Contexts: " + (filterCriteriaDTO.contexts() != null ? filterCriteriaDTO.contexts().toString() : "All Context") + "   " +
                     "\n" +
                     "Bounce Type: " + globalSettings.getBounceType() + "   " +
-                    "Bounce Value: " + globalSettings.getBounceValue() + "   ";
+                    "Bounce Value: " + globalSettings.getBounceValue() + "   " +
+                    specialFilterSubtitle(filterCriteriaDTO);
 
         TextTitle subtitle = new TextTitle(filterApplied);
         subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
@@ -114,6 +134,23 @@ public class FilterSelectionController extends Navigator {
       }
       stage.close();
     }
+  }
+
+  private String defaultTimeGranularity (FilterCriteriaDTO filterDTO){
+    if (filterDTO.timeGranularity() == null){
+      return "Per Day";
+    } else {
+      return filterDTO.timeGranularity();
+    }
+  }
+
+  private String specialFilterSubtitle (FilterCriteriaDTO filterDTO){
+    if ("Per Day".equals(filterDTO.timeGranularity()) && filterDTO.daysOfWeek() != null && !filterDTO.daysOfWeek().isEmpty()){
+      return "Days Of Week: " + filterDTO.daysOfWeek();
+    } else if ("Per Hour".equals(filterDTO.timeGranularity()) && filterDTO.timeOfDay() != null && !filterDTO.timeOfDay().isEmpty()){
+      return "Times Of Day: " + filterDTO.timeOfDay();
+    }
+    return "";
   }
 
   private void initMetrics(MetricsController metricsController) {
