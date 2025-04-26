@@ -81,29 +81,31 @@ public class DBHelper {
   }
 
   public static LocalDate fetchMinDate() {
-    String query = "SELECT MIN(Date)" +
-            " FROM impressionLog";
-    return getLocalDate(query);
+    String query = "SELECT MIN(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection()) {
+      return fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
   }
 
   public static LocalDate fetchMaxDate() {
-    String query = "SELECT MAX(Date)" +
-            " FROM impressionLog";
-    return getLocalDate(query);
+    String query = "SELECT MAX(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection()) {
+      return fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
   }
 
-  private static LocalDate getLocalDate(String query) {
-    ResultSet rs;
-    try {
-      rs = executeQuery(getConnection(), query);
+  private static LocalDate fetchDate(Connection conn, String query) {
+    try (ResultSet rs = executeQuery(conn, query)) {
+      if (rs.next()) {
+        return LocalDate.parse(rs.getString(1).split(" ")[0]);
+      }
+      throw new RuntimeException("No rows returned: " + query);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      String[] dateTime = rs.getString(1).split(" ");
-      return LocalDate.parse(dateTime[0]);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Error executing query: " + query, e);
     }
   }
 }
