@@ -20,12 +20,16 @@
 <?import org.controlsfx.control.CheckComboBox?>
 
 <AnchorPane fx:id="root" prefHeight="387.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
+
+
     <children>
         <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
             <HBox alignment="CENTER">
                <children>
+
                       <Label fx:id="chartNameLabel" text="Filtering Mode">
+
                           <font>
                               <Font size="24.0" />
                           </font>
@@ -62,7 +66,9 @@
                     <children>
                         <VBox alignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                             <children>
+
                                 <Button fx:id="applyChangesButton" minWidth="100.0" mnemonicParsing="false" onAction="#applyChanges" styleClass="blue-button" text="Apply Changes">
+
                                     <VBox.margin>
                                         <Insets left="10.0" />
                                     </VBox.margin>
@@ -72,7 +78,9 @@
                                         <Insets left="10.0" right="10.0" top="10.0" />
                                     </VBox.margin>
                                 </ProgressBar>
+
                                 <Label fx:id="filterProgressLabel" styleClass="bold-label">
+
                                     <VBox.margin>
                                         <Insets left="10.0" />
                                     </VBox.margin>
@@ -81,7 +89,9 @@
                         </VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <children>
+
                                 <Label text="End Date" styleClass="bold-label"/>
+
                                 <DatePicker fx:id="endDatePicker" styleClass="custom-date-picker" />
                             </children>
                         </VBox>
@@ -89,12 +99,13 @@
                             <children>
                                 <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                                     <children>
+
                                         <RadioButton fx:id="maleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Male">
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></RadioButton>
                                         <RadioButton fx:id="femaleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Female">
-                                            <padding>
+                       <padding>
                                                 <Insets left="15.0" />
                                             </padding>
                                  <HBox.margin>
@@ -119,7 +130,9 @@
                      </GridPane.margin></CheckComboBox>
                   <HBox alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="3">
                      <children>
+
                               <ComboBox fx:id="granularityChooser" minWidth="145.0" promptText="Time Granularity" styleClass="blue-combo-box">
+
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">
                                           <String fx:value="Per Hour" />
@@ -129,14 +142,18 @@
                                   </items>
                               </ComboBox>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+
                         <CheckComboBox fx:id="dayOfWeekSelector" minWidth="145.0" styleClass="blue-check-combo-box" title="Per Day Of Week" />
+
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <ComboBox fx:id="timeOfDaySelector" minWidth="145.0" promptText="Per Time Of Day" styleClass="blue-check-combo-box" />
                      </children>
                   </HBox>
                   <VBox alignment="CENTER">
                      <children>
+
                         <Label text="Start Date" styleClass="bold-label"/>
+
                         <DatePicker fx:id="startDatePicker" styleClass="custom-date-picker" />
                      </children>
                   </VBox>
