@@ -101,7 +101,7 @@ public class DBHelper {
   private static LocalDate fetchDate(Connection conn, String query) {
     try (ResultSet rs = executeQuery(conn, query)) {
       if (rs.next()) {
-        return LocalDate.parse(rs.getString(1).split(" ")[0]);
+        return rs.getDate(1).toLocalDate();
       }
       throw new RuntimeException("No rows returned: " + query);
     } catch (SQLException e) {
