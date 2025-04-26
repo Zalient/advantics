@@ -19,13 +19,13 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane fx:id="root" prefHeight="380.0" prefWidth="600.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
+<AnchorPane fx:id="root" prefHeight="380.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
     <children>
         <VBox prefHeight="380.0" prefWidth="600.0">
             <children>
             <HBox>
                <children>
-                      <Label fx:id="chartNameLabel" prefHeight="48.0" prefWidth="231.0" stylesheets="@../styles/styles.css" text="  Filtering Mode">
+                      <Label fx:id="chartNameLabel" prefHeight="48.0" prefWidth="231.0" text="  Filtering Mode" styleClass="bold-label">
                           <font>
                               <Font size="24.0" />
                           </font>
@@ -56,7 +56,7 @@
                     <children>
                         <VBox alignment="CENTER_LEFT" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                             <children>
-                                <Button fx:id="applyChangesButton" mnemonicParsing="false" onAction="#applyChanges" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Apply Changes">
+                                <Button fx:id="applyChangesButton" mnemonicParsing="false" onAction="#applyChanges" styleClass="blue-button" text="Apply Changes">
                                     <VBox.margin>
                                         <Insets left="10.0" />
                                     </VBox.margin>
@@ -73,7 +73,7 @@
                                 </Label>
                             </children>
                         </VBox>
-                        <ComboBox fx:id="granularityChooser" prefHeight="31.0" prefWidth="156.0" promptText="Time Granularity" styleClass="blue-combo-box" stylesheets="@../styles/styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <ComboBox fx:id="granularityChooser" prefHeight="31.0" prefWidth="156.0" promptText="Time Granularity" styleClass="blue-combo-box" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Per Hour" />
@@ -84,9 +84,9 @@
                         </ComboBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <children>
-                                <Label stylesheets="@../styles/styles.css" text="Start Date" />
+                                <Label text="Start Date" styleClass="bold-label"/>
                                 <DatePicker fx:id="startDatePicker" styleClass="custom-date-picker" />
-                                <Label stylesheets="@../styles/styles.css" text="End Date" />
+                                <Label text="End Date" styleClass="bold-label"/>
                                 <DatePicker fx:id="endDatePicker" styleClass="custom-date-picker" />
                             </children>
                         </VBox>
@@ -94,11 +94,11 @@
                             <children>
                                 <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <RadioButton fx:id="maleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" stylesheets="@../styles/styles.css" text="Male">
+                                        <RadioButton fx:id="maleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Male">
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></RadioButton>
-                                        <RadioButton fx:id="femaleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" stylesheets="@../styles/styles.css" text="Female">
+                                        <RadioButton fx:id="femaleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Female">
                                             <padding>
                                                 <Insets left="15.0" />
                                             </padding>
@@ -122,7 +122,7 @@
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></CheckComboBox>
-                  <CheckComboBox fx:id="dayOfWeekSelector" styleClass="blue-check-combo-box" stylesheets="@../styles/styles.css" title="Per Day Of Week" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <CheckComboBox fx:id="dayOfWeekSelector" styleClass="blue-check-combo-box" title="Per Day Of Week" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin>

@@ -12,12 +12,11 @@
 
 <?import javafx.scene.control.PasswordField?>
 <ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane"
-            stylesheets="@../../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.university.grp20.controller.settings.UserSettingsController">
     <content>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0"
-              stylesheets="@../../styles/styles.css">
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="50.0">
                     <VBox.margin>
@@ -26,14 +25,14 @@
                     <children>
                         <VBox spacing="20.0">
                             <children>
-                                <Label text="Add User">
+                                <Label text="Add User" styleClass="bold-label">
                                     <font>
                                         <Font size="18.0"/>
                                     </font>
                                 </Label>
                                 <VBox spacing="5.0">
                                     <children>
-                                        <Label text="Username:">
+                                        <Label text="Username:" styleClass="bold-label">
                                             <font>
                                                 <Font size="14.0"/>
                                             </font>
@@ -48,7 +47,7 @@
                                 </VBox>
                                 <VBox spacing="5.0">
                                     <children>
-                                        <Label text="Password:">
+                                        <Label text="Password:" styleClass="bold-label">
                                             <font>
                                                 <Font size="14.0"/>
                                             </font>
@@ -65,7 +64,7 @@
                                           styleClass="blue-combo-box"/>
                                 <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#addUser"
                                         prefWidth="150.0" styleClass="blue-button"
-                                        stylesheets="@../../styles/styles.css" text="Add User">
+                                        text="Add User">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>
@@ -78,7 +77,7 @@
                     <children>
                         <VBox spacing="20.0">
                             <children>
-                                <Label text="Edit User">
+                                <Label text="Edit User" styleClass="bold-label">
                                     <font>
                                         <Font size="18.0"/>
                                     </font>
@@ -87,7 +86,7 @@
                                           styleClass="blue-combo-box"/>
                                 <VBox spacing="5.0">
                                     <children>
-                                        <Label text="New Password:">
+                                        <Label text="New Password:" styleClass="bold-label">
                                             <font>
                                                 <Font size="14.0"/>
                                             </font>
@@ -104,7 +103,7 @@
                                           styleClass="blue-combo-box"/>
                                 <Button fx:id="editUserButton" mnemonicParsing="false"
                                         onAction="#editUser" prefWidth="150.0" styleClass="blue-button"
-                                        stylesheets="@../../styles/styles.css" text="Edit User">
+                                        text="Edit User">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>

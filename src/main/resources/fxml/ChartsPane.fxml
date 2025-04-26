@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartsController">
     <children>
         <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Back">
+                    <HBox spacing="30.0">
+                    <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -25,19 +19,22 @@
                             <Insets left="10.0" />
                         </HBox.margin>
                     </Button>
+                  <Button mnemonicParsing="false" onAction="#exportAllChartsAsPDF" prefHeight="59.0" prefWidth="230.0" styleClass="exportAllButton" text="Export All Charts" />
+                    </HBox>
                     <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
+
                         <opaqueInsets>
                             <Insets />
                         </opaqueInsets>
                     </Region>
                     <HBox spacing="10.0">
                         <children>
-                            <Button mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Metrics">
+                            <Button mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
                             </Button>
-                            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Charts">
+                            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
@@ -50,7 +47,7 @@
                      <Insets right="10.0" />
                   </HBox.margin>
                </Button>
-                    <MenuButton fx:id="addChartButton" alignment="CENTER" prefHeight="60.0" prefWidth="140.0" styleClass="blue-menu-button" stylesheets="@../styles/styles.css" text="Add">
+                    <MenuButton fx:id="addChartButton" alignment="CENTER" prefHeight="60.0" prefWidth="140.0" styleClass="blue-menu-button" text="Add">
                         <items>
                             <MenuItem mnemonicParsing="false" onAction="#addImpressionsChart" text="No Of Impressions" />
                             <MenuItem mnemonicParsing="false" onAction="#addClicksChart" text="No Of Clicks" />
@@ -77,9 +74,9 @@
                     <Insets bottom="10.0" top="10.0" />
                 </padding>
             </HBox>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="custom-scroll-pane" stylesheets="@../styles/styles.css" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="custom-scroll-pane" VBox.vgrow="ALWAYS">
                 <content>
-                    <FlowPane fx:id="addChartFlowPane" prefWrapLength="620" styleClass="root" stylesheets="@../styles/styles.css" />
+                    <FlowPane fx:id="addChartFlowPane" prefWrapLength="620" styleClass="root" />
                 </content>
             </ScrollPane>
         </VBox>

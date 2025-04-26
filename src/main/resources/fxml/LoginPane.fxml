@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
+<AnchorPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
     <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="50.0" />
@@ -29,7 +29,7 @@
         <children>
             <HBox alignment="CENTER" GridPane.columnIndex="1">
                 <children>
-                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Login">
+                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Login">
                         <font>
                             <Font size="40.0" />
                         </font>
@@ -46,12 +46,12 @@
             </HBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <children>
-                    <Label stylesheets="@../styles/styles.css" text="Username:">
+                    <Label text="Username:" styleClass="bold-label">
                         <font>
                             <Font size="24.0" />
                         </font>
                     </Label>
-                    <TextField fx:id="usernameInputBox" prefWidth="300.0" promptText="Username" styleClass="custom-text-field" stylesheets="@../styles/styles.css" />
+                    <TextField fx:id="usernameInputBox" prefWidth="300.0" promptText="Username" styleClass="custom-text-field" />
                 </children>
                 <padding>
                     <Insets left="20.0" right="20.0" />
@@ -59,12 +59,12 @@
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
-                    <Label stylesheets="@../styles/styles.css" text="Password:">
+                    <Label text="Password:" styleClass="bold-label">
                         <font>
                             <Font size="24.0" />
                         </font>
                     </Label>
-                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field" stylesheets="@../styles/styles.css" />
+                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field"/>
                 </children>
                 <padding>
                     <Insets left="20.0" right="20.0" />
@@ -72,7 +72,7 @@
             </VBox>
             <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Login">
+                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="140.0" styleClass="blue-button" text="Login">
                         <font>
                             <Font size="22.0" />
                         </font>
