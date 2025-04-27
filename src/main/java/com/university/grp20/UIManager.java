@@ -3,6 +3,7 @@ package com.university.grp20;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.controller.layout.MainLayoutController;
 import com.university.grp20.controller.layout.ModalLayoutController;
+import com.university.grp20.model.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -40,9 +41,23 @@ public class UIManager {
 
   private static Parent resolveFxmlRoot(FXMLLoader childLoader, boolean useCache) {
     try {
-      String key = (useCache && childLoader.getLocation() != null)
+      /**String key = (useCache && childLoader.getLocation() != null)
               ? childLoader.getLocation().toString()
-              : null;
+              : null;*/
+      String key = null;
+      if (childLoader.getLocation()!=null) {
+        String pageName = childLoader.getLocation().toString();
+
+        // If page being loaded is a metrics page make a different one per campaign
+        if (pageName.endsWith("/MetricsPane.fxml")) {
+          String campaign = User.getSelectedCampaign();
+          key = (campaign != null) ? pageName + "#" + campaign : pageName;
+        } else {
+           key = (useCache && childLoader.getLocation() != null)
+                  ? childLoader.getLocation().toString()
+                  : null;
+        }
+      }
       if (key != null && ROOT_CACHE.containsKey(key)) {
         return ROOT_CACHE.get(key);
       }

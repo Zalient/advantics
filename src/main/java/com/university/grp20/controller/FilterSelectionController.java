@@ -34,6 +34,7 @@ public class FilterSelectionController extends Navigator {
   private MetricsController metricsController;
   private ChartViewer chartViewer;
   private final OperationLogger operationLogger = new OperationLogger();
+  private String campaignName;
 
   @FXML
   private void initialize() {
@@ -56,17 +57,39 @@ public class FilterSelectionController extends Navigator {
         });
   }
 
+
+
   public void init(
       String filterMode, MetricsController metricsController, ChartViewer chartViewer) {
-    if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
-    else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
+   // if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
+    //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
+    initMetrics(metricsController);
   }
+
+  public void init(
+          String filterMode, MetricsController metricsController, ChartViewer chartViewer, String campaignName) {
+    //if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
+    //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
+    initChart(chartViewer);
+    this.campaignName = campaignName;
+  }
+
+
+
 
   @FXML
   private void applyChanges() {
     GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
     Stage stage = (Stage) parentPane.getScene().getWindow();
-    CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+    CalculateMetricsService calculateMetricsService = null;
+    System.out.println("DEBUG: Filter mode is " + filterMode);
+    if (filterMode == FilterMode.METRICS) {
+      calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
+      System.out.println("DEBUG: Calculating metrics for campaign " + User.getSelectedCampaign());
+    } else {
+      calculateMetricsService = new CalculateMetricsService(campaignName);
+      System.out.println("DEBUG: Calculating metrics for campaign " + campaignName);
+    }
     calculateMetricsService.setOnFilterStart(this::updateProgressBar);
     calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
@@ -79,7 +102,7 @@ public class FilterSelectionController extends Navigator {
 
       new Thread(task).start();
     } else if (filterMode == FilterMode.CHART) {
-      GenerateChartService generateChartService = new GenerateChartService();
+      GenerateChartService generateChartService = new GenerateChartService(campaignName);
       String metricType =
           (chartViewer != null && chartViewer.getUserData() != null)
               ? chartViewer.getUserData().toString()

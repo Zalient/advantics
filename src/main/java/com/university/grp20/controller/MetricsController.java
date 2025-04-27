@@ -31,7 +31,8 @@ public class MetricsController extends Navigator {
   private final OperationLogger operationLogger = new OperationLogger();
   private MetricsDTO metricsDTO;
   @FXML private VBox bounceMsgBox;
-  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+  @FXML private Label selectedDatabaseLabel;
+  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
 
 
   @FXML
@@ -47,6 +48,7 @@ public class MetricsController extends Navigator {
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
     bounceMsgBox.setVisible(false);
+    selectedDatabaseLabel.setText("Selected Database: " + User.getSelectedCampaign().replace(".db", ""));
   }
 
   public void showBounceMsgBox(){
@@ -74,7 +76,7 @@ public class MetricsController extends Navigator {
       UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
     } else {
       UIManager.switchContent(
-          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
+          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"), false);
     }
   }
 

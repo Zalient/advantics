@@ -1,10 +1,7 @@
 package com.university.grp20.controller.settings;
 
 import com.university.grp20.controller.MetricsController;
-import com.university.grp20.model.CalculateMetricsService;
-import com.university.grp20.model.GenerateChartService;
-import com.university.grp20.model.GlobalSettingsStorage;
-import com.university.grp20.model.OperationLogger;
+import com.university.grp20.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -13,7 +10,7 @@ public class MetricSettingsController {
   @FXML private RadioButton timeSpentButton;
   @FXML private TextField bounceValField;
   private MetricsController metricsController;
-  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
   private ToggleGroup bounceGroup;
   @FXML private Label bounceDefLabel;
   @FXML private Button applyBounceButton;

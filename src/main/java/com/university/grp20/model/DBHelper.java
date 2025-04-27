@@ -7,12 +7,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class DBHelper {
   private static final int BATCH_SIZE = 15000;
-  private static final HikariDataSource dataSource;
+  private static HikariDataSource dataSource;
   private static Connection testConnection = null;
 
-  static {
+  public static void changeDatabase(String campaignName) {
     HikariConfig config = new HikariConfig();
-    config.setJdbcUrl("jdbc:sqlite:./statsDatabase.db");
+    config.setJdbcUrl("jdbc:sqlite:./" + campaignName + ".db");
     config.setDriverClassName("org.sqlite.JDBC");
     config.setMaximumPoolSize(10);
     config.setConnectionTestQuery("SELECT 1");
@@ -21,10 +21,11 @@ public class DBHelper {
     dataSource = new HikariDataSource(config);
   }
 
-  public static Connection getConnection() throws SQLException {
+  public static Connection getConnection(String campaignName) throws SQLException {
     if (testConnection != null) {
       return testConnection;
     }
+    changeDatabase(campaignName);
     return dataSource.getConnection();
   }
 

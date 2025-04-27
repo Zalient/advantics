@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
@@ -97,7 +98,7 @@ public class ChartsController extends Navigator {
   }
 
   @FXML
-  private void showFilterSelection(ChartViewer chartViewer) {
+  private void showFilterSelection(ChartViewer chartViewer, String campaignName) {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
@@ -105,7 +106,7 @@ public class ChartsController extends Navigator {
         filterLoader.load();
 
         FilterSelectionController filterController = filterLoader.getController();
-        filterController.init("Chart", null, chartViewer);
+        filterController.init("Chart", null, chartViewer, campaignName);
 
         UIManager.showModalStage("Filter Selection", filterLoader);
       } catch (IOException e) {
@@ -240,7 +241,8 @@ public class ChartsController extends Navigator {
           CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
-      filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+      String campaignToUse = User.getSelectedCampaign();
+      filterButton.setOnAction(e -> showFilterSelection(chartViewer, campaignToUse));
       buttonBox.getChildren().add(0, filterButton);
     }
 
@@ -267,6 +269,10 @@ public class ChartsController extends Navigator {
         });
 
     buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton);
+
+    Label campaignLabel = new Label("Campaign: " + User.getSelectedCampaign());
+    buttonBox.getChildren().add(campaignLabel);
+
     buttonBox.setSpacing(10);
     chartBox = new VBox(buttonBox, chartViewer);
 

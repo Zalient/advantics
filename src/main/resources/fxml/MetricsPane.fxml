@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
     <children>
         <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -288,6 +288,11 @@
             <Font size="24.0" />
          </font>
       </Button>
+      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" layoutX="42.0" layoutY="415.0" prefHeight="158.0" prefWidth="228.0" text="Selected Campaign:" wrapText="true">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
 
     </children>
 </AnchorPane>

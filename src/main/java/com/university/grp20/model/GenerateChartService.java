@@ -24,13 +24,22 @@ import java.util.List;
 public class GenerateChartService {
   private final Logger logger = LogManager.getLogger(GenerateChartService.class);
   private Integer numOfDays;
+  private static String campaignName = User.getSelectedCampaign();
   public void setNumOfDays(int days){
     numOfDays = days;
   }
 
+  public GenerateChartService(String c) {
+    campaignName = c;
+  }
+
+  public GenerateChartService() {
+    campaignName = User.getSelectedCampaign();
+  }
+
   private static DefaultCategoryDataset getCategoryDataset(String query, String metricLine) {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    try (Connection conn = DBHelper.getConnection();
+    try (Connection conn = DBHelper.getConnection(campaignName);
         ResultSet rs = DBHelper.executeQuery(conn, query)) {
       while (rs != null && rs.next()) {
         String x = rs.getString(1);
@@ -46,7 +55,7 @@ public class GenerateChartService {
   private static HistogramDataset getHistogramDataset(
       String query, String metricLine, int binSize) {
     List<Double> dataPoints = new ArrayList<>();
-    try (Connection conn = DBHelper.getConnection();
+    try (Connection conn = DBHelper.getConnection(campaignName);
         ResultSet rs = DBHelper.executeQuery(conn, query)) {
       while (rs != null && rs.next()) {
         dataPoints.add(rs.getDouble(1));
@@ -240,7 +249,7 @@ public class GenerateChartService {
 
   private void getNumOfDays (){
     String query = "SELECT COUNT(DISTINCT strftime('%Y-%m-%d', Date)) AS count FROM clickLog";
-    try (Connection conn = DBHelper.getConnection();
+    try (Connection conn = DBHelper.getConnection(campaignName);
          ResultSet rs = DBHelper.executeQuery(conn, query)) {
       if (rs != null && rs.next()) {
         numOfDays = rs.getInt("count");
@@ -260,6 +269,7 @@ public class GenerateChartService {
     subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
     subtitle.setPaint(new Color(0, 0, 140));
     chart.addSubtitle(subtitle);
+    //chart.addSubtitle(new TextTitle("Campaign Name: " + User.getSelectedCampaign()));
   }
 
   public JFreeChart filteredImpressionsChart(FilterCriteriaDTO filterDTO) {
@@ -276,6 +286,7 @@ public class GenerateChartService {
     String label = granularityLabel(filterDTO);
     JFreeChart chart =
         ChartFactory.createLineChart("Impressions Per " + label, label, "Impressions", dataset);
+    //chart.addSubtitle(new TextTitle("Campaign Name: " + User.getSelectedCampaign()));
     configXAxisLabels(chart, filterDTO);
     return chart;
   }
