@@ -88,7 +88,7 @@ public class ChartsController extends Navigator {
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/ViewerFileSelectionPane.fxml"));
       operationLogger.log("Back button clicked, returned to login page");
     } else {
       UIManager.switchContent(

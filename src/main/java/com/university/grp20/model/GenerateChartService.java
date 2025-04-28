@@ -32,11 +32,7 @@ public class GenerateChartService {
   public GenerateChartService(String c) {
     campaignName = c;
   }
-
-  public GenerateChartService() {
-    campaignName = User.getSelectedCampaign();
-  }
-
+  
   public static void setCampaignName(String c) {
     campaignName = c;
   }
