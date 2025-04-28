@@ -38,7 +38,7 @@
                      </padding>
                       </Label>
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!">
+                  <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide">
                      <HBox.margin>
                         <Insets top="6.0" />
                      </HBox.margin>

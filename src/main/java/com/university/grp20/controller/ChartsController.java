@@ -329,4 +329,18 @@ public class ChartsController extends Navigator {
     renderer.setDefaultOutlinePaint(Color.BLACK);
     renderer.setSeriesPaint(0, new Color(173, 216, 230));
   }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Charts");
+      UIManager.showModalStage("Charts Page Help Guide", loader, false);
+      operationLogger.log("Charts Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
+  }
 }

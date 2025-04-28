@@ -5,6 +5,7 @@ import com.university.grp20.model.LoginService;
 import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -12,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 import java.net.URL;
 
 import java.util.Objects;
@@ -110,6 +113,20 @@ public class LoginController extends Navigator {
       }
 
       alert.showAndWait();
+    }
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Login");
+      UIManager.showModalStage("Login Page Help Guide", loader, false);
+      operationLogger.log("Login Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
     }
   }
 }
