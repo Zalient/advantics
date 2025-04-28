@@ -236,7 +236,7 @@
             <children>
                 <VBox spacing="30.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as PDF">
+                        <Button fx:id="pdfButton" mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as PDF">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -244,7 +244,7 @@
                                 <Insets />
                             </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as CSV">
+                        <Button fx:id="csvButton" mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as CSV">
                             <font>
                                 <Font size="21.0" />
                             </font>

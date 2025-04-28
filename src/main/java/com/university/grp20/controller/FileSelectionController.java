@@ -190,6 +190,7 @@ public class FileSelectionController extends Navigator {
     if (true) { // debug : fileImportService.isDataLoaded()
       UIManager.switchContent(
           parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), useCache);
+
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");

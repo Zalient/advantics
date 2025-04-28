@@ -1,5 +1,7 @@
 package com.university.grp20;
 
+import com.university.grp20.controller.ChartsController;
+import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.controller.layout.MainLayoutController;
 import com.university.grp20.controller.layout.ModalLayoutController;
@@ -63,6 +65,8 @@ public class UIManager {
       }
       // If the loader has already loaded its content, reuse it
       Parent root = (childLoader.getRoot() == null) ? childLoader.load() : childLoader.getRoot();
+      Object controller = childLoader.getController();
+      root.getProperties().put("controller", controller);
       if (key != null) {
         ROOT_CACHE.put(key, root);
       }
@@ -82,10 +86,34 @@ public class UIManager {
     contentPane.getChildren().setAll(childRoot);
 
     // If the controller is a Navigator it needs to know its parent container
-    Object controller = childLoader.getController();
+    //Object controller = childLoader.getController();
+    Object controller = childRoot.getProperties().get("controller");
+
+    if (controller == null) {
+      controller = childLoader.getController();
+    }
     if (controller instanceof Navigator) {
       ((Navigator) controller).init(contentPane);
     }
+    if (controller instanceof MetricsController) {
+      System.out.println("Controller is instance of metrics controller");
+      ((MetricsController) controller).disableForViewer();
+    }
+    if (controller instanceof ChartsController) {
+      System.out.println("Controller is instance of charts controller");
+      ((ChartsController) controller).disableForViewer();
+    }
+
+    /**
+    Object myController = childRoot.getProperties().get("controller");
+    if (myController instanceof MetricsController) {
+      System.out.println("UI MANAGER: Calling disableForViewer on metrics controller");
+      ((MetricsController) myController).disableForViewer();
+    }
+    if (myController instanceof ChartsController) {
+      ((ChartsController) myController).disableForViewer();
+    }
+     */
   }
 
   public static void switchContent(Pane contentPane, FXMLLoader childLoader) {

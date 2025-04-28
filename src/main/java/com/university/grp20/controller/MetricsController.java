@@ -3,6 +3,8 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import java.io.IOException;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -148,9 +150,12 @@ public class MetricsController extends Navigator {
     logger.info("disableForViewer called");
     boolean status = User.getRole().equals("Viewer");
 
-    filterButton.setDisable(status);
-    pdfButton.setDisable(status);
-    csvButton.setDisable(status);
+    Platform.runLater(() -> {
+      filterButton.setDisable(status);
+      pdfButton.setDisable(status);
+      csvButton.setDisable(status);
+    });
+
   }
 
   @FXML
