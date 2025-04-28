@@ -37,6 +37,10 @@ public class GenerateChartService {
     campaignName = User.getSelectedCampaign();
   }
 
+  public static void setCampaignName(String c) {
+    campaignName = c;
+  }
+
   private static DefaultCategoryDataset getCategoryDataset(String query, String metricLine) {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     try (Connection conn = DBHelper.getConnection(campaignName);

@@ -73,7 +73,7 @@ public class MetricsController extends Navigator {
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/ViewerFileSelectionPane.fxml"), false);
     } else {
       UIManager.switchContent(
           parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"), false);

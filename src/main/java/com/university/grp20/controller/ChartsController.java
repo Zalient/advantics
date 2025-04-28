@@ -124,30 +124,35 @@ public class ChartsController extends Navigator {
 
   @FXML
   private void addImpressionsChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.impressionsChart();
     addChart(chart, "Impressions");
   }
 
   @FXML
   private void addClicksChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.clicksChart();
     addChart(chart, "Clicks");
   }
 
   @FXML
   private void addUniquesChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.uniquesChart();
     addChart(chart, "Uniques");
   }
 
   @FXML
   private void addBouncesChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.bouncesChart();
     addChart(chart, "Bounces");
   }
 
   @FXML
   private void addConversionsChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
     operationLogger.log("Conversions chart chosen and displayed");
@@ -155,36 +160,42 @@ public class ChartsController extends Navigator {
 
   @FXML
   private void addTotalCostChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.totalCostChart();
     addChart(chart, "Total Cost");
   }
 
   @FXML
   private void addCTRChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.ctrChart();
     addChart(chart, "CTR");
   }
 
   @FXML
   private void addCPAChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpaChart();
     addChart(chart, "CPA");
   }
 
   @FXML
   private void addCPCChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpcChart();
     addChart(chart, "CPC");
   }
 
   @FXML
   private void addCPMChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpmChart();
     addChart(chart, "CPM");
   }
 
   @FXML
   private void addBounceRateChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.bounceRateChart();
     addChart(chart, "Bounce Rate");
   }
@@ -224,6 +235,7 @@ public class ChartsController extends Navigator {
   }
 
   public void addChart(JFreeChart chart, String metricType) {
+    System.out.println("DEBUG: addChart, user campaign is " + User.getSelectedCampaign());
     operationLogger.log(metricType + " chart display option clicked and displayed");
     ChartViewer chartViewer = new ChartViewer(chart);
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
@@ -280,6 +292,7 @@ public class ChartsController extends Navigator {
   }
 
   private void addHistogram(int numBins) {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
     operationLogger.log("Bin size chosen and histogram displayed");
