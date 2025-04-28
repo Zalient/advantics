@@ -127,7 +127,7 @@
               </VBox>
             <VBox alignment="CENTER" prefHeight="566.0" prefWidth="342.0">
                <children>
-                  <Label alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
+                  <Label fx:id="selectCampaignLabel" alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="30.0" />
                      </font>

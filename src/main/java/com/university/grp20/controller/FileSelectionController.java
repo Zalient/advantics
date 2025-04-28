@@ -31,6 +31,7 @@ public class FileSelectionController extends Navigator {
   @FXML private Label serverPathLabel;
   @FXML private TextField campaignNameTextField;
   @FXML private VBox uploadedCampaignVBox;
+  @FXML private Label selectCampaignLabel;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
@@ -80,6 +81,10 @@ public class FileSelectionController extends Navigator {
           uploadedCampaignVBox.getChildren().add(campaignButton);
         }
       }
+    }
+
+    if (existingCampaigns.isEmpty()) {
+      selectCampaignLabel.setText("No campaigns uploaded");
     }
 
   }
