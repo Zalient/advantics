@@ -37,7 +37,7 @@
                      <Insets />
                   </HBox.margin>
                     </Label>
-               <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!">
+               <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide">
                   <HBox.margin>
                      <Insets bottom="100.0" left="450.0" />
                   </HBox.margin>

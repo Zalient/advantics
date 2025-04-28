@@ -1,11 +1,14 @@
 package com.university.grp20.controller;
 
+import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -265,6 +268,26 @@ public class FilterSelectionController extends Navigator {
   private enum FilterMode {
     METRICS,
     CHART
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      if (filterMode == FilterMode.METRICS) {
+        helpController.setupCarousel("Metric-Filter");
+        UIManager.showModalStage("Metrics Filter Help Guide", loader, false);
+        operationLogger.log("Metrics Filter Help Guide Icon clicked");
+      } else if (filterMode == FilterMode.CHART) {
+        helpController.setupCarousel("Chart-Filter");
+        UIManager.showModalStage("Charts Filter Help Guide", loader, false);
+        operationLogger.log("Charts Filter Help Guide Icon clicked");
+      }
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 }
 

@@ -153,4 +153,18 @@ public class MetricsController extends Navigator {
     setMetrics(defaultMetrics);
     UIManager.showAlert("Success", "Dashboard successfully reset to default");
   }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Metrics");
+      UIManager.showModalStage("Metrics Page Help Guide", loader, false);
+      operationLogger.log("Metrics Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
+  }
 }

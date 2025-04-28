@@ -1,18 +1,25 @@
 package com.university.grp20.controller.settings;
 
 import com.university.grp20.UIManager;
+import com.university.grp20.controller.HelpGuideController;
+import com.university.grp20.controller.LoginController;
 import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SettingsController extends Navigator {
+  private static final Logger logger = LogManager.getLogger(LoginController.class);
   @FXML private Button metricSettingsButton;
   @FXML private Button userSettingsButton;
   @FXML private Button exportSettingsButton;
@@ -34,8 +41,16 @@ public class SettingsController extends Navigator {
 
   @FXML
   private void showHelpGuide() {
-    UIManager.showModalStage("Settings Help Guide", UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml"), false);
-    operationLogger.log("Help Guide Icon clicked");
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Settings");
+      UIManager.showModalStage("Settings Page Help Guide", loader, false);
+      operationLogger.log("Settings Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 
   @FXML

@@ -47,7 +47,7 @@
                         </VBox>
                         <VBox alignment="CENTER" spacing="15.0">
                             <children>
-                                <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Select...">
+                                <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" styleClass="blue-button" text="Select...">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
@@ -133,6 +133,6 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </HBox>
-      <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" />
+      <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide"/>
     </children>
 </AnchorPane>
