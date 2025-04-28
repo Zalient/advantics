@@ -13,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class FileSelectionController extends Navigator {
@@ -34,6 +36,8 @@ public class FileSelectionController extends Navigator {
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
   private final OperationLogger operationLogger = new OperationLogger();
+
+  private Set<String> existingCampaigns = new HashSet<>();
 
   String campaignName = "";
 
@@ -65,6 +69,7 @@ public class FileSelectionController extends Navigator {
         if (!file.getName().equals("users.db")) {
           System.out.println("Found campaign file: " + file.getName());
           String campaignName = file.getName().replace(".db", "");
+          existingCampaigns.add(campaignName);
           Button campaignButton = new Button(campaignName);
           campaignButton.getStyleClass().add("blue-button");
           campaignButton.setMaxWidth(Double.MAX_VALUE);
@@ -82,7 +87,7 @@ public class FileSelectionController extends Navigator {
   @FXML
   private void startImport() {
     operationLogger.log("Next button clicked, attempting import");
-    if (fileImportService.isReady()) {
+    if (fileImportService.isReady() && !campaignNameTextField.getText().isEmpty() && !existingCampaigns.contains(campaignNameTextField.getText())) {
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
       nextButton.setDisable(true);
@@ -120,11 +125,23 @@ public class FileSelectionController extends Navigator {
                 }
               });
       importDataThread.start();
-    } else {
+    } else if (!fileImportService.isReady()){
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
       alert.setHeaderText(null);
       alert.setContentText("You have not uploaded the 3 required log files.");
+      alert.showAndWait();
+    } else if (existingCampaigns.contains(campaignNameTextField.getText())) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("A campaign already exists with that name.");
+      alert.showAndWait();
+    } else if (campaignNameTextField.getText().isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("You haven't entered a name for the campaign.");
       alert.showAndWait();
     }
   }
