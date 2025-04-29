@@ -90,7 +90,6 @@ public class UIManager {
 
     switchContent(mainLayoutContentPane, childLoader, useCache);
 
-    mainStage.initStyle(StageStyle.TRANSPARENT);
     mainStage.setTitle(title);
 
     Scene scene = new Scene(mainLayoutRoot);

@@ -18,7 +18,7 @@
             <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
                 <children>
                     <HBox spacing="30.0">
-                    <Button mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
+                    <Button mnemonicParsing="false" fx:id = "backButton" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -35,12 +35,12 @@
                     </Region>
                     <HBox spacing="10.0">
                         <children>
-                            <Button mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
+                            <Button mnemonicParsing="false" fx:id="metricsButton" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
                             </Button>
-                            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
+                            <Button mnemonicParsing="false" fx:id = "chartsButton" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
                                 <font>
                                     <Font size="24.0" />
                                 </font>

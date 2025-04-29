@@ -129,4 +129,9 @@ public class LoginController extends Navigator {
       logger.error("Failed to open Help Guide", e);
     }
   }
+
+  public String getLoginStatus() {
+    return loginStatus;
+  }
+
 }

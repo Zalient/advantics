@@ -19,7 +19,7 @@
         </Label>
         <VBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
             <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="File Import">
+                <Label alignment="CENTER" fx:id="fileImportLabel" contentDisplay="CENTER" styleClass="bold-label" text="File Import">
                     <font>
                         <Font size="40.0" />
                     </font>

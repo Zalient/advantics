@@ -9,19 +9,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="1117.0" spacing="100.0"
-      xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.MetricSettingsController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="1117.0" spacing="100.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.MetricSettingsController">
     <children>
         <HBox spacing="50.0">
             <children>
                 <VBox spacing="10.0">
                     <children>
-                        <Label text="Bounce Definition" styleClass="bold-label">
+                        <Label fx:id="bounceDefTitle" styleClass="bold-label" text="Bounce Definition">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                  <Label fx:id="bounceDefLabel" prefHeight="24.0" prefWidth="526.0" text="Current Setting: Pages Viewed = 1" styleClass="bold-label">
+                  <Label fx:id="bounceDefLabel" prefHeight="24.0" prefWidth="526.0" styleClass="bold-label" text="Current Setting: Pages Viewed = 1">
                      <font>
                         <Font size="14.0" />
                      </font>
