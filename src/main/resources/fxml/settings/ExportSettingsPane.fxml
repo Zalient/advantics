@@ -8,38 +8,30 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.university.grp20.controller.settings.ExportSettingsController">
+<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.ExportSettingsController">
     <content>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0"
-              >
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="50.0">
                     <VBox.margin>
-                        <Insets right="400.0"/>
+                        <Insets right="400.0" />
                     </VBox.margin>
                     <children>
                         <VBox spacing="20.0">
                             <children>
-                                <Label text="Export Operations Log" styleClass="bold-label">
+                                <Label fx:id="exportLogTitle" styleClass="bold-label" text="Export Operations Log">
                                     <font>
-                                        <Font size="18.0"/>
+                                        <Font size="18.0" />
                                     </font>
                                 </Label>
-                                <Button mnemonicParsing="false" onAction="#exportOperationsPdf" prefWidth="150.0"
-                                        styleClass="blue-button"
-                                        text="Export PDF">
+                                <Button fx:id="exportLogPDFButton" mnemonicParsing="false" onAction="#exportOperationsPdf" prefWidth="150.0" styleClass="blue-button" text="Export PDF">
                                     <font>
-                                        <Font size="14.0"/>
+                                        <Font size="14.0" />
                                     </font>
                                 </Button>
-                                <Button mnemonicParsing="false" onAction="#exportOperationsCsv" prefWidth="150.0"
-                                        styleClass="blue-button"
-                                        text="Export CSV">
+                                <Button fx:id="exportLogCSVButton" mnemonicParsing="false" onAction="#exportOperationsCsv" prefWidth="150.0" styleClass="blue-button" text="Export CSV">
                                     <font>
-                                        <Font size="14.0"/>
+                                        <Font size="14.0" />
                                     </font>
                                 </Button>
                             </children>
@@ -48,7 +40,7 @@
                 </HBox>
             </children>
             <padding>
-                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
             </padding>
         </VBox>
     </content>

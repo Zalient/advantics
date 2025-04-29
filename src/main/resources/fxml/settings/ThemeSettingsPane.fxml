@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.ThemeSettingsController">
+<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.ThemeSettingsController">
 <content>
     <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
         <children>
@@ -14,7 +17,7 @@
                     <Insets right="400.0" />
                 </VBox.margin>
                 <children>
-                    <Label styleClass="bold-label" text="Theme">
+                    <Label fx:id="themeTitle" styleClass="bold-label" text="Theme">
                      <font>
                         <Font size="16.0" />
                      </font></Label>

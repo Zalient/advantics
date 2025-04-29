@@ -35,8 +35,6 @@ public class SettingsController extends Navigator {
     } else if (User.getRole().equals("Editor")) {
       deleteButtons(List.of(userSettingsButton, exportSettingsButton));
     }
-
-    displayThemeSettings();
   }
 
   @FXML
@@ -89,9 +87,6 @@ public class SettingsController extends Navigator {
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/ThemeSettingsPane.fxml"));
   }
-
-  @FXML
-  private void displayLanguageSettings() {}
 
   private void deleteButtons(List<Button> buttons) {
     for (Button button : buttons) {
