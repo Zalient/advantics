@@ -27,6 +27,13 @@ public class CalculateMetricsService {
     this.filterProgressLabel = listener;
   }
 
+  private String campaignName;
+
+  public CalculateMetricsService(String c) {
+    this.campaignName = c;
+    System.out.println("Creating metrics service with campaign name: " + campaignName);
+  }
+
   public MetricsDTO fetchMetrics(FilterCriteriaDTO filterCriteriaDTO) {
     final int totalTasks = 7;
     ExecutorService executorService = Executors.newFixedThreadPool(totalTasks);
@@ -89,7 +96,7 @@ public class CalculateMetricsService {
 
   private Callable<MetricResult> metricTask(String metricName, Supplier<String> querySupplier) {
     return () -> {
-      try (Connection conn = DBHelper.getConnection()) {
+      try (Connection conn = DBHelper.getConnection(campaignName)) {
         String query = querySupplier.get();
         double val = fetchMetricValue(conn, query);
         logger.info("Fetched " + metricName + ": " + val);

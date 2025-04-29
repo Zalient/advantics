@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
+<GridPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" percentWidth="14.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -43,11 +43,6 @@
                     </font>
                 </Button>
                 <Button fx:id="themeSettingsButton" onAction="#displayThemeSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Theme">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
-                <Button prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Language">
                     <font>
                         <Font size="14.0" />
                     </font>

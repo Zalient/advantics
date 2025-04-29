@@ -341,8 +341,8 @@ public class FileImportService {
     logger.info("Dropped table indexes");
   }
 
-  public void runFullImport() {
-    try (Connection conn = DBHelper.getConnection()) {
+  public void runFullImport(String campaignName) {
+    try (Connection conn = DBHelper.getConnection(campaignName)) {
       conn.setAutoCommit(false);
       dropTableIndexes(conn);
       createTables(conn);
@@ -358,8 +358,8 @@ public class FileImportService {
     }
   }
 
-  public void deleteInsertedData() {
-    try (Connection conn = DBHelper.getConnection()) {
+  public void deleteInsertedData(String campaignName) {
+    try (Connection conn = DBHelper.getConnection(campaignName)) {
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS impressionLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS clickLog");
       DBHelper.executeUpdate(conn, "DROP TABLE IF EXISTS serverLog");

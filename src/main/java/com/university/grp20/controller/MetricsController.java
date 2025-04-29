@@ -3,10 +3,13 @@ package com.university.grp20.controller;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import java.io.IOException;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +32,9 @@ public class MetricsController extends Navigator {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
   private MetricsDTO metricsDTO;
-  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
+  @FXML private Label selectedDatabaseLabel;
+  private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
+
   @FXML private Button helpButton;
 
 
@@ -46,7 +51,10 @@ public class MetricsController extends Navigator {
         });
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
+    selectedDatabaseLabel.setText("Selected Campaign: " + User.getSelectedCampaign().replace(".db", ""));
   }
+
+
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
@@ -66,10 +74,10 @@ public class MetricsController extends Navigator {
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/ViewerFileSelectionPane.fxml"), false);
     } else {
       UIManager.switchContent(
-          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
+          parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"), false);
     }
   }
 
@@ -141,9 +149,12 @@ public class MetricsController extends Navigator {
     logger.info("disableForViewer called");
     boolean status = User.getRole().equals("Viewer");
 
-    filterButton.setDisable(status);
-    pdfButton.setDisable(status);
-    csvButton.setDisable(status);
+    Platform.runLater(() -> {
+      filterButton.setDisable(status);
+      pdfButton.setDisable(status);
+      csvButton.setDisable(status);
+    });
+
   }
 
   @FXML
