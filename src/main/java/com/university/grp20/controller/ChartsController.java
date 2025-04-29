@@ -8,6 +8,7 @@ import com.university.grp20.model.User;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -270,7 +271,7 @@ public class ChartsController extends Navigator {
       CategoryPlot chartPlot = chart.getCategoryPlot();
       CategoryAxis xAxis = chartPlot.getDomainAxis();
       xAxis.setCategoryLabelPositions(
-          CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
+              CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
       String campaignToUse = User.getSelectedCampaign();
@@ -284,38 +285,58 @@ public class ChartsController extends Navigator {
     exportPDFButton.getStyleClass().add("export-button");
     exportPDFButton.setPrefSize(110, 25);
     exportPDFButton.setOnAction(
-        e -> {
-          operationLogger.log(metricType + " chart export as PDF button clicked");
-          try {
-            String filePath = ExportService.askForPDFFilename();
-            ExportService.chartToPDF(chartViewer.getChart(), filePath);
-            operationLogger.log( metricType + " chart successfully exported as PDF to " + filePath);
-            UIManager.showAlert("Success", metricType + " chart successfully exported as PDF to " + filePath);
-          } catch (IOException ex) {
-            logger.error("Error exporting as PDF: " + ex);
-            operationLogger.log("Error exporting " + metricType + " chart as PDF " + ex);
-            UIManager.showAlert("Error", "Error exporting as PDF " + ex);
-          }
-        });
+            e -> {
+              operationLogger.log(metricType + " chart export as PDF button clicked");
+              try {
+                String filePath = ExportService.askForPDFFilename();
+                ExportService.chartToPDF(chartViewer.getChart(), filePath);
+                operationLogger.log( metricType + " chart successfully exported as PDF to " + filePath);
+                UIManager.showAlert("Success", metricType + " chart successfully exported as PDF to " + filePath);
+              } catch (IOException ex) {
+                logger.error("Error exporting as PDF: " + ex);
+                operationLogger.log("Error exporting " + metricType + " chart as PDF " + ex);
+                UIManager.showAlert("Error", "Error exporting as PDF " + ex);
+              }
+            });
 
     Button exportCSVButton = new Button("Export as CSV");
     exportCSVButton.getStyleClass().add("export-button");
     exportCSVButton.setPrefSize(110, 25);
     exportCSVButton.setOnAction(
-        e -> {
-          operationLogger.log(metricType + " chart export as CSV button clicked");
-          try {
-            String filePath = ExportService.askForCSVFilename();
-            ExportService.chartToCSV(chartViewer.getChart(), filePath);
-            operationLogger.log( metricType + " chart successfully exported as CSV to " + filePath);
-            UIManager.showAlert("Success", metricType + " chart successfully exported as CSV to " + filePath);
-          } catch (IOException ex) {
-            logger.error("Error exporting as CSV " + ex);
-            operationLogger.log("Error exporting " + metricType + " chart as CSV " + ex);
-            UIManager.showAlert("Error", "Error exporting as CSV " + ex);
-          }
-        });
+            e -> {
+              operationLogger.log(metricType + " chart export as CSV button clicked");
+              try {
+                String filePath = ExportService.askForCSVFilename();
+                ExportService.chartToCSV(chartViewer.getChart(), filePath);
+                operationLogger.log( metricType + " chart successfully exported as CSV to " + filePath);
+                UIManager.showAlert("Success", metricType + " chart successfully exported as CSV to " + filePath);
+              } catch (IOException ex) {
+                logger.error("Error exporting as CSV " + ex);
+                operationLogger.log("Error exporting " + metricType + " chart as CSV " + ex);
+                UIManager.showAlert("Error", "Error exporting as CSV " + ex);
+              }
+            });
 
+    Button printButton = new Button("Print Chart");
+    printButton.getStyleClass().add("export-button");
+    printButton.setPrefSize(90, 25);
+    printButton.setOnAction(e -> {
+      operationLogger.log(metricType + " chart print button clicked");
+      PrinterJob job = PrinterJob.createPrinterJob();
+      if (job != null && job.showPrintDialog(chartViewer.getScene().getWindow())) {
+        boolean success = job.printPage(chartViewer);
+        if (success) {
+          job.endJob();
+          operationLogger.log(metricType + " chart successfully sent to printer");
+          UIManager.showAlert("Print", " chart sent to printer successfully");
+        } else {
+          operationLogger.log("Printing failed for " + metricType + " chart");
+          UIManager.showAlert("Print Error", "Failed to print chart");
+        }
+      } else {
+        operationLogger.log("User canceled the print dialog for " + metricType + " chart");
+      }
+    });
 
     Label campaignLabel = new Label("Campaign: " + User.getSelectedCampaign());
     campaignLabel.getStyleClass().add("bold-label");
@@ -328,7 +349,7 @@ public class ChartsController extends Navigator {
       addChartFlowPane.getChildren().remove(chartBox);
     });
 
-    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, deleteButton, campaignLabel);
+    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, printButton, deleteButton, campaignLabel);
 
     buttonBox.setSpacing(10);
     chartBox.getChildren().addAll(buttonBox, chartViewer);
