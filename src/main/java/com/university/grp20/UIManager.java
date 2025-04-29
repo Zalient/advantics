@@ -27,7 +27,7 @@ public class UIManager {
   private static Object controller;
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static Stage mainStage;
-  private static final int CACHE_MAX_SIZE = 5;
+  private static final int CACHE_MAX_SIZE = 100;
 
   private static String currentTheme = "/styles/styles.css";
 

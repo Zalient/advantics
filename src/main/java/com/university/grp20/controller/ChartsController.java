@@ -70,7 +70,8 @@ public class ChartsController extends Navigator {
                                         String buttonText = currentButton.getText();
                                         if (buttonText.equals("Filter")
                                             || buttonText.equals("Export as PDF")
-                                            || buttonText.equals("Export as CSV")) {
+                                            || buttonText.equals("Export as CSV")
+                                            || buttonText.equals("Delete")){
                                           currentButton.setDisable(status);
                                         }
                                       }

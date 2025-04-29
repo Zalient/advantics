@@ -41,7 +41,7 @@
                     </children>
                 </HBox>
                 <Region prefHeight="60.0" prefWidth="268.0" />
-            <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide">
+            <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="blue-button" text="Click Me!">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
@@ -295,7 +295,7 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" layoutX="42.0" layoutY="415.0" prefHeight="158.0" prefWidth="228.0" text="Selected Campaign:" wrapText="true">
+      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" layoutX="59.0" layoutY="289.0" prefHeight="158.0" prefWidth="255.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Selected Campaign:" wrapText="true">
          <font>
             <Font size="26.0" />
          </font>
