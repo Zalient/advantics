@@ -8,12 +8,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class DBHelper {
   private static final int BATCH_SIZE = 15000;
-  private static final HikariDataSource dataSource;
+  private static HikariDataSource dataSource;
   private static Connection testConnection = null;
 
-  static {
+  public static void changeDatabase(String campaignName) {
     HikariConfig config = new HikariConfig();
-    config.setJdbcUrl("jdbc:sqlite:./statsDatabase.db");
+    config.setJdbcUrl("jdbc:sqlite:./" + campaignName + ".db");
     config.setDriverClassName("org.sqlite.JDBC");
     config.setMaximumPoolSize(10);
     config.setConnectionTestQuery("SELECT 1");
@@ -22,10 +22,11 @@ public class DBHelper {
     dataSource = new HikariDataSource(config);
   }
 
-  public static Connection getConnection() throws SQLException {
+  public static Connection getConnection(String campaignName) throws SQLException {
     if (testConnection != null) {
       return testConnection;
     }
+    changeDatabase(campaignName);
     return dataSource.getConnection();
   }
 
@@ -80,9 +81,10 @@ public class DBHelper {
     return BATCH_SIZE;
   }
 
+  //min and max date may need correcting
   public static LocalDate fetchMinDate() {
     String query = "SELECT MIN(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection()) {
+    try (Connection conn = getConnection(User.getSelectedCampaign())) {
       return fetchDate(conn, query);
     } catch (SQLException e) {
       throw new RuntimeException("Unable to obtain DB connection", e);
@@ -91,7 +93,7 @@ public class DBHelper {
 
   public static LocalDate fetchMaxDate() {
     String query = "SELECT MAX(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection()) {
+    try (Connection conn = getConnection(User.getSelectedCampaign())) {
       return fetchDate(conn, query);
     } catch (SQLException e) {
       throw new RuntimeException("Unable to obtain DB connection", e);

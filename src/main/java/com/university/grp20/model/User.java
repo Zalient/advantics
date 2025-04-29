@@ -6,6 +6,7 @@ public class User {
   private static String name;
   private static String password;
   private static String role;
+  private static String selectedCampaign;
 
   public static void logOut() {
     username = null;
@@ -30,6 +31,10 @@ public class User {
     role = newRole;
   }
 
+  public static void setSelectedCampaign(String newSelectedCampaign) {
+    selectedCampaign = newSelectedCampaign;
+  }
+
   public static String getUsername() {
     return username;
   }
@@ -45,4 +50,10 @@ public class User {
   public static String getRole() {
     return role;
   }
+
+  public static String getSelectedCampaign() {
+    return selectedCampaign;
+  }
+
+
 }

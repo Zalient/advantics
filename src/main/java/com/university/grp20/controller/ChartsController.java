@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
@@ -107,7 +108,7 @@ public class ChartsController extends Navigator {
   @FXML
   private void showFileSelection() {
     if (User.getRole().equals("Viewer")) {
-      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
+      UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/ViewerFileSelectionPane.fxml"));
       operationLogger.log("Back button clicked, returned to login page");
     } else {
       UIManager.switchContent(
@@ -117,7 +118,7 @@ public class ChartsController extends Navigator {
   }
 
   @FXML
-  private void showFilterSelection(ChartViewer chartViewer) {
+  private void showFilterSelection(ChartViewer chartViewer, String campaignName) {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
@@ -125,7 +126,7 @@ public class ChartsController extends Navigator {
         filterLoader.load();
 
         FilterSelectionController filterController = filterLoader.getController();
-        filterController.init("Chart", null, chartViewer);
+        filterController.init("Chart", null, chartViewer, campaignName);
 
         UIManager.showModalStage("Filter Selection", filterLoader);
       } catch (IOException e) {
@@ -143,66 +144,77 @@ public class ChartsController extends Navigator {
 
   @FXML
   private void addImpressionsChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.impressionsChart();
     addChart(chart, "Impressions");
   }
 
   @FXML
   private void addClicksChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.clicksChart();
     addChart(chart, "Clicks");
   }
 
   @FXML
   private void addUniquesChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.uniquesChart();
     addChart(chart, "Uniques");
   }
 
   @FXML
   private void addBouncesChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.bouncesChart();
     addChart(chart, "Bounces");
   }
 
   @FXML
   private void addConversionsChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
   }
 
   @FXML
   private void addTotalCostChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.totalCostChart();
     addChart(chart, "Total Cost");
   }
 
   @FXML
   private void addCTRChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.ctrChart();
     addChart(chart, "CTR");
   }
 
   @FXML
   private void addCPAChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpaChart();
     addChart(chart, "CPA");
   }
 
   @FXML
   private void addCPCChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpcChart();
     addChart(chart, "CPC");
   }
 
   @FXML
   private void addCPMChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.cpmChart();
     addChart(chart, "CPM");
   }
 
   @FXML
   private void addBounceRateChart() {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.bounceRateChart();
     addChart(chart, "Bounce Rate");
   }
@@ -242,6 +254,7 @@ public class ChartsController extends Navigator {
   }
 
   public void addChart(JFreeChart chart, String metricType) {
+    System.out.println("DEBUG: addChart, user campaign is " + User.getSelectedCampaign());
     operationLogger.log(metricType + " chart display option clicked and displayed");
     ChartViewer chartViewer = new ChartViewer(chart);
     chartViewer.prefWidthProperty().bind(addChartFlowPane.widthProperty().divide(2).subtract(15));
@@ -259,9 +272,10 @@ public class ChartsController extends Navigator {
           CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
+      String campaignToUse = User.getSelectedCampaign();
       filterButton.getStyleClass().add("chart-button");
       filterButton.setPrefSize(70, 25);
-      filterButton.setOnAction(e -> showFilterSelection(chartViewer));
+      filterButton.setOnAction(e -> showFilterSelection(chartViewer, campaignToUse));
       buttonBox.getChildren().add(0, filterButton);
     }
 
@@ -301,6 +315,9 @@ public class ChartsController extends Navigator {
           }
         });
 
+
+    Label campaignLabel = new Label("Campaign: " + User.getSelectedCampaign());
+
     Button deleteButton = new Button("Delete");
     deleteButton.getStyleClass().add("chart-button");
     deleteButton.setPrefSize(70, 25);
@@ -309,7 +326,7 @@ public class ChartsController extends Navigator {
       addChartFlowPane.getChildren().remove(chartBox);
     });
 
-    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, deleteButton);
+    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, deleteButton, campaignLabel);
 
     buttonBox.setSpacing(10);
     chartBox.getChildren().addAll(buttonBox, chartViewer);
@@ -318,6 +335,7 @@ public class ChartsController extends Navigator {
   }
 
   private void addHistogram(int numBins) {
+    GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
     operationLogger.log("Bin size of "+ numBins +" chosen and histogram displayed");

@@ -6,16 +6,19 @@ import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -31,6 +34,10 @@ public class FileSelectionController extends Navigator {
   @FXML private Label impressionPathLabel;
   @FXML private Label clickPathLabel;
   @FXML private Label serverPathLabel;
+  @FXML private TextField campaignNameTextField;
+  @FXML private VBox uploadedCampaignVBox;
+  @FXML private Label selectCampaignLabel;
+
   @FXML private Button skipButton;
   @FXML private Button helpButton;
 
@@ -38,6 +45,10 @@ public class FileSelectionController extends Navigator {
   private final FileImportService fileImportService = new FileImportService();
   private final FileChooser fileChooser = new FileChooser();
   private final OperationLogger operationLogger = new OperationLogger();
+
+  private Set<String> existingCampaigns = new HashSet<>();
+
+  String campaignName = "";
 
   @FXML
   public void initialize() {
@@ -48,16 +59,49 @@ public class FileSelectionController extends Navigator {
           logger.info("Role is: " + User.getRole());
           roleLabel.setText("Role: " + User.getRole());
 
+          updateUploadedCampaigns();
+
           fileImportService.setOnUploadStart(this::updateProgressBar);
           fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
           fileImportService.setOnFileError(this::handleFileUploadError);
         });
   }
 
+  public void updateUploadedCampaigns() {
+    System.out.println("Updating uploaded campaigns");
+    File currentWorkingDirectory = new File(System.getProperty("user.dir"));
+
+    File[] campaignFiles = currentWorkingDirectory.listFiles(((dir, name) -> name.toLowerCase().endsWith(".db")));
+
+    if (campaignFiles != null) {
+      for (File file : campaignFiles) {
+        if (!file.getName().equals("users.db")) {
+          System.out.println("Found campaign file: " + file.getName());
+          String campaignName = file.getName().replace(".db", "");
+          existingCampaigns.add(campaignName);
+          Button campaignButton = new Button(campaignName);
+          campaignButton.getStyleClass().add("blue-button");
+          campaignButton.setMaxWidth(Double.MAX_VALUE);
+          campaignButton.setStyle("-fx-font-size: 18px;");
+          campaignButton.setOnAction(e -> {
+            handleSkip(campaignName);
+          });
+          uploadedCampaignVBox.getChildren().add(campaignButton);
+        }
+      }
+    }
+
+    if (existingCampaigns.isEmpty()) {
+      selectCampaignLabel.setText("No campaigns uploaded");
+    }
+
+  }
+
   @FXML
   private void startImport() {
-    operationLogger.log("Next button clicked, attempting file upload");
-    if (fileImportService.isReady()) {
+    operationLogger.log("Next button clicked, attempting import");
+    if (fileImportService.isReady() && !campaignNameTextField.getText().isEmpty() && !existingCampaigns.contains(campaignNameTextField.getText())) {
+
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
       nextButton.setDisable(true);
@@ -65,25 +109,32 @@ public class FileSelectionController extends Navigator {
       clickLogButton.setDisable(true);
       serverLogButton.setDisable(true);
       logoutButton.setDisable(true);
-      skipButton.setDisable(true);
+      campaignNameTextField.setDisable(true);
+      campaignName = campaignNameTextField.getText();
       Thread importDataThread =
           new Thread(
               () -> {
                 try {
-                  fileImportService.runFullImport();
+                  fileImportService.runFullImport(campaignName);
                   Platform.runLater(
                       () -> {
                         importProgressLabel.setText("Calculating Metrics...");
                         importProgressBar.setProgress(1.0);
                       });
                   Thread.sleep(100);
-                  Platform.runLater(
-                      () ->
-                          UIManager.switchContent(
-                              parentPane,
-                              UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
-                              true));
-                  operationLogger.log("Upload success, displaying metrics");
+                  Platform.runLater(() -> {
+                    //boolean useCache = campaignName.equals(User.getSelectedCampaign());
+                    User.setSelectedCampaign(campaignName);
+                    boolean useCache = true;
+                    UIManager.switchContent(
+                            parentPane,
+                            UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
+                            useCache
+                    );
+                                      operationLogger.log("Upload success, displaying metrics");
+
+                  });
+
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
                   throw new RuntimeException(
@@ -91,13 +142,25 @@ public class FileSelectionController extends Navigator {
                 }
               });
       importDataThread.start();
-    } else {
+    } else if (!fileImportService.isReady()){
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
       alert.setHeaderText(null);
       alert.setContentText("You have not uploaded the 3 required log files.");
       alert.showAndWait();
       operationLogger.log("Upload failed, log files not uploaded");
+    } else if (existingCampaigns.contains(campaignNameTextField.getText())) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("A campaign already exists with that name.");
+      alert.showAndWait();
+    } else if (campaignNameTextField.getText().isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error!");
+      alert.setHeaderText(null);
+      alert.setContentText("You haven't entered a name for the campaign.");
+      alert.showAndWait();
     }
   }
 
@@ -128,12 +191,19 @@ public class FileSelectionController extends Navigator {
     UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/LoginPane.fxml"));
   }
 
-  @FXML
-  private void handleSkip() {
-    operationLogger.log("Skip upload button clicked");
-    if (fileImportService.isDataLoaded()) {
+  private void handleSkip(String campaignName) {
+    operationLogger.log("Preuploaded campaign button clicked: " + campaignName);
+    System.out.println("Previously selected campaign: " + User.getSelectedCampaign());
+    System.out.println("Selecting: " + campaignName);
+
+    //boolean useCache = campaignName.equals(User.getSelectedCampaign());
+    boolean useCache = true;
+    System.out.println("Using cache? " + useCache);
+    User.setSelectedCampaign(campaignName);
+    if (true) { // debug : fileImportService.isDataLoaded()
       UIManager.switchContent(
-          parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
+          parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), useCache);
+
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
@@ -187,7 +257,7 @@ public class FileSelectionController extends Navigator {
     serverLogButton.setDisable(false);
     nextButton.setDisable(true);
     logoutButton.setDisable(false);
-    skipButton.setDisable(false);
+    campaignNameTextField.setDisable(false);
     impressionPathLabel.setText("File Path");
     clickPathLabel.setText("File Path");
     serverPathLabel.setText("File Path");
@@ -200,11 +270,12 @@ public class FileSelectionController extends Navigator {
     clickLogButton.setStyle("");
     serverLogButton.setStyle("");
 
-    fileImportService.deleteInsertedData();
+    fileImportService.deleteInsertedData(campaignName);
     fileImportService.setImpressionLog(null);
     fileImportService.setServerLog(null);
     fileImportService.setClickLog(null);
     fileImportService.setCampaignStartDate("");
+    campaignNameTextField.clear();
   }
 
   public void updateProgressBar(Double progress) {

@@ -170,6 +170,16 @@
     -fx-font-weight: bold;
     -fx-text-fill: #000000;
 }
+.campaign-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-text-fill: black;
+}
+.campaign-label:hover {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-text-fill: blue;
+}
 .blue-button {
     -fx-background-color: #2A54A7;
     -fx-border-color: black;
