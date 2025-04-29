@@ -63,13 +63,13 @@ public class MetricSettingsController {
         bounceDefLabel.setText("Current Setting: " + selectedBounce.getText() + " = " + bounceVal);
 
         Alert successAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        operationLogger.log("Bounce value redefined as: " + selectedBounce.getText() + " : " + bounceVal);
+        operationLogger.log("Bounce value redefined as: " + selectedBounce.getText() + " = " + bounceVal);
         successAlert.setTitle("Confirmation");
         successAlert.setHeaderText(null);
         successAlert.setContentText("Bounce successfully redefined");
         successAlert.showAndWait();
       } catch (NumberFormatException ex) {
-        operationLogger.log("Bounce value of wrong type");
+        operationLogger.log("Bounce value entered of wrong type");
         inputAlert.setContentText("Input is not an integer, wrong type");
         inputAlert.showAndWait();
       }

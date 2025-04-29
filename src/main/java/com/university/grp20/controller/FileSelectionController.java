@@ -8,6 +8,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+
+import javafx.fxml.FXMLLoader;
+
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public class FileSelectionController extends Navigator {
@@ -32,6 +37,9 @@ public class FileSelectionController extends Navigator {
   @FXML private TextField campaignNameTextField;
   @FXML private VBox uploadedCampaignVBox;
   @FXML private Label selectCampaignLabel;
+
+  @FXML private Button skipButton;
+  @FXML private Button helpButton;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);
   private final FileImportService fileImportService = new FileImportService();
@@ -93,6 +101,7 @@ public class FileSelectionController extends Navigator {
   private void startImport() {
     operationLogger.log("Next button clicked, attempting import");
     if (fileImportService.isReady() && !campaignNameTextField.getText().isEmpty() && !existingCampaigns.contains(campaignNameTextField.getText())) {
+
       fileImportService.setOnUploadStart(this::updateProgressBar);
       fileImportService.setOnUploadLabelStart(this::updateProgressLabel);
       nextButton.setDisable(true);
@@ -122,7 +131,10 @@ public class FileSelectionController extends Navigator {
                             UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
                             useCache
                     );
+                                      operationLogger.log("Upload success, displaying metrics");
+
                   });
+
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
                   throw new RuntimeException(
@@ -136,6 +148,7 @@ public class FileSelectionController extends Navigator {
       alert.setHeaderText(null);
       alert.setContentText("You have not uploaded the 3 required log files.");
       alert.showAndWait();
+      operationLogger.log("Upload failed, log files not uploaded");
     } else if (existingCampaigns.contains(campaignNameTextField.getText())) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
@@ -198,6 +211,7 @@ public class FileSelectionController extends Navigator {
       alert.setContentText(
           "You cannot Skip if data has not already been uploaded into the database.");
       alert.showAndWait();
+      operationLogger.log("Skip button failure, data not yet uploaded to database");
     }
   }
 
@@ -232,6 +246,7 @@ public class FileSelectionController extends Navigator {
           alert.setTitle("Error!");
           alert.setHeaderText(null);
           alert.setContentText(errorMessage);
+          operationLogger.log("File upload error: " + errorMessage);
           alert.showAndWait();
         });
   }
@@ -271,5 +286,19 @@ public class FileSelectionController extends Navigator {
   public void updateProgressLabel(String text) {
     logger.info("Updating progress label to " + text);
     Platform.runLater(() -> importProgressLabel.setText(text));
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Upload");
+      UIManager.showModalStage("Upload Page Help Guide", loader, false);
+      operationLogger.log("Upload Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 }

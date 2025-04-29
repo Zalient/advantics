@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +35,9 @@ public class MetricsController extends Navigator {
   @FXML private Label selectedDatabaseLabel;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
 
+  @FXML private Button helpButton;
+
+
 
   @FXML
   private void initialize() {
@@ -55,6 +57,7 @@ public class MetricsController extends Navigator {
 
   public void showBounceMsgBox(){
     bounceMsgBox.setVisible(true);
+
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
@@ -86,10 +89,10 @@ public class MetricsController extends Navigator {
   private void showMetricsFilter() {
     try {
       logger.info("Filter button clicked");
-      FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
       filterLoader.load();
       operationLogger.log("Metrics filter button clicked, displaying filter options");
-      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+      FXMLLoader loader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
       loader.load();
 
       FilterSelectionController controller = filterLoader.getController();
@@ -103,7 +106,7 @@ public class MetricsController extends Navigator {
 
   @FXML
   private void saveAsPDF() throws IOException {
-    operationLogger.log("Save as PDF button clicked");
+    operationLogger.log("Metrics report save as PDF button clicked");
     if (metricsDTO == null) {
       logger.error("Cannot export to PDF: metricsDTO is null.");
       return;
@@ -116,20 +119,20 @@ public class MetricsController extends Navigator {
       operationLogger.log("Metrics report saved to PDF at " + filePath);
       UIManager.showAlert("Success", "Metrics report saved to PDF at " + filePath);
     } else {
-      operationLogger.log("Metrics report not saved");
+      operationLogger.log("Metrics report not saved as PDF");
     }
   }
 
   @FXML
   private void saveAsCSV() throws IOException {
-    operationLogger.log("Save as CSV button clicked");
+    operationLogger.log("Metrics report save as CSV button clicked");
     String filePath = ExportService.askForCSVFilename();
     ExportService.dashboardToCSV(metricsDTO, filePath);
     if (filePath != null) {
       operationLogger.log("Metrics report saved to CSV at " + filePath);
       UIManager.showAlert("Success", "Metrics report saved to CSV at " + filePath);
     } else {
-      operationLogger.log("Metrics report not saved");
+      operationLogger.log("Metrics report not saved as CSV");
     }
   }
 
@@ -160,8 +163,23 @@ public class MetricsController extends Navigator {
 
   @FXML
   private void handleResetClick(){
+    operationLogger.log("Reset dashboard button clicked");
     MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
     setMetrics(defaultMetrics);
     UIManager.showAlert("Success", "Dashboard successfully reset to default");
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Metrics");
+      UIManager.showModalStage("Metrics Page Help Guide", loader, false);
+      operationLogger.log("Metrics Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 }

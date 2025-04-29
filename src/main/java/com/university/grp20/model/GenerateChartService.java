@@ -1,6 +1,5 @@
 package com.university.grp20.model;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
@@ -17,9 +16,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.List;
 
 public class GenerateChartService {
   private final Logger logger = LogManager.getLogger(GenerateChartService.class);
@@ -138,6 +137,30 @@ public class GenerateChartService {
                 .collect(Collectors.joining(", ")));
         sb.append(")");
       }
+
+      if ("Per Day".equals(filterDTO.timeGranularity()) && filterDTO.daysOfWeek() != null && !filterDTO.daysOfWeek().isEmpty()){
+        sb.append(" AND strftime('%w', ").append(dateAlias).append(".").append(dateColumn).append(") IN (" );
+        sb.append(formatChosenDays(filterDTO.daysOfWeek()));
+        sb.append(")");
+      }
+      if ("Per Hour".equals(filterDTO.timeGranularity()) && filterDTO.timeOfDay() != null && !filterDTO.timeOfDay().contains("None") && !filterDTO.timeOfDay().isEmpty()) {
+        List<Integer> range = getTimeRange(filterDTO);
+        if (range.size() >= 2) {
+          int start = range.get(0);
+          int end = range.get(1);
+
+          sb.append(" AND (");
+          if (start > end) {
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") >= '").append(String.format("%02d", start)).append("' OR ");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") < '").append(String.format("%02d", end)).append("'");
+          } else {
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") >= '").append(String.format("%02d", start)).append("' AND ");
+            sb.append("strftime('%H', ").append(dateAlias).append(".").append(dateColumn).append(") < '").append(String.format("%02d", end)).append("'");
+          }
+          sb.append(")");
+        }
+      }
+
       if (filterDTO.timeGranularity() == null
           || filterDTO.timeGranularity().isEmpty()
           || "Per Day".equals(filterDTO.timeGranularity())) {
@@ -161,6 +184,45 @@ public class GenerateChartService {
       }
     }
     return sb.toString();
+  }
+
+  private String getDayNumber (String day){
+    return switch (day) {
+      case "Monday" -> "1";
+      case "Tuesday" -> "2";
+      case "Wednesday" -> "3";
+      case "Thursday" -> "4";
+      case "Friday" -> "5";
+      case "Saturday" -> "6";
+      case "Sunday" -> "0";
+      default -> throw new IllegalArgumentException("Invalid day: " + day);
+    };
+  }
+
+  private String formatChosenDays (List<String> chosenDays){
+    StringBuilder sqlRes = new StringBuilder();
+    for (String day : chosenDays){
+      sqlRes.append("'").append(getDayNumber(day)).append("'").append(",");
+    }
+    if (!chosenDays.isEmpty()) {
+      sqlRes.deleteCharAt(sqlRes.length() - 1);
+    }
+    return sqlRes.toString();
+  }
+
+
+  private List<Integer> getTimeRange(FilterCriteriaDTO filterDTO){
+    List<Integer> results = new ArrayList<>();
+    List<String> selectedTimes = filterDTO.timeOfDay();
+    for (String selectedTime : selectedTimes) {
+      switch (selectedTime) {
+        case "Morning 06:00 - 11:59" -> results.addAll(Arrays.asList(6, 12));
+        case "Afternoon 12:00 - 17:59" -> results.addAll(Arrays.asList(12, 18));
+        case "Night 18:00 - 05:59" -> results.addAll(Arrays.asList(18, 6));
+        default -> throw new IllegalArgumentException("Invalid time of day: " + selectedTime);
+      }
+    }
+    return results;
   }
 
   private String applyGranularitySelect(
@@ -232,16 +294,46 @@ public class GenerateChartService {
       xAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       String timeGranularity = filterDTO.timeGranularity();
+      DefaultCategoryDataset dataset = (DefaultCategoryDataset) categoryPlot.getDataset();
+      List<?> categories = dataset.getColumnKeys();
+      int numOfPoints = categories.size();
+      //if days more than num
       if (timeGranularity != null && timeGranularity.equals("Per Hour")) {
-        DefaultCategoryDataset dataset = (DefaultCategoryDataset) categoryPlot.getDataset();
-        List<?> categories = dataset.getColumnKeys();
-        int step = (int) Math.ceil((numOfDays * 24.0) / 15.0);
+        int step = numOfPoints / 15;
+        int roundedStep = ((step + 23) / 24) * 24;
+        logger.info("Num of Points: " + numOfPoints + "   Step: " + step + "   Rounded Step: " + roundedStep);
 
         for (int i = 0; i < categories.size(); i++) {
           String label = categories.get(i).toString();
-          if (i % 120 != 0) {
+          if (i % roundedStep != 0) {
             xAxis.setTickLabelPaint(label, new Color(0, 0, 0, 0));
           }
+        }
+      }
+      if (timeGranularity != null && timeGranularity.equals("Per Day")) {
+        int step = Math.max(1, categories.size() / 15);
+        for (int i = 0; i < categories.size(); i++) {
+          String label = categories.get(i).toString();
+          if (i % step != 0) {
+            xAxis.setTickLabelPaint(label, new Color(0, 0, 0, 0));
+          }
+        }
+      }
+    }
+  }
+
+  private static void configDefaultXAxis(JFreeChart chart){
+    if (chart.getPlot() instanceof CategoryPlot categoryPlot) {
+      CategoryAxis xAxis = categoryPlot.getDomainAxis();
+      xAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
+
+      DefaultCategoryDataset dataset = (DefaultCategoryDataset) categoryPlot.getDataset();
+      List<?> categories = dataset.getColumnKeys();
+      int step = Math.max(1, categories.size() / 15);
+      for (int i = 0; i < categories.size(); i++) {
+        String label = categories.get(i).toString();
+        if (i % step != 0) {
+          xAxis.setTickLabelPaint(label, new Color(0, 0, 0, 0));
         }
       }
     }
@@ -262,7 +354,7 @@ public class GenerateChartService {
 
   private static void showDefaultFilters(JFreeChart chart){
     GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
-    String filterApplied = "Time Granularity: Per Day   Start Date: []   End Date: []\n" +
+    String filterApplied = "Time Granularity: Per Day   Start Date:    End Date: \n" +
             "Gender: All Gender   Age Ranges: []   Income: []   Contexts: []\n" +
             "Bounce Type " + globalSettings.getBounceType() + "   Bounce Value: " + globalSettings.getBounceValue();
     TextTitle subtitle = new TextTitle(filterApplied);
@@ -616,6 +708,7 @@ public class GenerateChartService {
             "Impressions By Day");
     JFreeChart chart = ChartFactory.createLineChart("Impressions Per Day", "Day", "Impressions", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -626,6 +719,7 @@ public class GenerateChartService {
             "Clicks");
     JFreeChart chart = ChartFactory.createLineChart("Clicks Per Day", "Day", "Clicks", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -636,6 +730,7 @@ public class GenerateChartService {
             "Uniques");
     JFreeChart chart = ChartFactory.createLineChart("Uniques Per Day", "Day", "Uniques", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -648,6 +743,7 @@ public class GenerateChartService {
             "Bounces");
     JFreeChart chart =  ChartFactory.createLineChart("Bounces Per Day", "Day", "Bounces", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -658,6 +754,7 @@ public class GenerateChartService {
             "Conversions");
     JFreeChart chart =  ChartFactory.createLineChart("Conversions Per Day", "Day", "Conversions", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -672,6 +769,7 @@ public class GenerateChartService {
             "Total Cost");
     JFreeChart chart =  ChartFactory.createLineChart("Total Cost Per Day", "Day", "Total Cost", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -685,6 +783,7 @@ public class GenerateChartService {
             "CTR");
     JFreeChart chart =  ChartFactory.createLineChart("CTR Per Day", "Day", "CTR", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -702,6 +801,7 @@ public class GenerateChartService {
             "CPA");
     JFreeChart chart =  ChartFactory.createLineChart("CPA Per Day", "Day", "CPA", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -719,6 +819,7 @@ public class GenerateChartService {
             "CPC");
     JFreeChart chart =  ChartFactory.createLineChart("CPC Per Day", "Day", "CPC", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -732,6 +833,7 @@ public class GenerateChartService {
             "CPM");
     JFreeChart chart =  ChartFactory.createLineChart("CPM Per Day", "Day", "CPM", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 
@@ -747,6 +849,7 @@ public class GenerateChartService {
             "Bounce Rate");
     JFreeChart chart =  ChartFactory.createLineChart("Bounce Rate Per Day", "Day", "Bounce Rate", dataset);
     showDefaultFilters(chart);
+    configDefaultXAxis(chart);
     return chart;
   }
 }

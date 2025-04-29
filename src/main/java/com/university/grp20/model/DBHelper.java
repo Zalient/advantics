@@ -1,6 +1,7 @@
 package com.university.grp20.model;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -78,5 +79,34 @@ public class DBHelper {
 
   public static int getBatchSize() {
     return BATCH_SIZE;
+  }
+
+  public static LocalDate fetchMinDate() {
+    String query = "SELECT MIN(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection()) {
+      return fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
+  }
+
+  public static LocalDate fetchMaxDate() {
+    String query = "SELECT MAX(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection()) {
+      return fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
+  }
+
+  private static LocalDate fetchDate(Connection conn, String query) {
+    try (ResultSet rs = executeQuery(conn, query)) {
+      if (rs.next()) {
+        return rs.getDate(1).toLocalDate();
+      }
+      throw new RuntimeException("No rows returned: " + query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Error executing query: " + query, e);
+    }
   }
 }

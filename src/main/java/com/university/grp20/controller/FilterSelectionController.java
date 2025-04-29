@@ -1,11 +1,14 @@
 package com.university.grp20.controller;
 
+import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +23,8 @@ import java.util.List;
 import java.time.LocalDate;
 
 public class FilterSelectionController extends Navigator {
-  @FXML private CheckComboBox<String> ageGroupSelector, contextSelector, incomeSelector;
+  @FXML private CheckComboBox<String> ageGroupSelector, contextSelector, incomeSelector, dayOfWeekSelector;
+  @FXML private ComboBox<String> timeOfDaySelector;
   @FXML private RadioButton maleRadioButton, femaleRadioButton;
   @FXML private ComboBox<String> granularityChooser;
   @FXML private DatePicker startDatePicker, endDatePicker;
@@ -36,6 +40,8 @@ public class FilterSelectionController extends Navigator {
   private final OperationLogger operationLogger = new OperationLogger();
   private String campaignName;
 
+  @FXML private Button helpButton;
+
   @FXML
   private void initialize() {
     genderGroup = new ToggleGroup();
@@ -43,18 +49,38 @@ public class FilterSelectionController extends Navigator {
     femaleRadioButton.setToggleGroup(genderGroup);
     maleRadioButton.setUserData("Male");
     femaleRadioButton.setUserData("Female");
+    startDatePicker.setValue(DBHelper.fetchMinDate());
+    endDatePicker.setValue(DBHelper.fetchMaxDate());
 
+    dayOfWeekSelector.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+    timeOfDaySelector.getItems().addAll("Morning 06:00 - 11:59", "Afternoon 12:00 - 17:59", "Night 18:00 - 05:59", "None");
     ageGroupSelector.getItems().addAll("<25", "25-34", "35-44", "45-54", ">54");
     incomeSelector.getItems().addAll("Low", "Medium", "High");
-    contextSelector
-        .getItems()
-        .addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
+    contextSelector.getItems().addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
     Platform.runLater(
         () -> {
           ageGroupSelector.getStyleClass().add("blue-check-combo-box");
           incomeSelector.getStyleClass().add("blue-check-combo-box");
           contextSelector.getStyleClass().add("blue-check-combo-box");
+          dayOfWeekSelector.getStyleClass().add("blue-check-combo-box");
+          timeOfDaySelector.getStyleClass().add("blue-combo-box");
         });
+
+    dayOfWeekSelector.setDisable(true);
+    timeOfDaySelector.setDisable(true);
+    granularityChooser.setOnAction(event -> {
+      String chosenGranularity = granularityChooser.getValue();
+      if (chosenGranularity.equals("Per Day")) {
+        dayOfWeekSelector.setDisable(false);
+        timeOfDaySelector.setDisable(true);
+      } else if (chosenGranularity.equals("Per Hour")) {
+        timeOfDaySelector.setDisable(false);
+        dayOfWeekSelector.setDisable(true);
+      } else {
+        timeOfDaySelector.setDisable(true);
+        dayOfWeekSelector.setDisable(true);
+      }
+    });
   }
 
 
@@ -94,7 +120,7 @@ public class FilterSelectionController extends Navigator {
     calculateMetricsService.setOnFilterLabelStart(this::updateProgressLabel);
     applyChangesButton.setDisable(true);
     FilterCriteriaDTO filterCriteriaDTO = buildFilterCriteria();
-    operationLogger.log("Filters chosen and applied");
+    operationLogger.log("Apply changes button clicked");
 
     if (filterMode == FilterMode.METRICS) {
       logger.info("Calculating filtered metrics");
@@ -112,7 +138,7 @@ public class FilterSelectionController extends Navigator {
 
       if (newFilteredChart != null && chartViewer != null) {
         String filterApplied =
-            "Time granularity: " + filterCriteriaDTO.timeGranularity() + "   " +
+            "Time granularity: " + defaultTimeGranularity(filterCriteriaDTO) + "   " +
                     "Start Date: " + (filterCriteriaDTO.startDate() != null ? filterCriteriaDTO.startDate().toString() : " ") + "   " +
                     "End Date: " + (filterCriteriaDTO.endDate() != null ? filterCriteriaDTO.endDate().toString() : " ") + "   " +
                     "\n" +
@@ -122,12 +148,14 @@ public class FilterSelectionController extends Navigator {
                     "Contexts: " + (filterCriteriaDTO.contexts() != null ? filterCriteriaDTO.contexts().toString() : "All Context") + "   " +
                     "\n" +
                     "Bounce Type: " + globalSettings.getBounceType() + "   " +
-                    "Bounce Value: " + globalSettings.getBounceValue() + "   ";
+                    "Bounce Value: " + globalSettings.getBounceValue() + "   " +
+                    specialFilterSubtitle(filterCriteriaDTO);
 
         TextTitle subtitle = new TextTitle(filterApplied);
         subtitle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
         subtitle.setPaint(new Color(0, 0, 140));
         newFilteredChart.addSubtitle(subtitle);
+        operationLogger.log("Filters chosen: " + filterApplied);
       }
 
       if (newFilteredChart != null && chartViewer != null) {
@@ -135,6 +163,23 @@ public class FilterSelectionController extends Navigator {
       }
       stage.close();
     }
+  }
+
+  private String defaultTimeGranularity (FilterCriteriaDTO filterDTO){
+    if (filterDTO.timeGranularity() == null){
+      return "Per Day";
+    } else {
+      return filterDTO.timeGranularity();
+    }
+  }
+
+  private String specialFilterSubtitle (FilterCriteriaDTO filterDTO){
+    if ("Per Day".equals(filterDTO.timeGranularity()) && filterDTO.daysOfWeek() != null && !filterDTO.daysOfWeek().isEmpty()){
+      return "Days Of Week: " + filterDTO.daysOfWeek();
+    } else if ("Per Hour".equals(filterDTO.timeGranularity()) && filterDTO.timeOfDay() != null && !filterDTO.timeOfDay().isEmpty()){
+      return "Times Of Day: " + filterDTO.timeOfDay();
+    }
+    return "";
   }
 
   private void initMetrics(MetricsController metricsController) {
@@ -178,11 +223,14 @@ public class FilterSelectionController extends Navigator {
   private void applyFilterModeUI() {
     if (filterMode == FilterMode.METRICS) {
       granularityChooser.setVisible(false);
-      chartNameLabel.setVisible(false);
+      chartNameLabel.setText("Metrics Filtering");
+      dayOfWeekSelector.setVisible(false);
+      timeOfDaySelector.setVisible(false);
     }
     if (filterMode == FilterMode.CHART) {
       filterProgressBar.setVisible(false);
       filterProgressLabel.setVisible(false);
+      chartNameLabel.setText("Chart Filtering");
     }
   }
 
@@ -206,6 +254,16 @@ public class FilterSelectionController extends Navigator {
     Toggle selectedToggle = genderGroup.getSelectedToggle();
     String gender = selectedToggle != null ? selectedToggle.getUserData().toString() : null;
 
+    List<String> daysOfWeek =
+        dayOfWeekSelector.getCheckModel().getCheckedItems() != null
+            ? List.copyOf(dayOfWeekSelector.getCheckModel().getCheckedItems())
+            : List.of();
+
+    List<String> timeOfDay =
+        timeOfDaySelector.getValue() != null
+            ? List.of(timeOfDaySelector.getValue())
+            : List.of();
+
     logger.info("Building filter criteria with:");
     logger.info("Age Ranges: " + ageRanges);
     logger.info("Incomes: " + incomes);
@@ -214,9 +272,11 @@ public class FilterSelectionController extends Navigator {
     logger.info("Start Date: " + startDate);
     logger.info("End Date: " + endDate);
     logger.info("Gender: " + gender);
+    logger.info("Days Of Week: " + daysOfWeek);
+    logger.info("Times Of Day: " + timeOfDay);
 
     return new FilterCriteriaDTO(
-        ageRanges, incomes, contexts, timeGranularity, gender, startDate, endDate);
+        ageRanges, incomes, contexts, timeGranularity, gender, startDate, endDate, daysOfWeek, timeOfDay);
   }
 
   public void updateProgressBar(Double progress) {
@@ -232,6 +292,26 @@ public class FilterSelectionController extends Navigator {
   private enum FilterMode {
     METRICS,
     CHART
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      if (filterMode == FilterMode.METRICS) {
+        helpController.setupCarousel("Metric-Filter");
+        UIManager.showModalStage("Metrics Filter Help Guide", loader, false);
+        operationLogger.log("Metrics Filter Help Guide Icon clicked");
+      } else if (filterMode == FilterMode.CHART) {
+        helpController.setupCarousel("Chart-Filter");
+        UIManager.showModalStage("Charts Filter Help Guide", loader, false);
+        operationLogger.log("Charts Filter Help Guide Icon clicked");
+      }
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 }
 

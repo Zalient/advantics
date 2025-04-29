@@ -1,22 +1,32 @@
 package com.university.grp20.controller.settings;
 
 import com.university.grp20.UIManager;
+import com.university.grp20.controller.HelpGuideController;
+import com.university.grp20.controller.LoginController;
 import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SettingsController extends Navigator {
+  private static final Logger logger = LogManager.getLogger(LoginController.class);
   @FXML private Button metricSettingsButton;
   @FXML private Button userSettingsButton;
   @FXML private Button exportSettingsButton;
   @FXML private StackPane contentPane;
   private static boolean bounceChanged = false;
+  OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
 
   @FXML
   private void initialize() {
@@ -30,7 +40,22 @@ public class SettingsController extends Navigator {
   }
 
   @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Settings");
+      UIManager.showModalStage("Settings Page Help Guide", loader, false);
+      operationLogger.log("Settings Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
+  }
+
+  @FXML
   private void displayMetrics() {
+    operationLogger.log("Back button clicked");
     if (bounceChanged) {
       UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"));
     }
@@ -39,24 +64,31 @@ public class SettingsController extends Navigator {
 
   @FXML
   private void displayMetricSettings() {
+    operationLogger.log("Metric settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/MetricSettingsPane.fxml"));
   }
 
   @FXML
   private void displayUserSettings() {
+    operationLogger.log("User settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/UserSettingsPane.fxml"));
   }
 
   @FXML
   private void displayExportSettings() {
+    operationLogger.log("Export settings button clicked");
     UIManager.switchContent(
         contentPane, UIManager.createFxmlLoader("/fxml/settings/ExportSettingsPane.fxml"));
   }
 
   @FXML
-  private void displayThemeSettings() {}
+  private void displayThemeSettings() {
+    operationLogger.log("Theme settings button clicked");
+    UIManager.switchContent(
+        contentPane, UIManager.createFxmlLoader("/fxml/settings/ThemeSettingsPane.fxml"));
+  }
 
   @FXML
   private void displayLanguageSettings() {}

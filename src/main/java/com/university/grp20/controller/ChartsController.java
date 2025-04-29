@@ -38,6 +38,8 @@ public class ChartsController extends Navigator {
   @FXML private MenuButton addChartButton;
   private final Logger logger = LogManager.getLogger(ChartsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
+  @FXML private Button helpButton;
+
 
   @FXML
   private void initialize() {}
@@ -80,6 +82,24 @@ public class ChartsController extends Navigator {
   }
 
   @FXML
+  private void exportAllChartsAsPDF() {
+    operationLogger.log("exportAllChartsAsPDF button clicked");
+    try {
+      String filePath = ExportService.askForPDFFilename();
+      if (filePath != null) {
+        operationLogger.log("export all charts as pdf, filepath: " + filePath);
+      } else {
+        operationLogger.log("Chart export canceled");
+        return;
+      }
+      ExportService.exportAllChartAsPDF(addChartFlowPane, filePath);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @FXML
   private void showMetrics() {
     UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
     operationLogger.log("Metrics button clicked, displaying metrics dashboard");
@@ -102,7 +122,7 @@ public class ChartsController extends Navigator {
     if (!User.getRole().equals("Viewer")) {
       operationLogger.log("Charts filter button clicked, displaying filter options");
       try {
-        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionModal.fxml");
+        FXMLLoader filterLoader = UIManager.createFxmlLoader("/fxml/FilterSelectionPopup.fxml");
         filterLoader.load();
 
         FilterSelectionController filterController = filterLoader.getController();
@@ -155,7 +175,6 @@ public class ChartsController extends Navigator {
     GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.conversionsChart();
     addChart(chart, "Conversions");
-    operationLogger.log("Conversions chart chosen and displayed");
   }
 
   @FXML
@@ -243,7 +262,7 @@ public class ChartsController extends Navigator {
     chartViewer.setUserData(metricType);
     chartViewer.addEventHandler(ScrollEvent.SCROLL, Event::consume);
 
-    VBox chartBox;
+    VBox chartBox = new VBox();
     HBox buttonBox = new HBox();
 
     if (chart.getPlot() instanceof CategoryPlot) {
@@ -254,39 +273,63 @@ public class ChartsController extends Navigator {
 
       Button filterButton = new Button("Filter");
       String campaignToUse = User.getSelectedCampaign();
+      filterButton.getStyleClass().add("chart-button");
+      filterButton.setPrefSize(70, 25);
       filterButton.setOnAction(e -> showFilterSelection(chartViewer, campaignToUse));
       buttonBox.getChildren().add(0, filterButton);
     }
 
     Button exportPDFButton = new Button("Export as PDF");
+    exportPDFButton.getStyleClass().add("export-button");
+    exportPDFButton.setPrefSize(110, 25);
     exportPDFButton.setOnAction(
         e -> {
+          operationLogger.log(metricType + " chart export as PDF button clicked");
           try {
             String filePath = ExportService.askForPDFFilename();
             ExportService.chartToPDF(chartViewer.getChart(), filePath);
+            operationLogger.log( metricType + " chart successfully exported as PDF to " + filePath);
+            UIManager.showAlert("Success", metricType + " chart successfully exported as PDF to " + filePath);
           } catch (IOException ex) {
             logger.error("Error exporting as PDF: " + ex);
+            operationLogger.log("Error exporting " + metricType + " chart as PDF " + ex);
+            UIManager.showAlert("Error", "Error exporting as PDF " + ex);
           }
         });
 
     Button exportCSVButton = new Button("Export as CSV");
+    exportCSVButton.getStyleClass().add("export-button");
+    exportCSVButton.setPrefSize(110, 25);
     exportCSVButton.setOnAction(
         e -> {
+          operationLogger.log(metricType + " chart export as CSV button clicked");
           try {
             String filePath = ExportService.askForCSVFilename();
             ExportService.chartToCSV(chartViewer.getChart(), filePath);
+            operationLogger.log( metricType + " chart successfully exported as CSV to " + filePath);
+            UIManager.showAlert("Success", metricType + " chart successfully exported as CSV to " + filePath);
           } catch (IOException ex) {
             logger.error("Error exporting as CSV " + ex);
+            operationLogger.log("Error exporting " + metricType + " chart as CSV " + ex);
+            UIManager.showAlert("Error", "Error exporting as CSV " + ex);
           }
         });
 
-    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton);
 
     Label campaignLabel = new Label("Campaign: " + User.getSelectedCampaign());
-    buttonBox.getChildren().add(campaignLabel);
+
+    Button deleteButton = new Button("Delete");
+    deleteButton.getStyleClass().add("chart-button");
+    deleteButton.setPrefSize(70, 25);
+    deleteButton.setOnAction(e -> {
+      operationLogger.log("Delete button clicked");
+      addChartFlowPane.getChildren().remove(chartBox);
+    });
+
+    buttonBox.getChildren().addAll(exportPDFButton, exportCSVButton, deleteButton, campaignLabel);
 
     buttonBox.setSpacing(10);
-    chartBox = new VBox(buttonBox, chartViewer);
+    chartBox.getChildren().addAll(buttonBox, chartViewer);
 
     addChartFlowPane.getChildren().add(chartBox);
   }
@@ -295,7 +338,7 @@ public class ChartsController extends Navigator {
     GenerateChartService.setCampaignName(User.getSelectedCampaign());
     JFreeChart chart = GenerateChartService.clickCostHistogram(numBins);
     addChart(chart, "Click Cost Histogram");
-    operationLogger.log("Bin size chosen and histogram displayed");
+    operationLogger.log("Bin size of "+ numBins +" chosen and histogram displayed");
 
     XYPlot plot = (XYPlot) chart.getPlot();
     XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
@@ -303,5 +346,19 @@ public class ChartsController extends Navigator {
     renderer.setDrawBarOutline(true);
     renderer.setDefaultOutlinePaint(Color.BLACK);
     renderer.setSeriesPaint(0, new Color(173, 216, 230));
+  }
+
+  @FXML
+  private void showHelpGuide() {
+    FXMLLoader loader = UIManager.createFxmlLoader("/fxml/HelpGuidePane.fxml");
+    try {
+      loader.load();
+      HelpGuideController helpController = loader.getController();
+      helpController.setupCarousel("Charts");
+      UIManager.showModalStage("Charts Page Help Guide", loader, false);
+      operationLogger.log("Charts Page Help Guide Icon clicked");
+    } catch (IOException e) {
+      logger.error("Failed to open Help Guide", e);
+    }
   }
 }
