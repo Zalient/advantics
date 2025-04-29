@@ -318,6 +318,7 @@ public class ChartsController extends Navigator {
 
 
     Label campaignLabel = new Label("Campaign: " + User.getSelectedCampaign());
+    campaignLabel.getStyleClass().add("bold-label");
 
     Button deleteButton = new Button("Delete");
     deleteButton.getStyleClass().add("chart-button");
