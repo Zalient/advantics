@@ -5,6 +5,7 @@ import com.university.grp20.model.*;
 import java.io.IOException;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -199,9 +200,21 @@ public class MetricsController extends Navigator {
   @FXML
   private void handleResetClick(){
     operationLogger.log("Reset dashboard button clicked");
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
+    globalSettings.setMetricVisibility("impressions", true);
+    globalSettings.setMetricVisibility("clicks", true);
+    globalSettings.setMetricVisibility("uniques", true);
+    globalSettings.setMetricVisibility("bounces", true);
+    globalSettings.setMetricVisibility("conversions", true);
+    globalSettings.setMetricVisibility("totalCost", true);
+    globalSettings.setMetricVisibility("ctr", true);
+    globalSettings.setMetricVisibility("cpa", true);
+    globalSettings.setMetricVisibility("cpc", true);
+    globalSettings.setMetricVisibility("cpm", true);
+    globalSettings.setMetricVisibility("bounceRate", true);
     MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
     setMetrics(defaultMetrics);
-    UIManager.showAlert("Success", "Dashboard successfully reset to default");
+    UIManager.showAlert("Success", "Dashboard successfully reset to default. Filters removed.");
   }
 
   @FXML
@@ -216,5 +229,12 @@ public class MetricsController extends Navigator {
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);
     }
+  }
+
+  public void handleUpdateClick(ActionEvent actionEvent) {
+    operationLogger.log("Update dashboard button clicked");
+    MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
+    setMetrics(defaultMetrics);
+    UIManager.showAlert("Success", "Dashboard successfully updated. Filters removed.");
   }
 }
