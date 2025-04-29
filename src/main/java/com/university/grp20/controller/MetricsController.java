@@ -32,7 +32,6 @@ public class MetricsController extends Navigator {
   private final Logger logger = LogManager.getLogger(MetricsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
   private MetricsDTO metricsDTO;
-  @FXML private VBox bounceMsgBox;
   @FXML private Label selectedDatabaseLabel;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
 
@@ -52,14 +51,10 @@ public class MetricsController extends Navigator {
         });
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
-    bounceMsgBox.setVisible(false);
-    selectedDatabaseLabel.setText("Selected Database: " + User.getSelectedCampaign().replace(".db", ""));
+    selectedDatabaseLabel.setText("Selected Campaign: " + User.getSelectedCampaign().replace(".db", ""));
   }
 
-  public void showBounceMsgBox(){
-    bounceMsgBox.setVisible(true);
 
-  }
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;

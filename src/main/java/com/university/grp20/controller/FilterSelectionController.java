@@ -49,8 +49,7 @@ public class FilterSelectionController extends Navigator {
     femaleRadioButton.setToggleGroup(genderGroup);
     maleRadioButton.setUserData("Male");
     femaleRadioButton.setUserData("Female");
-    startDatePicker.setValue(DBHelper.fetchMinDate());
-    endDatePicker.setValue(DBHelper.fetchMaxDate());
+
 
     dayOfWeekSelector.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
     timeOfDaySelector.getItems().addAll("Morning 06:00 - 11:59", "Afternoon 12:00 - 17:59", "Night 18:00 - 05:59", "None");
@@ -90,6 +89,8 @@ public class FilterSelectionController extends Navigator {
    // if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
     //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
     initMetrics(metricsController);
+    startDatePicker.setValue(DBHelper.fetchMinDate(User.getSelectedCampaign()));
+    endDatePicker.setValue(DBHelper.fetchMaxDate(User.getSelectedCampaign()));
   }
 
   public void init(
@@ -98,6 +99,8 @@ public class FilterSelectionController extends Navigator {
     //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
     initChart(chartViewer);
     this.campaignName = campaignName;
+    startDatePicker.setValue(DBHelper.fetchMinDate(campaignName));
+    endDatePicker.setValue(DBHelper.fetchMaxDate(campaignName));
   }
 
 
