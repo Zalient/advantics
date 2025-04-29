@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javafx.scene.layout.VBox;
 
 public class UIManager {
   private static Object controller;
