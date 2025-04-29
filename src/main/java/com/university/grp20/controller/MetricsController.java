@@ -42,19 +42,19 @@ public class MetricsController extends Navigator {
   @FXML
   private void initialize() {
     calculateMetricsService.setOnFilterStart(
-        progress -> {
-          /* no-op */
-        });
+            progress -> {
+              /* no-op */
+            });
     calculateMetricsService.setOnFilterLabelStart(
-        text -> {
-          /* no-op */
-        });
+            text -> {
+              /* no-op */
+            });
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
     selectedDatabaseLabel.setText("Selected Campaign: " + User.getSelectedCampaign().replace(".db", ""));
+
+    updateMetricVisibility();
   }
-
-
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
@@ -69,6 +69,45 @@ public class MetricsController extends Navigator {
     cpcLabel.setText(String.format("£%.2f", metricsDTO.cpc() / 100));
     cpmLabel.setText(String.format("£%.2f", metricsDTO.cpm() / 100));
     bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.bounceRate() * 100));
+
+    updateMetricVisibility();
+  }
+
+  public void updateMetricVisibility() {
+    GlobalSettingsStorage settings = GlobalSettingsStorage.getInstance();
+
+    impressionsLabel.getParent().setVisible(settings.isMetricVisible("impressions"));
+    impressionsLabel.getParent().setManaged(settings.isMetricVisible("impressions"));
+
+    clicksLabel.getParent().setVisible(settings.isMetricVisible("clicks"));
+    clicksLabel.getParent().setManaged(settings.isMetricVisible("clicks"));
+
+    uniquesLabel.getParent().setVisible(settings.isMetricVisible("uniques"));
+    uniquesLabel.getParent().setManaged(settings.isMetricVisible("uniques"));
+
+    bouncesLabel.getParent().setVisible(settings.isMetricVisible("bounces"));
+    bouncesLabel.getParent().setManaged(settings.isMetricVisible("bounces"));
+
+    conversionsLabel.getParent().setVisible(settings.isMetricVisible("conversions"));
+    conversionsLabel.getParent().setManaged(settings.isMetricVisible("conversions"));
+
+    totalLabel.getParent().setVisible(settings.isMetricVisible("totalCost"));
+    totalLabel.getParent().setManaged(settings.isMetricVisible("totalCost"));
+
+    ctrLabel.getParent().setVisible(settings.isMetricVisible("ctr"));
+    ctrLabel.getParent().setManaged(settings.isMetricVisible("ctr"));
+
+    cpaLabel.getParent().setVisible(settings.isMetricVisible("cpa"));
+    cpaLabel.getParent().setManaged(settings.isMetricVisible("cpa"));
+
+    cpcLabel.getParent().setVisible(settings.isMetricVisible("cpc"));
+    cpcLabel.getParent().setManaged(settings.isMetricVisible("cpc"));
+
+    cpmLabel.getParent().setVisible(settings.isMetricVisible("cpm"));
+    cpmLabel.getParent().setManaged(settings.isMetricVisible("cpm"));
+
+    bounceRateLabel.getParent().setVisible(settings.isMetricVisible("bounceRate"));
+    bounceRateLabel.getParent().setManaged(settings.isMetricVisible("bounceRate"));
   }
 
   @FXML
