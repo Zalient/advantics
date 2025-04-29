@@ -83,7 +83,7 @@ public class DBHelper {
 
   public static LocalDate fetchMinDate() {
     String query = "SELECT MIN(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection()) {
+    try (Connection conn = getConnection(campaignName)) {
       return fetchDate(conn, query);
     } catch (SQLException e) {
       throw new RuntimeException("Unable to obtain DB connection", e);
@@ -92,7 +92,7 @@ public class DBHelper {
 
   public static LocalDate fetchMaxDate() {
     String query = "SELECT MAX(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection()) {
+    try (Connection conn = getConnection(campaignName)) {
       return fetchDate(conn, query);
     } catch (SQLException e) {
       throw new RuntimeException("Unable to obtain DB connection", e);
