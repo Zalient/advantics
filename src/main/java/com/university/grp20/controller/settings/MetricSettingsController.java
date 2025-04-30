@@ -39,13 +39,6 @@ public class MetricSettingsController {
     bounceDefLabel.setText("Current Setting: " + bounceType + " : " + bounceValue);
     pagesViewedButton.setToggleGroup(bounceGroup);
     timeSpentButton.setToggleGroup(bounceGroup);
-
-    if (bounceType.equals("Pages Viewed")) {
-      pagesViewedButton.setSelected(true);
-    } else {
-      timeSpentButton.setSelected(true);
-    }
-
     initializeCheckboxes();
   }
 
@@ -143,8 +136,9 @@ public class MetricSettingsController {
       metricsController.updateMetricVisibility();
     }
   }
-
+ /**
   public void init(MetricsController metricsController) {
     this.metricsController = metricsController;
   }
+  **/
 }

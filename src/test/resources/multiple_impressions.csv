@@ -1,0 +1,19 @@
+Date,ID,Gender,Age,Income,Context,Impression Cost
+2015-01-01 00:00:00,0,Male,<25,Low,News,0
+2015-01-01 00:00:01,0,Male,<25,Low,Shopping,1
+2015-01-01 00:00:02,0,Male,<25,Low,Social Media,2
+2015-01-02 00:00:00,1,Female,25-34,Medium,Blog,3
+2015-01-02 00:00:01,1,Female,25-34,Medium,Hobbies,4
+2015-01-02 00:00:02,1,Female,25-34,Medium,Travel,5
+2015-01-03 00:00:00,2,Male,35-44,High,News,6
+2015-01-03 00:00:01,2,Male,35-44,High,Shopping,7
+2015-01-03 00:00:02,2,Male,35-44,High,Social Media,8
+2015-01-04 00:00:00,3,Female,45-54,Low,Blog,9
+2015-01-04 00:00:01,3,Female,45-54,Low,Hobbies,10
+2015-01-04 00:00:02,3,Female,45-54,Low,Travel,11
+2015-01-05 00:00:00,4,Male,>54,Medium,News,12
+2015-01-05 00:00:01,4,Male,>54,Medium,Shopping,13
+2015-01-05 00:00:02,4,Male,>54,Medium,Social Media,14
+2015-01-06 00:00:00,5,Female,<25,High,Blog,15
+2015-01-06 00:00:01,5,Female,<25,High,Hobbies,16
+2015-01-06 00:00:02,5,Female,<25,High,Travel,17

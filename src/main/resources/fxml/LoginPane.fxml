@@ -30,7 +30,7 @@
         <children>
             <HBox alignment="CENTER" GridPane.columnIndex="1">
                 <children>
-                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Login">
+                    <Label fx:id="loginTitle" alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Login">
                         <font>
                             <Font size="40.0" />
                         </font>
@@ -47,7 +47,7 @@
             </HBox>
             <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <children>
-                    <Label styleClass="bold-label" text="Username:">
+                    <Label fx:id="usernameLabel" styleClass="bold-label" text="Username:">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -60,7 +60,7 @@
             </VBox>
             <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
-                    <Label styleClass="bold-label" text="Password:">
+                    <Label fx:id="passwordLabel" styleClass="bold-label" text="Password:">
                         <font>
                             <Font size="24.0" />
                         </font>

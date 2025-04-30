@@ -23,6 +23,6 @@ Thumbs.db
 *.tmp
 hs_err_pid*
 
-*.db
+
 dependency-reduced-pom.xml
 operationLogs

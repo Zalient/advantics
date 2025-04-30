@@ -370,7 +370,7 @@ public class FileImportService {
       throw new RuntimeException("Error during import: " + e.getMessage(), e);
     }
   }
-
+ /**
   public boolean isDataLoaded() {
     Connection conn = null;
     boolean impressionTableExists, clickTableExists, serverTableExists;
@@ -410,6 +410,7 @@ public class FileImportService {
 
     return (impressionTableExists && clickTableExists && serverTableExists);
   }
+  **/
 
   public void setOnUploadStart(ProgressBarListener listener) {
     this.progressBarListener = listener;

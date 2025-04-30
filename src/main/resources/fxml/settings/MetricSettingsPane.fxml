@@ -22,7 +22,7 @@
                   <children>
                       <VBox spacing="10.0">
                           <children>
-                              <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Bounce Definition">
+                              <Label fx:id = "bounceDefTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Bounce Definition">
                                   <font>
                                       <Font size="20.0" />
                                   </font>
