@@ -14,7 +14,7 @@
 
 <AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>
-        <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Role:">
+        <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" text="Role:">
 
             <font>
                 <Font size="32.0" />
@@ -24,7 +24,7 @@
             <children>
                 <VBox alignment="CENTER" prefHeight="566.0" prefWidth="909.0" spacing="30.0">
                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Add New Campaign">
+                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Add New Campaign">
                             <font>
                                 <Font size="40.0" />
                             </font>
@@ -33,22 +33,22 @@
                             <children>
                                 <VBox alignment="CENTER" prefHeight="190.0" prefWidth="212.0" spacing="15.0">
                                     <children>
-                                        <Label alignment="CENTER" text="Campaign Name">
+                                        <Label alignment="CENTER" styleClass="bold-label" text="Campaign Name">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" text="Impression Log">
+                                        <Label alignment="CENTER" styleClass="bold-label" text="Impression Log">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" text="Click Log">
+                                        <Label alignment="CENTER" styleClass="bold-label" text="Click Log">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" text="Server Log">
+                                        <Label alignment="CENTER" styleClass="bold-label" text="Server Log">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
@@ -57,18 +57,18 @@
                                 </VBox>
                                 <VBox alignment="CENTER" prefHeight="190.0" prefWidth="154.0" spacing="10.0">
                                     <children>
-                                        <TextField fx:id="campaignNameTextField" prefWidth="120.0" />
-                                        <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Select...">
+                                        <TextField fx:id="campaignNameTextField" prefWidth="120.0" styleClass="custom-text-field" />
+                                        <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" stylesheets="@../styles/styles.css" text="Select...">
                                             <font>
                                                 <Font size="20.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="clickLogButton" mnemonicParsing="false" onAction="#handleClickUpload" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Select...">
+                                        <Button fx:id="clickLogButton" mnemonicParsing="false" onAction="#handleClickUpload" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                             <font>
                                                 <Font size="20.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="serverLogButton" mnemonicParsing="false" onAction="#handleServerUpload" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Select...">
+                                        <Button fx:id="serverLogButton" mnemonicParsing="false" onAction="#handleServerUpload" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                             <font>
                                                 <Font size="20.0" />
                                             </font>
@@ -102,14 +102,14 @@
                                 <Insets left="250.0" />
                             </VBox.margin>
                         </HBox>
-                        <Button fx:id="nextButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startImport" prefHeight="50.0" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Next">
+                        <Button fx:id="nextButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startImport" prefHeight="50.0" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Next">
                             <font>
                                 <Font size="20.0" />
                             </font>
                         </Button>
                         <VBox alignment="CENTER">
                             <children>
-                                <ProgressBar fx:id="importProgressBar" prefHeight="25.0" prefWidth="500.0" progress="0.0" styleClass="custom-progress-bar" stylesheets="@../styles/styles.css">
+                                <ProgressBar fx:id="importProgressBar" prefHeight="25.0" prefWidth="500.0" progress="0.0" styleClass="custom-progress-bar">
                                     <VBox.margin>
                                         <Insets />
                                     </VBox.margin>
@@ -128,7 +128,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="566.0" prefWidth="342.0">
                     <children>
-                        <Label fx:id="selectCampaignLabel" alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
+                        <Label fx:id="selectCampaignLabel" alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
                             <font>
                                 <Font size="30.0" />
                             </font>
@@ -151,7 +151,7 @@
         </HBox>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Logout">
+                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" style="-fx-font-szie: 20;" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Logout">
 
                     <font>
                         <Font size="20.0" />

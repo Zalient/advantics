@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ViewerFileSelectionController">
     <children>
-        <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Role:">
+        <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" text="Role:">
             <font>
                 <Font size="32.0" />
             </font>
@@ -21,7 +21,7 @@
             <children>
                 <VBox alignment="CENTER" prefHeight="566.0" prefWidth="342.0">
                     <children>
-                        <Label fx:id="selectCampaignLabel" alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" stylesheets="@../styles/styles.css" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
+                        <Label fx:id="selectCampaignLabel" alignment="TOP_LEFT" prefHeight="116.0" prefWidth="307.0" styleClass="bold-label" text="Select Uploaded Campaign" textAlignment="CENTER" wrapText="true">
                             <font>
                                 <Font size="30.0" />
                             </font>
@@ -44,7 +44,7 @@
         </HBox>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Logout">
+                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" styleClass="custom-button" text="Logout">
                     <font>
                         <Font size="20.0" />
                     </font>
