@@ -166,10 +166,8 @@ public class SettingsFlowTest extends ApplicationTest {
 
         clickOn("#newUsernameField").eraseText(20).write("testNewUser");
         clickOn("#newPasswordField").eraseText(20).write("testNewPass");
-        clickOn("#newRoleMenu");
-        sleep(500, TimeUnit.MILLISECONDS);
-        clickOn("Viewer");
-
+        interact(() -> lookup("#newRoleMenu").queryComboBox().setValue("Viewer"));
+        
         clickOn("#addUserButton");
 
         verifyThat(".alert", isVisible());
