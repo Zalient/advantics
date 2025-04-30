@@ -38,7 +38,6 @@ public class FileSelectionController extends Navigator {
   @FXML private VBox uploadedCampaignVBox;
   @FXML private Label selectCampaignLabel;
 
-  @FXML private Button skipButton;
   @FXML private Button helpButton;
 
   private static final Logger logger = LogManager.getLogger(FileSelectionController.class);

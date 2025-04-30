@@ -50,7 +50,7 @@
                                     <Font size="20.0" />
                                 </font>
                             </Button>
-                     <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportAllChartsAsPDF" prefHeight="25.0" prefWidth="115.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Save All Charts">
+                     <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" fx:id="saveAllChartsButton" onAction="#exportAllChartsAsPDF" prefHeight="25.0" prefWidth="115.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Save All Charts">
                         <HBox.margin>
                            <Insets />
                         </HBox.margin>

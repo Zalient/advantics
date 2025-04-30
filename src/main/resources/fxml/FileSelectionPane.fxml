@@ -26,7 +26,7 @@
                   <children>
                   <HBox alignment="CENTER">
                      <children>
-                            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Add Campaign">
+                            <Label fx:id="addNewCampaignTitle" alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Add New Campaign">
                                 <font>
                                     <Font size="40.0" />
                                 </font>
@@ -40,22 +40,22 @@
                           <children>
                               <VBox alignment="TOP_CENTER" prefHeight="190.0" prefWidth="212.0" spacing="20.0">
                                   <children>
-                              <Label alignment="CENTER" styleClass="bold-label" text="Campaign Name">
+                              <Label fx:id="campaignNameLabel" alignment="CENTER" styleClass="bold-label" text="Campaign Name">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Impression Log">
+                                      <Label fx:id="impressionLogLabel" alignment="CENTER" styleClass="bold-label" text="Impression Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
                                       </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Click Log">
+                                      <Label fx:id="clickLogLabel" alignment="CENTER" styleClass="bold-label" text="Click Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
                                       </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Server Log">
+                                      <Label fx:id="serverLogLabel" alignment="CENTER" styleClass="bold-label" text="Server Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
