@@ -32,7 +32,7 @@
             <ImageView fx:id="imageCarousel" fitHeight="383.0" fitWidth="681.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" />
          </children>
       </StackPane>
-      <Label fx:id="guideTitleLabel" alignment="CENTER" layoutX="297.0" layoutY="14.0" prefHeight="34.0" prefWidth="306.0" text="Page Guide">
+      <Label fx:id="guideTitleLabel" alignment="TOP_CENTER" layoutX="296.0" layoutY="14.0" prefHeight="34.0" prefWidth="306.0" styleClass="bold-label" text="Page Guide" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>

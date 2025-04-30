@@ -87,7 +87,7 @@ public class MetricsPaneTest extends ApplicationTest {
     @Test
     void testResetDashButtonExist(){
         verifyThat("#resetDashButton", isVisible());
-        verifyThat("#resetDashButton", hasText("Reset Dashboard"));
+        verifyThat("#resetDashButton", hasText("Reset Filter"));
         verifyThat("#resetDashButton", isEnabled());
         verifyThat("#resetDashButton", node -> node instanceof Button);
     }
