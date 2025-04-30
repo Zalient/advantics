@@ -27,13 +27,9 @@ public class ViewerFileSelectionController extends Navigator {
   @FXML private Label selectCampaignLabel;
 
   private static final Logger logger = LogManager.getLogger(ViewerFileSelectionController.class);
-  private final FileImportService fileImportService = new FileImportService();
-  private final FileChooser fileChooser = new FileChooser();
   private final OperationLogger operationLogger = new OperationLogger();
 
   private Set<String> existingCampaigns = new HashSet<>();
-
-  String campaignName = "";
 
   @FXML
   public void initialize() {

@@ -24,31 +24,31 @@
          <children>
               <VBox alignment="CENTER" prefHeight="566.0" prefWidth="909.0" spacing="30.0">
                   <children>
-                      <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Add New Campaign">
+                      <Label fx:id="addNewCampaignTitle" alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="Add New Campaign">
                           <font>
                               <Font size="40.0" />
                           </font>
                       </Label>
                       <HBox alignment="CENTER" prefWidth="72.0">
                           <children>
-                              <VBox alignment="CENTER" prefHeight="190.0" prefWidth="212.0" spacing="15.0">
+                              <VBox alignment="CENTER" prefHeight="190.0" prefWidth="201.0" spacing="15.0">
                                   <children>
-                              <Label alignment="CENTER" styleClass="bold-label" text="Campaign Name">
+                              <Label fx:id="campaignNameLabel" alignment="CENTER" styleClass="bold-label" text="Campaign Name">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Impression Log">
+                                      <Label fx:id="impressionLogLabel" alignment="CENTER" styleClass="bold-label" text="Impression Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
                                       </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Click Log">
+                                      <Label fx:id="clickLogLabel" alignment="CENTER" styleClass="bold-label" text="Click Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
                                       </Label>
-                                      <Label alignment="CENTER" styleClass="bold-label" text="Server Log">
+                                      <Label fx:id="serverLogLabel" alignment="CENTER" styleClass="bold-label" text="Server Log">
                                           <font>
                                               <Font size="24.0" />
                                           </font>
@@ -57,7 +57,10 @@
                               </VBox>
                               <VBox alignment="CENTER" prefHeight="190.0" prefWidth="154.0" spacing="10.0">
                                   <children>
-                              <TextField fx:id="campaignNameTextField" prefWidth="120.0" />
+                              <TextField fx:id="campaignNameTextField" prefWidth="120.0">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin></TextField>
                                       <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" styleClass="blue-button" text="Select...">
                                           <font>
                                               <Font size="20.0" />

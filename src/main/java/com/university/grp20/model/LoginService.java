@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -17,6 +16,7 @@ import java.util.Base64;
 
 public class LoginService {
   private static final Logger logger = LogManager.getLogger(LoginService.class);
+  private static String userDB = "./users.db";
 
   private LoginListener loginListener;
 
@@ -129,11 +129,15 @@ public class LoginService {
     }
   }
 
+  public static void useTestDB(String dbName) {
+    userDB = dbName;
+  }
+
   public Connection connectDatabase() {
     Connection conn;
     try {
       // Connect to the database and commence setup
-      conn = DriverManager.getConnection("jdbc:sqlite:./users.db");
+      conn = DriverManager.getConnection("jdbc:sqlite:" + userDB);
       setupDatabase(conn);
       logger.info("Database connected");
     } catch (SQLException e) {
@@ -216,6 +220,7 @@ public class LoginService {
     }
   }
 
+  /**
   public boolean isDataLoaded() {
     Connection conn = null;
     boolean impressionTableExists, clickTableExists, serverTableExists;
@@ -255,6 +260,7 @@ public class LoginService {
 
     return (impressionTableExists && clickTableExists && serverTableExists);
   }
+   **/
 
   public void setOnLogin(LoginListener listener) {
     this.loginListener = listener;
@@ -430,6 +436,7 @@ public class LoginService {
     return success;
   }
 
+  /**
   public String getUserPassword(String username) {
 
     Connection conn = null;
@@ -459,7 +466,9 @@ public class LoginService {
 
     return password;
   }
+   **/
 
+  /**
   public String getUserRole(String username) {
 
     Connection conn = null;
@@ -489,4 +498,5 @@ public class LoginService {
 
     return role;
   }
+   **/
 }

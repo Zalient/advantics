@@ -16,8 +16,6 @@ public class UserSettingsController {
   @FXML private ComboBox<String> newRoleMenu;
   @FXML private ComboBox<String> currentUsersMenu;
   @FXML private ComboBox<String> changeRoleMenu;
-  @FXML private Button editUser;
-  @FXML private Button addUser;
   private final LoginService loginService = new LoginService();
   @FXML private PasswordField changePasswordField;
   OperationLogger operationLogger = new OperationLogger();
@@ -61,7 +59,7 @@ public class UserSettingsController {
           operationLogger.log("Error adding user");
         }
       } else {
-        UIManager.showError("Username" + enteredUsername + " already in use");
+        UIManager.showError("Username " + enteredUsername + " already in use");
         operationLogger.log("Error as Username: " + enteredUsername + " already in use");
       }
     }

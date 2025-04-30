@@ -75,11 +75,11 @@ public class CalculateMetricsService {
     double bounces = metricResultsMap.get("bounces");
     double conversions = metricResultsMap.get("conversions");
     double totalCost = metricResultsMap.get("impression cost") + metricResultsMap.get("click cost");
-    double ctr = clicks / impressions;
-    double cpa = totalCost / conversions;
-    double cpc = totalCost / clicks;
-    double cpm = (totalCost / impressions) * 1000;
-    double bounceRate = bounces / clicks;
+    double ctr = (impressions == 0) ? 0.0 : clicks / impressions;
+    double cpa = (conversions == 0) ? 0.0 : totalCost / conversions;
+    double cpc = (clicks == 0) ? 0.0 : totalCost / clicks;
+    double cpm = (impressions == 0) ? 0.0 : (totalCost / impressions) * 1000;
+    double bounceRate = (clicks == 0) ? 0.0 : bounces/clicks;
     return new MetricsDTO(
         impressions,
         clicks,
@@ -188,6 +188,7 @@ public class CalculateMetricsService {
     appendContextFilter(filterQuery, filterCriteriaDTO, "u");
     filterQuery.append(" GROUP BY u.ID, s.EntryDate");
     filterQuery.append(")");
+    logger.info(filterQuery.toString());
     return filterQuery.toString();
   }
 

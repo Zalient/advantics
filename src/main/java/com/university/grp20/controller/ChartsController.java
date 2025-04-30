@@ -45,7 +45,6 @@ public class ChartsController extends Navigator {
   private void initialize() {}
 
   @FXML
-  MenuItem addImpressionsChartButton,addClicksChartButton, addUniquesChartButton,addBouncesChartButton, addConversionsChartButton, addTotalCostChartButton, addCTRChartButton, addCPAChartButton, addCPCChartButton, addCPMChartButton, addBounceRateChartButton, addClickCostHistogramButton;
   public void disableForViewer() {
     logger.info("disableForViewer called");
 
@@ -235,20 +234,29 @@ public class ChartsController extends Navigator {
     ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
     numBinsDialog.getDialogPane().getButtonTypes().setAll(applyButton, cancelButton);
 
-    numBinsDialog.setResultConverter(
-        dialogButton -> {
-          if (dialogButton == applyButton) {
-            String input = numBinsField.getText();
-            try {
-              return Integer.parseInt(input);
-            } catch (NumberFormatException ex) {
-              Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setContentText("Input is not an integer, wrong type");
-              alert.showAndWait();
-            }
+    numBinsDialog.setResultConverter(dialogButton -> {
+      if (dialogButton == applyButton) {
+        String input = numBinsField.getText();
+        try {
+          int numOfBins = Integer.parseInt(input);
+          if (numOfBins <= 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setContentText("Input is less than 0, please enter a positive value");
+            alert.showAndWait();
+            return null;
           }
+          return numOfBins;
+        } catch (NumberFormatException ex) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error!");
+          alert.setContentText("Input is not an integer, wrong type");
+          alert.showAndWait();
           return null;
-        });
+        }
+      }
+      return null;
+    });
 
     Optional<Integer> numBinsRes = numBinsDialog.showAndWait();
     numBinsRes.ifPresent(this::addHistogram);

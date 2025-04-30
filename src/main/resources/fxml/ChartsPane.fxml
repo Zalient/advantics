@@ -47,7 +47,7 @@
                             </Button>
                         </children>
                     </HBox>
-               <Button mnemonicParsing="false" onAction="#exportAllChartsAsPDF" prefHeight="25.0" prefWidth="95.0" styleClass="exportAllButton" text="Save All Charts">
+               <Button mnemonicParsing="false" fx:id="saveAllChartsButton" onAction="#exportAllChartsAsPDF" prefHeight="25.0" prefWidth="95.0" styleClass="exportAllButton" text="Save All Charts">
                   <HBox.margin>
                      <Insets left="10.0" />
                   </HBox.margin>

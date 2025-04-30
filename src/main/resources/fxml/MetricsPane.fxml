@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.MetricsController">
 
     <children>
         <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -242,7 +242,7 @@
             <children>
                 <VBox spacing="30.0">
                     <children>
-                        <Button fx:id="pdfButton" mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as PDF">
+                        <Button fx:id="pdfButton" mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Save as PDF">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -250,7 +250,7 @@
                                 <Insets />
                             </VBox.margin>
                         </Button>
-                        <Button fx:id="csvButton" mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Save as CSV">
+                        <Button fx:id="csvButton" mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Save as CSV">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -293,7 +293,7 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" layoutX="59.0" layoutY="289.0" prefHeight="158.0" prefWidth="255.0" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Selected Campaign:" wrapText="true">
+      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" layoutX="59.0" layoutY="289.0" prefHeight="158.0" prefWidth="255.0" styleClass="blue-button" text="Selected Campaign:" wrapText="true">
          <font>
             <Font size="26.0" />
          </font>

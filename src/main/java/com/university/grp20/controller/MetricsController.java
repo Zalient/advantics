@@ -92,7 +92,7 @@ public class MetricsController extends Navigator {
       loader.load();
 
       FilterSelectionController controller = filterLoader.getController();
-      controller.init("Metrics", this, null);
+      controller.init("Metrics", this, null, User.getSelectedCampaign());
 
       UIManager.showModalStage("Metrics Filtering", filterLoader, false);
     } catch (IOException e) {

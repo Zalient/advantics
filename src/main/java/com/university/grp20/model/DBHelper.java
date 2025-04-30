@@ -23,12 +23,13 @@ public class DBHelper {
   }
 
   public static Connection getConnection(String campaignName) throws SQLException {
-    if (testConnection != null) {
+    if (testConnection != null && !testConnection.isClosed()) {
       return testConnection;
     }
     changeDatabase(campaignName);
     return dataSource.getConnection();
   }
+
 
   public static void useTestConnection(Connection conn) {
     testConnection = conn;
@@ -79,35 +80,5 @@ public class DBHelper {
 
   public static int getBatchSize() {
     return BATCH_SIZE;
-  }
-
-  //min and max date may need correcting
-  public static LocalDate fetchMinDate(String campaignName) {
-    String query = "SELECT MIN(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection(campaignName)) {
-      return fetchDate(conn, query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Unable to obtain DB connection", e);
-    }
-  }
-
-  public static LocalDate fetchMaxDate(String campaignName) {
-    String query = "SELECT MAX(Date)" + " FROM impressionLog";
-    try (Connection conn = getConnection(campaignName)) {
-      return fetchDate(conn, query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Unable to obtain DB connection", e);
-    }
-  }
-
-  private static LocalDate fetchDate(Connection conn, String query) {
-    try (ResultSet rs = executeQuery(conn, query)) {
-      if (rs.next()) {
-        return rs.getDate(1).toLocalDate();
-      }
-      throw new RuntimeException("No rows returned: " + query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Error executing query: " + query, e);
-    }
   }
 }

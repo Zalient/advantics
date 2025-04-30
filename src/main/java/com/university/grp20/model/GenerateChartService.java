@@ -24,9 +24,11 @@ public class GenerateChartService {
   private final Logger logger = LogManager.getLogger(GenerateChartService.class);
   private Integer numOfDays;
   private static String campaignName = User.getSelectedCampaign();
+  /**
   public void setNumOfDays(int days){
     numOfDays = days;
   }
+   **/
 
   public GenerateChartService(String c) {
     campaignName = c;

@@ -4,6 +4,9 @@ import com.university.grp20.UIManager;
 import com.university.grp20.model.*;
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -21,6 +24,9 @@ import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.title.TextTitle;
 import java.util.List;
 import java.time.LocalDate;
+
+import static com.university.grp20.model.DBHelper.executeQuery;
+import static com.university.grp20.model.DBHelper.getConnection;
 
 public class FilterSelectionController extends Navigator {
   @FXML private CheckComboBox<String> ageGroupSelector, contextSelector, incomeSelector, dayOfWeekSelector;
@@ -41,6 +47,9 @@ public class FilterSelectionController extends Navigator {
   private String campaignName;
 
   @FXML private Button helpButton;
+
+  private LocalDate startDate;
+  private LocalDate endDate;
 
   @FXML
   private void initialize() {
@@ -82,28 +91,48 @@ public class FilterSelectionController extends Navigator {
     });
   }
 
-
-
-  public void init(
-      String filterMode, MetricsController metricsController, ChartViewer chartViewer) {
-   // if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
-    //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
-    initMetrics(metricsController);
-    startDatePicker.setValue(DBHelper.fetchMinDate(User.getSelectedCampaign()));
-    endDatePicker.setValue(DBHelper.fetchMaxDate(User.getSelectedCampaign()));
-  }
-
-  public void init(
-          String filterMode, MetricsController metricsController, ChartViewer chartViewer, String campaignName) {
-    //if (Objects.equals(filterMode, "Metrics")) initMetrics(metricsController);
-    //else if (Objects.equals(filterMode, "Chart")) initChart(chartViewer);
-    initChart(chartViewer);
+  public void init(String filterMode, MetricsController metricsController, ChartViewer chartViewer, String campaignName) {
+    if (Objects.equals(filterMode, "Metrics")) {
+      initMetrics(metricsController);
+    } else if (Objects.equals(filterMode, "Chart")) {
+      initChart(chartViewer);
+    }
     this.campaignName = campaignName;
-    startDatePicker.setValue(DBHelper.fetchMinDate(campaignName));
-    endDatePicker.setValue(DBHelper.fetchMaxDate(campaignName));
+    fetchMinDate(campaignName);
+    fetchMaxDate(campaignName);
+    startDatePicker.setValue(startDate);
+    endDatePicker.setValue(endDate);
   }
 
+  //min and max date may need correcting
+  public void fetchMinDate(String campaignName) {
+    String query = "SELECT MIN(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection(campaignName)) {
+      startDate = fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
+  }
 
+  public void fetchMaxDate(String campaignName) {
+    String query = "SELECT MAX(Date)" + " FROM impressionLog";
+    try (Connection conn = getConnection(campaignName)) {
+      endDate = fetchDate(conn, query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Unable to obtain DB connection", e);
+    }
+  }
+
+  private static LocalDate fetchDate(Connection conn, String query) {
+    try (ResultSet rs = executeQuery(conn, query)) {
+      if (rs.next()) {
+        return rs.getDate(1).toLocalDate();
+      }
+      throw new RuntimeException("No rows returned: " + query);
+    } catch (SQLException e) {
+      throw new RuntimeException("Error executing query: " + query, e);
+    }
+  }
 
 
   @FXML

@@ -15,11 +15,12 @@ import java.util.List;
 public class HelpGuideController {
     @FXML private Button nextPicButton, prevPicButton;
     @FXML private Label guideTitleLabel;
-    @FXML private ImageView imageCarousel;
+    @FXML
+    private ImageView imageCarousel;
     private static final Logger logger = LogManager.getLogger(LoginService.class);
     private int imageIndex = 0;
-    List<Image> imageList = new ArrayList<>();
-    int numImg;
+    private List<Image> imageList = new ArrayList<>();
+    private int numImg;
     
     public void setupCarousel(String pageType){
         setPageTitle(pageType);
@@ -104,16 +105,29 @@ public class HelpGuideController {
     }
 
     @FXML
-    private void handleNext(){
+    public void handleNext(){
         imageIndex = (imageIndex + 1) % numImg;
         imageCarousel.setImage(imageList.get(imageIndex));
         logger.info(imageIndex);
     }
 
     @FXML
-    private void handlePrev(){
+    public void handlePrev(){
         imageIndex = (imageIndex - 1 + numImg) % numImg;
         imageCarousel.setImage(imageList.get(imageIndex));
         logger.info(imageIndex);
+    }
+
+    public void setImageCarousel(ImageView imageView) {
+        this.imageCarousel = imageView;
+    }
+
+    public void setImageList(List<Image> images) {
+        this.imageList = new ArrayList<>(images);
+        this.numImg = images.size();
+    }
+
+    public int getImageIndex() {
+        return imageIndex;
     }
 }

@@ -9,7 +9,6 @@ public class MetricSettingsController {
   @FXML private RadioButton pagesViewedButton;
   @FXML private RadioButton timeSpentButton;
   @FXML private TextField bounceValField;
-  private MetricsController metricsController;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
   private ToggleGroup bounceGroup;
   @FXML private Label bounceDefLabel;
@@ -76,7 +75,9 @@ public class MetricSettingsController {
     }
   }
 
+  /**
   public void init(MetricsController metricsController) {
     this.metricsController = metricsController;
   }
+   **/
 }
