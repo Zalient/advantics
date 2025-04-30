@@ -40,6 +40,7 @@ public class ChartsController extends Navigator {
   private final Logger logger = LogManager.getLogger(ChartsController.class);
   private final OperationLogger operationLogger = new OperationLogger();
   @FXML private Button helpButton;
+  @FXML private Button saveAllChartsButton;
 
 
   @FXML
@@ -53,6 +54,8 @@ public class ChartsController extends Navigator {
     boolean status = User.getRole().equals("Viewer");
 
     addChartButton.setDisable(status);
+
+    saveAllChartsButton.setDisable(status);
 
     addChartFlowPane
         .getChildren()
@@ -72,6 +75,7 @@ public class ChartsController extends Navigator {
                                         if (buttonText.equals("Filter")
                                             || buttonText.equals("Export as PDF")
                                             || buttonText.equals("Export as CSV")
+                                                || buttonText.equals("Print Chart")
                                             || buttonText.equals("Delete")){
                                           currentButton.setDisable(status);
                                         }
@@ -323,7 +327,7 @@ public class ChartsController extends Navigator {
             });
 
     Button printButton = new Button("Print Chart");
-    printButton.getStyleClass().add("export-button");
+    printButton.getStyleClass().add("custom-button");
     printButton.setPrefSize(90, 25);
     printButton.setOnAction(e -> {
       operationLogger.log(metricType + " chart print button clicked");

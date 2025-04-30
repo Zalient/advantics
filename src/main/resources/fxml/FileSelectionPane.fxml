@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>
         <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" text="Role:">
 
@@ -58,7 +58,7 @@
                                 <VBox alignment="CENTER" prefHeight="190.0" prefWidth="154.0" spacing="10.0">
                                     <children>
                                         <TextField fx:id="campaignNameTextField" prefWidth="120.0" styleClass="custom-text-field" />
-                                        <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" stylesheets="@../styles/styles.css" text="Select...">
+                                        <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                             <font>
                                                 <Font size="20.0" />
                                             </font>
@@ -151,7 +151,7 @@
         </HBox>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" style="-fx-font-szie: 20;" styleClass="blue-button" stylesheets="@../styles/styles.css" text="Logout">
+                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" style="-fx-font-szie: 20;" styleClass="custom-button" text="Logout">
 
                     <font>
                         <Font size="20.0" />
@@ -163,6 +163,6 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </HBox>
-        <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="blue-button" text="Click Me!" />
+        <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="custom-button" text="Click Me!" />
     </children>
 </AnchorPane>
