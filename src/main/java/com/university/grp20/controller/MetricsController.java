@@ -38,8 +38,6 @@ public class MetricsController extends Navigator {
 
   @FXML private Button helpButton;
 
-
-
   @FXML
   private void initialize() {
     calculateMetricsService.setOnFilterStart(
@@ -53,8 +51,6 @@ public class MetricsController extends Navigator {
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
     selectedDatabaseLabel.setText("Selected Campaign: " + User.getSelectedCampaign().replace(".db", ""));
-
-    updateMetricVisibility();
   }
 
   public void setMetrics(MetricsDTO metricsDTO) {
@@ -70,8 +66,6 @@ public class MetricsController extends Navigator {
     cpcLabel.setText(String.format("£%.2f", metricsDTO.cpc() / 100));
     cpmLabel.setText(String.format("£%.2f", metricsDTO.cpm() / 100));
     bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.bounceRate() * 100));
-
-    updateMetricVisibility();
   }
 
   public void updateMetricVisibility() {
@@ -134,7 +128,7 @@ public class MetricsController extends Navigator {
       FilterSelectionController controller = filterLoader.getController();
       controller.init("Metrics", this, null);
 
-      UIManager.showModalStage("Metrics Filtering", filterLoader, false);
+      UIManager.showPopupStage("Metrics Filtering", filterLoader, false);
     } catch (IOException e) {
       logger.error("Error loading metrics filter:", e);
     }
@@ -194,7 +188,6 @@ public class MetricsController extends Navigator {
       pdfButton.setDisable(status);
       csvButton.setDisable(status);
     });
-
   }
 
   @FXML
@@ -224,17 +217,16 @@ public class MetricsController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Metrics");
-      UIManager.showModalStage("Metrics Page Help Guide", loader, false);
+      UIManager.showPopupStage("Metrics Page Help Guide", loader, false);
       operationLogger.log("Metrics Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);
     }
   }
 
-  public void handleUpdateClick(ActionEvent actionEvent) {
-    operationLogger.log("Update dashboard button clicked");
-    MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
-    setMetrics(defaultMetrics);
-    UIManager.showAlert("Success", "Dashboard successfully updated. Filters removed.");
+  public void handleUpdateClick() {
+    operationLogger.log("Toggle metrics button clicked");
+    updateMetricVisibility();
+    UIManager.showAlert("Success", "Toggled selected metrics");
   }
 }

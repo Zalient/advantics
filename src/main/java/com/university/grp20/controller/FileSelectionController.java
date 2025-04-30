@@ -80,7 +80,7 @@ public class FileSelectionController extends Navigator {
           String campaignName = file.getName().replace(".db", "");
           existingCampaigns.add(campaignName);
           Button campaignButton = new Button(campaignName);
-          campaignButton.getStyleClass().add("blue-button");
+          campaignButton.getStyleClass().add("custom-button");
           campaignButton.setMaxWidth(Double.MAX_VALUE);
           campaignButton.setStyle("-fx-font-size: 18px;");
           campaignButton.setOnAction(e -> {
@@ -92,7 +92,7 @@ public class FileSelectionController extends Navigator {
     }
 
     if (existingCampaigns.isEmpty()) {
-      selectCampaignLabel.setText("No campaigns uploaded");
+      selectCampaignLabel.setText("No Campaigns Found");
     }
 
   }
@@ -123,18 +123,13 @@ public class FileSelectionController extends Navigator {
                       });
                   Thread.sleep(100);
                   Platform.runLater(() -> {
-                    //boolean useCache = campaignName.equals(User.getSelectedCampaign());
                     User.setSelectedCampaign(campaignName);
-                    boolean useCache = true;
                     UIManager.switchContent(
                             parentPane,
-                            UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
-                            useCache
+                            UIManager.createFxmlLoader("/fxml/MetricsPane.fxml")
                     );
-                                      operationLogger.log("Upload success, displaying metrics");
-
+                                      operationLogger.log("Import success, displaying metrics");
                   });
-
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
                   throw new RuntimeException(
@@ -159,7 +154,7 @@ public class FileSelectionController extends Navigator {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error!");
       alert.setHeaderText(null);
-      alert.setContentText("You haven't entered a name for the campaign.");
+      alert.setContentText("You have not entered a name for the campaign.");
       alert.showAndWait();
     }
   }
@@ -196,7 +191,6 @@ public class FileSelectionController extends Navigator {
     System.out.println("Previously selected campaign: " + User.getSelectedCampaign());
     System.out.println("Selecting: " + campaignName);
 
-    //boolean useCache = campaignName.equals(User.getSelectedCampaign());
     boolean useCache = true;
     System.out.println("Using cache? " + useCache);
     User.setSelectedCampaign(campaignName);
@@ -230,7 +224,7 @@ public class FileSelectionController extends Navigator {
         serverPathLabel.setText(file.getPath());
       }
 
-      sourceButton.setStyle("-fx-background-color: #40cf23;");
+      sourceButton.getStyleClass().add("successful-button");
     } else {
       logger.info(title + " aborted");
     }
@@ -266,9 +260,12 @@ public class FileSelectionController extends Navigator {
     importProgressBar.setProgress(0);
 
     // Resets the style of the buttons to use the css file (removes the green background)
-    impressionLogButton.setStyle("");
-    clickLogButton.setStyle("");
-    serverLogButton.setStyle("");
+    impressionLogButton.getStyleClass().clear();
+    impressionLogButton.getStyleClass().add("custom-button");
+    clickLogButton.getStyleClass().clear();
+    clickLogButton.getStyleClass().add("custom-button");
+    serverLogButton.getStyleClass().clear();
+    serverLogButton.getStyleClass().add("custom-button");
 
     fileImportService.deleteInsertedData(campaignName);
     fileImportService.setImpressionLog(null);
@@ -295,7 +292,7 @@ public class FileSelectionController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Upload");
-      UIManager.showModalStage("Upload Page Help Guide", loader, false);
+      UIManager.showPopupStage("Upload Page Help Guide", loader, false);
       operationLogger.log("Upload Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);

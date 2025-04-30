@@ -20,15 +20,13 @@
 <?import org.controlsfx.control.CheckComboBox?>
 
 <AnchorPane fx:id="root" prefHeight="387.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
-
-
     <children>
         <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
             <HBox alignment="CENTER">
                <children>
 
-                      <Label fx:id="chartNameLabel" text="Filtering Mode">
+                      <Label fx:id="chartNameLabel" styleClass="bold-label" text="Filtering Mode">
 
                           <font>
                               <Font size="24.0" />
@@ -38,7 +36,7 @@
                      </padding>
                       </Label>
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="blue-button" text="Click Me!">
+                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" prefWidth="85.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Click Me!">
                      <HBox.margin>
                         <Insets top="6.0" />
                      </HBox.margin>
@@ -67,7 +65,7 @@
                         <VBox alignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                             <children>
 
-                                <Button fx:id="applyChangesButton" minWidth="100.0" mnemonicParsing="false" onAction="#applyChanges" styleClass="blue-button" text="Apply Changes">
+                                <Button fx:id="applyChangesButton" minWidth="100.0" mnemonicParsing="false" onAction="#applyChanges" style="-fx-font-size: 12;" styleClass="custom-button" text="Apply Changes">
 
                                     <VBox.margin>
                                         <Insets left="10.0" />
@@ -89,9 +87,7 @@
                         </VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <children>
-
                                 <Label fx:id="endDateTitle" styleClass="bold-label" text="End Date" />
-
                                 <DatePicker fx:id="endDatePicker" styleClass="custom-date-picker" />
                             </children>
                         </VBox>
@@ -100,11 +96,11 @@
                                 <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                                     <children>
 
-                                        <RadioButton fx:id="maleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Male">
+                                        <RadioButton fx:id="maleRadioButton" mnemonicParsing="false" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-radio-button" text="Male">
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></RadioButton>
-                                        <RadioButton fx:id="femaleRadioButton" mnemonicParsing="false" styleClass="custom-radio-button" text="Female">
+                                        <RadioButton fx:id="femaleRadioButton" mnemonicParsing="false" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-radio-button" text="Female">
                        <padding>
                                                 <Insets left="15.0" />
                                             </padding>
@@ -116,22 +112,22 @@
                                 </HBox>
                             </children>
                         </HBox>
-                        <CheckComboBox fx:id="ageGroupSelector" minWidth="145.0" styleClass="blue-check-combo-box" title="Age Group" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <CheckComboBox fx:id="ageGroupSelector" minWidth="145.0" styleClass="custom-check-combo-box" title="Age Group" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></CheckComboBox>
-                        <CheckComboBox fx:id="incomeSelector" minWidth="90.0" styleClass="blue-check-combo-box" title="Income " GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <CheckComboBox fx:id="incomeSelector" minWidth="90.0" styleClass="custom-check-combo-box" title="Income " GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></CheckComboBox>
-                        <CheckComboBox fx:id="contextSelector" minWidth="90.0" styleClass="blue-check-combo-box" title="Context" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <CheckComboBox fx:id="contextSelector" minWidth="90.0" styleClass="custom-check-combo-box" title="Context" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></CheckComboBox>
                   <HBox alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="3">
                      <children>
 
-                              <ComboBox fx:id="granularityChooser" minWidth="145.0" promptText="Time Granularity" styleClass="blue-combo-box">
+                              <ComboBox fx:id="granularityChooser" minWidth="145.0" promptText="Time Granularity" styleClass="custom-combo-box">
 
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">
@@ -143,17 +139,15 @@
                               </ComboBox>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
 
-                        <CheckComboBox fx:id="dayOfWeekSelector" minWidth="145.0" styleClass="blue-check-combo-box" title="Per Day Of Week" />
+                        <CheckComboBox fx:id="dayOfWeekSelector" minWidth="145.0" styleClass="custom-check-combo-box" title="Per Day Of Week" />
 
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <ComboBox fx:id="timeOfDaySelector" minWidth="145.0" promptText="Per Time Of Day" styleClass="blue-check-combo-box" />
+                        <ComboBox fx:id="timeOfDaySelector" minWidth="145.0" promptText="Per Time Of Day" styleClass="custom-check-combo-box" />
                      </children>
                   </HBox>
                   <VBox alignment="CENTER">
                      <children>
-
                         <Label fx:id="startDateTitle" styleClass="bold-label" text="Start Date" />
-
                         <DatePicker fx:id="startDatePicker" styleClass="custom-date-picker" />
                      </children>
                   </VBox>

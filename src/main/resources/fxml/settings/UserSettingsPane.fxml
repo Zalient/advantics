@@ -7,98 +7,66 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="userScroll" fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.UserSettingsController">
+<ScrollPane fx:id="userScroll" fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.UserSettingsController">
     <content>
         <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="50.0">
-                    <VBox.margin>
-                        <Insets right="400.0" />
-                    </VBox.margin>
-                    <children>
-                        <VBox spacing="20.0">
-                            <children>
-                                <Label fx:id="addUserTitle" styleClass="bold-label" text="Add User">
-                                    <font>
-                                        <Font size="18.0" />
-                                    </font>
-                                </Label>
-                                <VBox spacing="5.0">
-                                    <children>
-                                        <Label fx:id="usernameSubTitle" styleClass="bold-label" text="Username:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="newUsernameField" prefWidth="300.0" promptText="Username" styleClass="custom-text-field">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </TextField>
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0">
-                                    <children>
-                                        <Label fx:id="passwordSubTitle" styleClass="bold-label" text="Password:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <PasswordField fx:id="newPasswordField" prefWidth="300.0" promptText="Password" styleClass="custom-text-field">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </PasswordField>
-                                    </children>
-                                </VBox>
-                                <ComboBox fx:id="newRoleMenu" prefWidth="150.0" promptText="Select Role" styleClass="blue-combo-box" />
-                                <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#addUser" prefWidth="150.0" styleClass="blue-button" text="Add User">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Button>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-                <HBox spacing="50.0">
-                    <children>
-                        <VBox spacing="20.0">
-                            <children>
-                                <Label fx:id="editUserTitle" styleClass="bold-label" text="Edit User">
-                                    <font>
-                                        <Font size="18.0" />
-                                    </font>
-                                </Label>
-                                <ComboBox fx:id="currentUsersMenu" prefWidth="150.0" promptText="Select User" styleClass="blue-combo-box" />
-                                <VBox spacing="5.0">
-                                    <children>
-                                        <Label fx:id="newPasswordSubTitle" styleClass="bold-label" text="New Password:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <PasswordField fx:id="changePasswordField" prefWidth="300.0" promptText="New Password" styleClass="custom-text-field">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </PasswordField>
-                                    </children>
-                                </VBox>
-                                <ComboBox fx:id="changeRoleMenu" prefWidth="150.0" promptText="New Role" styleClass="blue-combo-box" />
-                                <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#editUser" prefWidth="150.0" styleClass="blue-button" text="Edit User">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Button>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
+                  <VBox spacing="20.0">
+                      <children>
+                          <Label fx:id="addUserTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Add User">
+                              <font>
+                                  <Font size="20.0" />
+                              </font>
+                          </Label>
+                          <VBox spacing="5.0">
+                              <children>
+                                  <Label fx:id="usernameSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="Username:">
+                                      <font>
+                                          <Font size="16.0" />
+                                      </font>
+                                  </Label>
+                                  <TextField fx:id="newUsernameField" prefWidth="300.0" promptText="Username" styleClass="custom-text-field" />
+                              </children>
+                          </VBox>
+                          <VBox spacing="5.0">
+                              <children>
+                                  <Label fx:id="passwordSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="Password:">
+                                      <font>
+                                          <Font size="14.0" />
+                                      </font>
+                                  </Label>
+                                  <PasswordField fx:id="newPasswordField" prefWidth="300.0" promptText="Password" styleClass="custom-text-field" />
+                              </children>
+                          </VBox>
+                          <ComboBox fx:id="newRoleMenu" prefWidth="170.0" promptText="Select Role" styleClass="custom-combo-box" />
+                          <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#addUser" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Add User" />
+                      </children>
+                  </VBox>
+                  <VBox spacing="20.0">
+                      <children>
+                          <Label fx:id="editUserTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Edit User">
+                              <font>
+                                  <Font size="20.0" />
+                              </font>
+                          </Label>
+                          <ComboBox fx:id="currentUsersMenu" prefWidth="170.0" promptText="Select User" styleClass="custom-combo-box" />
+                          <VBox spacing="5.0">
+                              <children>
+                                  <Label fx:id="newPasswordSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="New Password:">
+                                      <font>
+                                          <Font size="16.0" />
+                                      </font>
+                                  </Label>
+                                  <PasswordField fx:id="changePasswordField" prefWidth="300.0" promptText="New Password" styleClass="custom-text-field" />
+                              </children>
+                          </VBox>
+                          <ComboBox fx:id="changeRoleMenu" prefWidth="150.0" promptText="New Role" styleClass="custom-combo-box" />
+                          <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#editUser" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Edit User" />
+                      </children>
+                  </VBox>
             </children>
             <padding>
                 <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

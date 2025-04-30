@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="425.0" prefWidth="533.0" stylesheets="@../../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.layout.ModalLayoutController">
+<AnchorPane fx:id="root" prefHeight="425.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.layout.PopupLayoutController">
     <children>
         <VBox styleClass="filter-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <HBox fx:id="titleBar" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" spacing="10.0" styleClass="modal-title-bar" stylesheets="@../../styles/styles.css">
+                <HBox fx:id="titleBar" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" spacing="10.0" styleClass="popup-title-bar">
                     <children>
                         <Label fx:id="modalTitleLabel">
                             <font>
@@ -21,7 +21,7 @@
                             </font>
                         </Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#closeStage" styleClass="close-button" text="✕">
+                        <Button onAction="#closeStage" style="-fx-font-size: 10;" styleClass="close-button" text="✕">
                      <font>
                         <Font size="10.0" />
                      </font>

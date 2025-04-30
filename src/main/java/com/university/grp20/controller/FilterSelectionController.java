@@ -58,11 +58,11 @@ public class FilterSelectionController extends Navigator {
     contextSelector.getItems().addAll("News", "Shopping", "Social Media", "Blog", "Hobbies", "Travel");
     Platform.runLater(
         () -> {
-          ageGroupSelector.getStyleClass().add("blue-check-combo-box");
-          incomeSelector.getStyleClass().add("blue-check-combo-box");
-          contextSelector.getStyleClass().add("blue-check-combo-box");
-          dayOfWeekSelector.getStyleClass().add("blue-check-combo-box");
-          timeOfDaySelector.getStyleClass().add("blue-combo-box");
+          ageGroupSelector.getStyleClass().add("custom-check-combo-box");
+          incomeSelector.getStyleClass().add("custom-check-combo-box");
+          contextSelector.getStyleClass().add("custom-check-combo-box");
+          dayOfWeekSelector.getStyleClass().add("custom-check-combo-box");
+          timeOfDaySelector.getStyleClass().add("custom-combo-box");
         });
 
     dayOfWeekSelector.setDisable(true);
@@ -305,11 +305,11 @@ public class FilterSelectionController extends Navigator {
       HelpGuideController helpController = loader.getController();
       if (filterMode == FilterMode.METRICS) {
         helpController.setupCarousel("Metric-Filter");
-        UIManager.showModalStage("Metrics Filter Help Guide", loader, false);
+        UIManager.showPopupStage("Metrics Filter Help Guide", loader, false);
         operationLogger.log("Metrics Filter Help Guide Icon clicked");
       } else if (filterMode == FilterMode.CHART) {
         helpController.setupCarousel("Chart-Filter");
-        UIManager.showModalStage("Charts Filter Help Guide", loader, false);
+        UIManager.showPopupStage("Charts Filter Help Guide", loader, false);
         operationLogger.log("Charts Filter Help Guide Icon clicked");
       }
     } catch (IOException e) {
