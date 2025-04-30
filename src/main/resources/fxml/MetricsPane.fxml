@@ -297,7 +297,7 @@
                         <Font size="20.0" />
                      </font>
                   </Button>
-                  <Button fx:id="resetDashButton" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="200.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Reset Dashboard">
+                  <Button fx:id="resetDashButton" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="200.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Reset Filter">
                      <font>
                         <Font size="20.0" />
                      </font>

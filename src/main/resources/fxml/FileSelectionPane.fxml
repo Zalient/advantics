@@ -152,8 +152,7 @@
         </HBox>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" style="-fx-font-szie: 20;" styleClass="custom-button" text="Logout">
-
+                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Logout">
                     <font>
                         <Font size="20.0" />
                     </font>

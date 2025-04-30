@@ -336,6 +336,7 @@ public class ChartsController extends Navigator {
 
     Button printButton = new Button("Print Chart");
     printButton.getStyleClass().add("custom-button");
+    printButton.setStyle("-fx-font-size: 14px;");
     printButton.setPrefSize(90, 25);
     printButton.setOnAction(e -> {
       operationLogger.log(metricType + " chart print button clicked");
