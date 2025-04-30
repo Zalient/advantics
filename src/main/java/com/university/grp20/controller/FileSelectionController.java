@@ -81,8 +81,7 @@ public class FileSelectionController extends Navigator {
                       () ->
                           UIManager.switchContent(
                               parentPane,
-                              UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"),
-                              true));
+                              UIManager.createFxmlLoader("/fxml/MetricsPane.fxml")));
                   operationLogger.log("Upload success, displaying metrics");
                 } catch (Exception e) {
                   Platform.runLater(this::resetUI);
@@ -160,7 +159,7 @@ public class FileSelectionController extends Navigator {
         serverPathLabel.setText(file.getPath());
       }
 
-      sourceButton.setStyle("-fx-background-color: #40cf23;");
+      sourceButton.getStyleClass().add("successful-button");
     } else {
       logger.info(title + " aborted");
     }
@@ -196,9 +195,12 @@ public class FileSelectionController extends Navigator {
     importProgressBar.setProgress(0);
 
     // Resets the style of the buttons to use the css file (removes the green background)
-    impressionLogButton.setStyle("");
-    clickLogButton.setStyle("");
-    serverLogButton.setStyle("");
+    impressionLogButton.getStyleClass().clear();
+    impressionLogButton.getStyleClass().add("custom-button");
+    clickLogButton.getStyleClass().clear();
+    clickLogButton.getStyleClass().add("custom-button");
+    serverLogButton.getStyleClass().clear();
+    serverLogButton.getStyleClass().add("custom-button");
 
     fileImportService.deleteInsertedData();
     fileImportService.setImpressionLog(null);
@@ -224,7 +226,7 @@ public class FileSelectionController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Upload");
-      UIManager.showModalStage("Upload Page Help Guide", loader, false);
+      UIManager.showPopupStage("Upload Page Help Guide", loader, false);
       operationLogger.log("Upload Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);

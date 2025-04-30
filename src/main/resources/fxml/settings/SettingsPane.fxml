@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
+<GridPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.SettingsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" percentWidth="14.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -27,29 +27,24 @@
         <Region GridPane.columnIndex="2" />
         <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="custom-box" GridPane.rowIndex="1" GridPane.rowSpan="2">
             <children>
-                <Button fx:id="metricSettingsButton" onAction="#displayMetricSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Metrics">
+                <Button onAction="#displayStyleSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Style">
+               <font>
+                  <Font size="14.0" />
+               </font>
+                </Button>
+                <Button fx:id="metricSettingsButton" onAction="#displayMetricSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Metrics">
                     <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                     </font>
                 </Button>
-                <Button fx:id="userSettingsButton" onAction="#displayUserSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Users">
+                <Button fx:id="userSettingsButton" onAction="#displayUserSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Users">
                     <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                     </font>
                 </Button>
-                <Button fx:id="exportSettingsButton" onAction="#displayExportSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Export">
+                <Button fx:id="exportSettingsButton" onAction="#displayExportSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Export">
                     <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
-                <Button onAction="#displayThemeSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Theme">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
-                <Button onAction="#displayLanguageSettings" prefHeight="40.0" prefWidth="100.0" styleClass="blue-button" text="Language">
-                    <font>
-                        <Font size="14.0" />
+                        <Font size="16.0" />
                     </font>
                 </Button>
             </children>
@@ -69,9 +64,9 @@
         </HBox>
         <HBox alignment="CENTER" GridPane.hgrow="SOMETIMES">
             <children>
-                <Button alignment="CENTER" mnemonicParsing="false" onAction="#displayMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#displayMetrics" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
                     <font>
-                        <Font size="24.0" />
+                        <Font size="20.0" />
                     </font>
                     <HBox.margin>
                         <Insets />
@@ -79,7 +74,7 @@
                 </Button>
             </children>
         </HBox>
-      <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="blue-button" text="Click Me!" GridPane.columnIndex="2">
+      <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" style="-fx-font-size: 12;" styleClass="custom-button" text="Click Me!" GridPane.columnIndex="2">
          <GridPane.margin>
             <Insets bottom="50.0" left="110.0" />
          </GridPane.margin>

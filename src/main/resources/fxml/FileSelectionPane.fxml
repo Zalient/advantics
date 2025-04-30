@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FileSelectionController">
     <children>
         <Label fx:id="roleLabel" layoutX="25.0" layoutY="24.0" prefWidth="250.0" styleClass="bold-label" text="Role:">
             <font>
@@ -19,7 +19,7 @@
         </Label>
         <VBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
             <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" styleClass="bold-label" text="File Import">
+                <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 40;" styleClass="bold-label" text="File Import">
                     <font>
                         <Font size="40.0" />
                     </font>
@@ -28,17 +28,17 @@
                     <children>
                         <VBox alignment="CENTER" spacing="15.0">
                             <children>
-                                <Label alignment="CENTER" text="Impression Log" styleClass="bold-label">
+                                <Label alignment="CENTER" style="-fx-font-size: 24;" styleClass="bold-label" text="Impression Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
                                 </Label>
-                                <Label alignment="CENTER" minHeight="50.0" minWidth="110.0" text="Click Log" styleClass="bold-label">
+                                <Label alignment="CENTER" minHeight="50.0" minWidth="110.0" style="-fx-font-size: 24;" styleClass="bold-label" text="Click Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
                                 </Label>
-                                <Label alignment="CENTER" text="Server Log" styleClass="bold-label">
+                                <Label alignment="CENTER" style="-fx-font-size: 24;" styleClass="bold-label" text="Server Log">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
@@ -47,17 +47,17 @@
                         </VBox>
                         <VBox alignment="CENTER" spacing="15.0">
                             <children>
-                                <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="120.0" styleClass="blue-button" text="Select...">
+                                <Button fx:id="impressionLogButton" mnemonicParsing="false" onAction="#handleImpressionUpload" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="clickLogButton" mnemonicParsing="false" onAction="#handleClickUpload" prefWidth="120.0" styleClass="blue-button" text="Select...">
+                                <Button fx:id="clickLogButton" mnemonicParsing="false" onAction="#handleClickUpload" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="serverLogButton" mnemonicParsing="false" onAction="#handleServerUpload" prefWidth="120.0" styleClass="blue-button" text="Select...">
+                                <Button fx:id="serverLogButton" mnemonicParsing="false" onAction="#handleServerUpload" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Select...">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
@@ -88,8 +88,7 @@
                         <Insets left="300.0" />
                     </padding>
                 </HBox>
-                <Button fx:id="nextButton" disable="true" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" onAction="#startImport" prefHeight="50.0" prefWidth="120.0" styleClass="blue-button" text="Next">
+                <Button fx:id="nextButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startImport" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Next">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -115,15 +114,13 @@
         </VBox>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="50.0" prefWidth="120.0"
-                        styleClass="blue-button" text="Logout">
+                <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Logout">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="skipButton" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" onAction="#handleSkip" prefHeight="50.0" prefWidth="120.0" styleClass="blue-button" text="Skip">
+                <Button fx:id="skipButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSkip" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Skip">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -133,6 +130,6 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </HBox>
-      <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide"/>
+      <Button fx:id="helpButton" layoutX="1201.0" layoutY="24.0" mnemonicParsing="false" onAction="#showHelpGuide" style="-fx-font-size: 12;" styleClass="custom-button" text="Click Me!" />
     </children>
 </AnchorPane>

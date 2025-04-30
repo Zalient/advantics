@@ -32,8 +32,6 @@ public class MetricsController extends Navigator {
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService();
   @FXML private Button helpButton;
 
-
-
   @FXML
   private void initialize() {
     calculateMetricsService.setOnFilterStart(
@@ -86,7 +84,7 @@ public class MetricsController extends Navigator {
       FilterSelectionController controller = filterLoader.getController();
       controller.init("Metrics", this, null);
 
-      UIManager.showModalStage("Metrics Filtering", filterLoader, false);
+      UIManager.showPopupStage("Metrics Filtering", filterLoader, false);
     } catch (IOException e) {
       logger.error("Error loading metrics filter:", e);
     }
@@ -161,7 +159,7 @@ public class MetricsController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Metrics");
-      UIManager.showModalStage("Metrics Page Help Guide", loader, false);
+      UIManager.showPopupStage("Metrics Page Help Guide", loader, false);
       operationLogger.log("Metrics Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);

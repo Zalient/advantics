@@ -10,11 +10,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
+<AnchorPane prefHeight="735.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.LoginController">
     <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="50.0" />
@@ -37,16 +38,16 @@
                      <Insets />
                   </HBox.margin>
                     </Label>
-               <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide">
-                  <HBox.margin>
-                     <Insets bottom="100.0" left="450.0" />
-                  </HBox.margin>
-               </Button>
+               <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+               <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" prefWidth="85.0" styleClass="custom-button" text="Click Me!" />
                 </children>
+            <padding>
+               <Insets left="20.0" right="20.0" />
+            </padding>
             </HBox>
-            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <children>
-                    <Label text="Username:" styleClass="bold-label">
+                    <Label styleClass="bold-label" text="Username:">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -57,14 +58,14 @@
                     <Insets left="20.0" right="20.0" />
                 </padding>
             </VBox>
-            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
-                    <Label text="Password:" styleClass="bold-label">
+                    <Label styleClass="bold-label" text="Password:">
                         <font>
                             <Font size="24.0" />
                         </font>
                     </Label>
-                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field"/>
+                    <PasswordField fx:id="passwordInputBox" promptText="Password" styleClass="custom-password-field" />
                 </children>
                 <padding>
                     <Insets left="20.0" right="20.0" />
@@ -72,14 +73,14 @@
             </VBox>
             <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="140.0" styleClass="blue-button" text="Login">
+                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Login">
                         <font>
-                            <Font size="22.0" />
+                            <Font size="20.0" />
                         </font>
                     </Button>
                 </children>
             </HBox>
-            <VBox alignment="CENTER" style="-fx-background-color: #1e3c78;">
+            <VBox alignment="CENTER" styleClass="custom-theme-box">
                 <children>
                     <Label style="-fx-font-weight: bold;" text="AdVantics" textFill="#e1e8f8">
                         <font>
@@ -90,7 +91,7 @@
                 </children>
             </VBox>
             <Pane styleClass="big-logo" GridPane.rowIndex="1" GridPane.rowSpan="2" />
-            <Pane style="-fx-background-color: #1e3c78;" GridPane.rowIndex="3" />
+            <Pane styleClass="custom-theme-box" GridPane.rowIndex="3" />
         </children>
     </GridPane>
 </AnchorPane>

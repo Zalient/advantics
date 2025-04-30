@@ -2,9 +2,8 @@ package com.university.grp20;
 
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.controller.layout.MainLayoutController;
-import com.university.grp20.controller.layout.ModalLayoutController;
+import com.university.grp20.controller.layout.PopupLayoutController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -16,6 +15,8 @@ import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class UIManager {
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static Stage mainStage;
   private static final int CACHE_MAX_SIZE = 5;
-
-  private static String currentTheme = "/styles/styles.css";
+  private static String currentTheme = "/styles/default-blue.css";
+  private static String currentFont = "System";
 
   private static final Map<String, Parent> ROOT_CACHE = new LinkedHashMap<>(CACHE_MAX_SIZE, 0.75f, true) {
     @Override
@@ -95,6 +96,11 @@ public class UIManager {
 
     Scene scene = new Scene(mainLayoutRoot);
     scene.setFill(Color.TRANSPARENT);
+
+    scene.getRoot().getStylesheets().clear();
+    applyCurrentTheme(scene);
+    applyCurrentFont(scene);
+
     mainStage.setScene(scene);
 
     mainLayoutController.setMainTitle(title);
@@ -107,36 +113,37 @@ public class UIManager {
     showMainStage(title, childLoader, false);
   }
 
-  public static void showModalStage(String title, FXMLLoader childLoader, boolean useCache) {
-    FXMLLoader modalLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/PopupLayout.fxml");
-    Parent modalLayoutRoot = resolveFxmlRoot(modalLayoutLoader);
+  public static void showPopupStage(String title, FXMLLoader childLoader, boolean useCache) {
+    FXMLLoader popupLayoutLoader = UIManager.createFxmlLoader("/fxml/layout/PopupLayout.fxml");
+    Parent popupLayoutRoot = resolveFxmlRoot(popupLayoutLoader);
 
-    ModalLayoutController modalLayoutController = modalLayoutLoader.getController();
-    Pane modalLayoutContentPane = modalLayoutController.getContentPane();
+    PopupLayoutController popupLayoutController = popupLayoutLoader.getController();
+    Pane popupLayoutContentPane = popupLayoutController.getContentPane();
 
-    switchContent(modalLayoutContentPane, childLoader, useCache);
+    switchContent(popupLayoutContentPane, childLoader, useCache);
 
-    Stage modalStage = new Stage();
-    modalStage.initStyle(StageStyle.TRANSPARENT);
-    modalStage.initModality(Modality.WINDOW_MODAL);
-    modalStage.initOwner(mainStage);
-    modalStage.setTitle(title);
+    Stage popupStage = new Stage();
+    popupStage.initStyle(StageStyle.TRANSPARENT);
+    popupStage.initModality(Modality.WINDOW_MODAL);
+    popupStage.initOwner(mainStage);
+    popupStage.setTitle(title);
 
-    Scene scene = new Scene(modalLayoutRoot);
+    Scene scene = new Scene(popupLayoutRoot);
     scene.setFill(Color.TRANSPARENT);
 
-    scene.getRoot().getStylesheets().clear();
+    popupStage.setScene(scene);
+
     applyCurrentTheme(scene);
+    applyCurrentFont(scene);
+    
+    popupLayoutController.setPopupTitle(title);
+    popupLayoutController.setPopupStage(popupStage);
 
-    modalStage.setScene(scene);
-    modalLayoutController.setModalTitle(title);
-    modalLayoutController.setModalStage(modalStage);
-
-    modalStage.showAndWait();
+    popupStage.showAndWait();
   }
 
-  public static void showModalStage(String title, FXMLLoader childLoader) {
-    showModalStage(title, childLoader, false);
+  public static void showPopupStage(String title, FXMLLoader childLoader) {
+    showPopupStage(title, childLoader, false);
   }
 
   public static void showError(String errorMessage) {
@@ -165,48 +172,56 @@ public class UIManager {
   }
 
   public static void applyCurrentTheme(Scene scene) {
-
     scene.getStylesheets().clear();
-    scene.getStylesheets().add(UIManager.class.getResource(currentTheme).toExternalForm());
-    cssUpdate(scene.getRoot());
+    scene.getStylesheets().add(
+            UIManager.class.getResource(currentTheme).toExternalForm()
+    );
+    scene.getRoot().applyCss();
     scene.getRoot().layout();
   }
 
-  private static void cssUpdate(Node node) {
-    node.applyCss();
-    if (node instanceof Parent) {
-      for (Node child : ((Parent)node).getChildrenUnmodifiable()) {
-        cssUpdate(child);
-      }
+  public static void applyCurrentFont(Scene scene) {
+    scene.getStylesheets().removeIf(sheet -> sheet.contains("dynamic-font"));
+    String fontCss = "* {\n" +
+            "    -fx-font-family: '" + currentFont + "';\n" +
+            "}";
+    try {
+      Path tempFontCss = Files.createTempFile("dynamic-font", ".css");
+      Files.writeString(tempFontCss, fontCss);
+      scene.getStylesheets().add(tempFontCss.toUri().toString());
+      scene.getRoot().applyCss();
+      scene.getRoot().layout();
+    } catch (IOException e) {
+      logger.error("Error applying font: ", e);
     }
   }
 
-
   public static void setTheme(String theme) {
     switch (theme) {
-      case "Default Mode":
-        currentTheme = "/styles/styles.css";
-        break;
-      case "Dark Mode":
+      case "Dark":
         currentTheme = "/styles/dark.css";
         break;
-      case "High Contrast Mode":
-        currentTheme = "/styles/highContrast.css";
+      case "High Contrast":
+        currentTheme = "/styles/high-contrast.css";
+        break;
+      case "Colourblind":
+        currentTheme = "/styles/colourblind.css";
+        break;
+      case "Purple":
+        currentTheme = "/styles/purple.css";
         break;
       default:
-        currentTheme = "/styles/styles.css";
+        currentTheme = "/styles/default-blue.css";
     }
     if (mainStage != null && mainStage.getScene() != null) {
-      Scene scene = mainStage.getScene();
+      applyCurrentTheme(mainStage.getScene());
+    }
+  }
 
-      Parent root = scene.getRoot();
-      root.getStylesheets().clear();
-
-      scene.getStylesheets().clear();
-      scene.getStylesheets().add(UIManager.class.getResource(currentTheme).toExternalForm());
-
-      cssUpdate(root);
-      root.layout();
+  public static void setFont(String font) {
+    currentFont = font.equals("Default") ? "System" : font;
+    if (mainStage != null && mainStage.getScene() != null) {
+      applyCurrentFont(mainStage.getScene());
     }
   }
 }

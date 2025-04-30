@@ -3,9 +3,7 @@ package com.university.grp20.controller.settings;
 import com.university.grp20.UIManager;
 import com.university.grp20.controller.HelpGuideController;
 import com.university.grp20.controller.LoginController;
-import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
-import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.fxml.FXML;
@@ -36,7 +34,7 @@ public class SettingsController extends Navigator {
       deleteButtons(List.of(userSettingsButton, exportSettingsButton));
     }
 
-    displayThemeSettings();
+    displayStyleSettings();
   }
 
   @FXML
@@ -46,7 +44,7 @@ public class SettingsController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Settings");
-      UIManager.showModalStage("Settings Page Help Guide", loader, false);
+      UIManager.showPopupStage("Settings Page Help Guide", loader, false);
       operationLogger.log("Settings Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);
@@ -84,10 +82,10 @@ public class SettingsController extends Navigator {
   }
 
   @FXML
-  private void displayThemeSettings() {
-    operationLogger.log("Theme settings button clicked");
+  private void displayStyleSettings() {
+    operationLogger.log("Style settings button clicked");
     UIManager.switchContent(
-        contentPane, UIManager.createFxmlLoader("/fxml/settings/ThemeSettingsPane.fxml"));
+        contentPane, UIManager.createFxmlLoader("/fxml/settings/StyleSettingsPane.fxml"), true);
   }
 
   @FXML

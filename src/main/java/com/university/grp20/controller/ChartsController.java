@@ -127,7 +127,7 @@ public class ChartsController extends Navigator {
         FilterSelectionController filterController = filterLoader.getController();
         filterController.init("Chart", null, chartViewer);
 
-        UIManager.showModalStage("Filter Selection", filterLoader);
+        UIManager.showPopupStage("Filter Selection", filterLoader);
       } catch (IOException e) {
         logger.error("Error loading chart filter: " + e.getMessage());
       }
@@ -259,14 +259,16 @@ public class ChartsController extends Navigator {
           CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4));
 
       Button filterButton = new Button("Filter");
-      filterButton.getStyleClass().add("chart-button");
+      filterButton.getStyleClass().add("custom-button");
+      filterButton.setStyle("-fx-font-size: 14px;");
       filterButton.setPrefSize(70, 25);
       filterButton.setOnAction(e -> showFilterSelection(chartViewer));
       buttonBox.getChildren().add(0, filterButton);
     }
 
     Button exportPDFButton = new Button("Export as PDF");
-    exportPDFButton.getStyleClass().add("export-button");
+    exportPDFButton.getStyleClass().add("custom-button");
+    exportPDFButton.setStyle("-fx-font-size: 14px;");
     exportPDFButton.setPrefSize(110, 25);
     exportPDFButton.setOnAction(
         e -> {
@@ -284,7 +286,8 @@ public class ChartsController extends Navigator {
         });
 
     Button exportCSVButton = new Button("Export as CSV");
-    exportCSVButton.getStyleClass().add("export-button");
+    exportCSVButton.getStyleClass().add("custom-button");
+    exportCSVButton.setStyle("-fx-font-size: 14px;");
     exportCSVButton.setPrefSize(110, 25);
     exportCSVButton.setOnAction(
         e -> {
@@ -302,7 +305,8 @@ public class ChartsController extends Navigator {
         });
 
     Button deleteButton = new Button("Delete");
-    deleteButton.getStyleClass().add("chart-button");
+    deleteButton.getStyleClass().add("custom-button");
+    deleteButton.setStyle("-fx-font-size: 14px;");
     deleteButton.setPrefSize(70, 25);
     deleteButton.setOnAction(e -> {
       operationLogger.log("Delete button clicked");
@@ -337,7 +341,7 @@ public class ChartsController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Charts");
-      UIManager.showModalStage("Charts Page Help Guide", loader, false);
+      UIManager.showPopupStage("Charts Page Help Guide", loader, false);
       operationLogger.log("Charts Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);

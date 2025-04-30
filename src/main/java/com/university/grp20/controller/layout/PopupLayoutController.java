@@ -3,13 +3,12 @@ package com.university.grp20.controller.layout;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class ModalLayoutController {
+public class PopupLayoutController {
   @FXML private HBox titleBar;
   @FXML private StackPane contentPane;
   @FXML private Label modalTitleLabel;
@@ -40,11 +39,11 @@ public class ModalLayoutController {
     return contentPane;
   }
 
-  public void setModalTitle(String title) {
+  public void setPopupTitle(String title) {
     modalTitleLabel.setText(title);
   }
 
-  public void setModalStage(Stage modalStage) {
+  public void setPopupStage(Stage modalStage) {
     this.modalStage = modalStage;
   }
 }
