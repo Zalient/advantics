@@ -123,7 +123,7 @@ public class FileSelectionPaneTest extends ApplicationTest {
     @Test
     void checkSelectCampaignLabelExist(){
         verifyThat("#selectCampaignLabel", isNotNull());
-        verifyThat("#selectCampaignLabel", hasText("Select Campaign"));
+        verifyThat("#selectCampaignLabel", hasText("Select Uploaded Campaign"));
         verifyThat("#selectCampaignLabel", isVisible());
     }
 
