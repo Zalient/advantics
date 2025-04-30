@@ -5,6 +5,7 @@ import com.university.grp20.model.*;
 import java.io.IOException;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -37,24 +38,20 @@ public class MetricsController extends Navigator {
 
   @FXML private Button helpButton;
 
-
-
   @FXML
   private void initialize() {
     calculateMetricsService.setOnFilterStart(
-        progress -> {
-          /* no-op */
-        });
+            progress -> {
+              /* no-op */
+            });
     calculateMetricsService.setOnFilterLabelStart(
-        text -> {
-          /* no-op */
-        });
+            text -> {
+              /* no-op */
+            });
     metricsDTO = calculateMetricsService.fetchMetrics(null);
     setMetrics(metricsDTO);
     selectedDatabaseLabel.setText("Selected Campaign: " + User.getSelectedCampaign().replace(".db", ""));
   }
-
-
 
   public void setMetrics(MetricsDTO metricsDTO) {
     if (metricsDTO == null) return;
@@ -69,6 +66,43 @@ public class MetricsController extends Navigator {
     cpcLabel.setText(String.format("£%.2f", metricsDTO.cpc() / 100));
     cpmLabel.setText(String.format("£%.2f", metricsDTO.cpm() / 100));
     bounceRateLabel.setText(String.format("%.2f%%", metricsDTO.bounceRate() * 100));
+  }
+
+  public void updateMetricVisibility() {
+    GlobalSettingsStorage settings = GlobalSettingsStorage.getInstance();
+
+    impressionsLabel.getParent().setVisible(settings.isMetricVisible("impressions"));
+    impressionsLabel.getParent().setManaged(settings.isMetricVisible("impressions"));
+
+    clicksLabel.getParent().setVisible(settings.isMetricVisible("clicks"));
+    clicksLabel.getParent().setManaged(settings.isMetricVisible("clicks"));
+
+    uniquesLabel.getParent().setVisible(settings.isMetricVisible("uniques"));
+    uniquesLabel.getParent().setManaged(settings.isMetricVisible("uniques"));
+
+    bouncesLabel.getParent().setVisible(settings.isMetricVisible("bounces"));
+    bouncesLabel.getParent().setManaged(settings.isMetricVisible("bounces"));
+
+    conversionsLabel.getParent().setVisible(settings.isMetricVisible("conversions"));
+    conversionsLabel.getParent().setManaged(settings.isMetricVisible("conversions"));
+
+    totalLabel.getParent().setVisible(settings.isMetricVisible("totalCost"));
+    totalLabel.getParent().setManaged(settings.isMetricVisible("totalCost"));
+
+    ctrLabel.getParent().setVisible(settings.isMetricVisible("ctr"));
+    ctrLabel.getParent().setManaged(settings.isMetricVisible("ctr"));
+
+    cpaLabel.getParent().setVisible(settings.isMetricVisible("cpa"));
+    cpaLabel.getParent().setManaged(settings.isMetricVisible("cpa"));
+
+    cpcLabel.getParent().setVisible(settings.isMetricVisible("cpc"));
+    cpcLabel.getParent().setManaged(settings.isMetricVisible("cpc"));
+
+    cpmLabel.getParent().setVisible(settings.isMetricVisible("cpm"));
+    cpmLabel.getParent().setManaged(settings.isMetricVisible("cpm"));
+
+    bounceRateLabel.getParent().setVisible(settings.isMetricVisible("bounceRate"));
+    bounceRateLabel.getParent().setManaged(settings.isMetricVisible("bounceRate"));
   }
 
   @FXML
@@ -94,7 +128,7 @@ public class MetricsController extends Navigator {
       FilterSelectionController controller = filterLoader.getController();
       controller.init("Metrics", this, null, User.getSelectedCampaign());
 
-      UIManager.showModalStage("Metrics Filtering", filterLoader, false);
+      UIManager.showPopupStage("Metrics Filtering", filterLoader, false);
     } catch (IOException e) {
       logger.error("Error loading metrics filter:", e);
     }
@@ -154,15 +188,26 @@ public class MetricsController extends Navigator {
       pdfButton.setDisable(status);
       csvButton.setDisable(status);
     });
-
   }
 
   @FXML
   private void handleResetClick(){
     operationLogger.log("Reset dashboard button clicked");
+    GlobalSettingsStorage globalSettings = GlobalSettingsStorage.getInstance();
+    globalSettings.setMetricVisibility("impressions", true);
+    globalSettings.setMetricVisibility("clicks", true);
+    globalSettings.setMetricVisibility("uniques", true);
+    globalSettings.setMetricVisibility("bounces", true);
+    globalSettings.setMetricVisibility("conversions", true);
+    globalSettings.setMetricVisibility("totalCost", true);
+    globalSettings.setMetricVisibility("ctr", true);
+    globalSettings.setMetricVisibility("cpa", true);
+    globalSettings.setMetricVisibility("cpc", true);
+    globalSettings.setMetricVisibility("cpm", true);
+    globalSettings.setMetricVisibility("bounceRate", true);
     MetricsDTO defaultMetrics = calculateMetricsService.fetchMetrics(null);
     setMetrics(defaultMetrics);
-    UIManager.showAlert("Success", "Dashboard successfully reset to default");
+    UIManager.showAlert("Success", "Dashboard successfully reset to default. Filters removed.");
   }
 
   @FXML
@@ -172,10 +217,16 @@ public class MetricsController extends Navigator {
       loader.load();
       HelpGuideController helpController = loader.getController();
       helpController.setupCarousel("Metrics");
-      UIManager.showModalStage("Metrics Page Help Guide", loader, false);
+      UIManager.showPopupStage("Metrics Page Help Guide", loader, false);
       operationLogger.log("Metrics Page Help Guide Icon clicked");
     } catch (IOException e) {
       logger.error("Failed to open Help Guide", e);
     }
+  }
+
+  public void handleUpdateClick() {
+    operationLogger.log("Toggle metrics button clicked");
+    updateMetricVisibility();
+    UIManager.showAlert("Success", "Toggled selected metrics");
   }
 }

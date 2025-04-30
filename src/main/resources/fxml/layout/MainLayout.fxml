@@ -9,18 +9,18 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="781.0" prefWidth="1280.0" stylesheets="@../../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.layout.MainLayoutController">
+<AnchorPane fx:id="root" prefHeight="781.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.layout.MainLayoutController">
     <children>
         <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <HBox fx:id="titleBar" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" spacing="10.0" styleClass="title-bar" stylesheets="@../../styles/styles.css">
+                <HBox fx:id="titleBar" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" spacing="10.0" styleClass="title-bar">
                     <children>
                         <Pane styleClass="logo-icon" />
                         <Label fx:id="mainTitleLabel" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#minimiseStage" styleClass="minimise-button" stylesheets="@../../styles/styles.css" text="—" />
-                        <Button fx:id="maximiseButton" onAction="#toggleMaximiseStage" styleClass="maximise-button" text="⬜" />
-                        <Button onAction="#closeStage" styleClass="close-button" text="✕" />
+                        <Button onAction="#minimiseStage" style="-fx-font-size: 12;" styleClass="minimise-button" text="—" />
+                        <Button fx:id="maximiseButton" onAction="#toggleMaximiseStage" style="-fx-font-size: 12;" styleClass="maximise-button" text="⬜" />
+                        <Button onAction="#closeStage" style="-fx-font-size: 12;" styleClass="close-button" text="✕" />
                     </children>
                 </HBox>
                 <StackPane fx:id="contentPane" />

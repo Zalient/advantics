@@ -57,7 +57,7 @@ public class ViewerFileSelectionController extends Navigator {
           String campaignName = file.getName().replace(".db", "");
           existingCampaigns.add(campaignName);
           Button campaignButton = new Button(campaignName);
-          campaignButton.getStyleClass().add("blue-button");
+          campaignButton.getStyleClass().add("custom-button");
           campaignButton.setMaxWidth(Double.MAX_VALUE);
           campaignButton.setStyle("-fx-font-size: 18px;");
           campaignButton.setOnAction(e -> {
@@ -69,7 +69,7 @@ public class ViewerFileSelectionController extends Navigator {
     }
 
     if (existingCampaigns.isEmpty()) {
-      selectCampaignLabel.setText("No campaigns uploaded");
+      selectCampaignLabel.setText("No Campaigns Found");
     }
 
   }
