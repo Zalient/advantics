@@ -312,7 +312,7 @@ public class GenerateChartService {
           }
         }
       }
-      if (timeGranularity != null && timeGranularity.equals("Per Day")) {
+      if (timeGranularity == null || timeGranularity.equals("Per Day")) {
         int step = Math.max(1, categories.size() / 15);
         for (int i = 0; i < categories.size(); i++) {
           String label = categories.get(i).toString();

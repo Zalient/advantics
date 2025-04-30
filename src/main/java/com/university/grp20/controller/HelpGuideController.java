@@ -34,14 +34,14 @@ public class HelpGuideController {
         switch (pageType) {
             case "Login" -> {
                 imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/login-pane/1. Login Page.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/login-pane/2. Login Page w Deets.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/login-pane/2. Login Page Filled.png"))));
                 numImg = imageList.size();
             }
             case "Upload" -> {
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/1. File Upload Page.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/2. File Upload Chooser.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/3. File Upload Page Completed.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/4. Upload in progress.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/1. Upload Page.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/2. Windows File Explorer.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/3. Upload Page Filled.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/file-upload-pane/4. Upload Page Progress Bar.png"))));
                 numImg = imageList.size();
             }
             case "Metrics" -> {
@@ -50,20 +50,22 @@ public class HelpGuideController {
             }
             case "Charts" -> {
                 imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/1. Charts Page.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/2. Active Charts.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/3. Histogram Bin Prompt.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/4. Histogram Bin Prompt Filled.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/2. Charts Page with 1 Chart.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/3. Print Chart.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/4. Histogram Bin Prompt.png"))));
                 imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/charts-pane/5. Histogram Displayed.png"))));
                 numImg = imageList.size();
             }
             case "Settings" -> {
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/1. Settings Page.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/2. Metrics Settings.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/1. Theme Settings.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/2. Metric Settings.png"))));
                 imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/3. User Settings.png"))));
                 imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/4. Export Settings.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/5. Theme Settings.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/6. Dark Mode View.png"))));
-                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/7. High Contrast View.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/Colourblind view.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/Purple view.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/Dark mode view.png"))));
+                imageList.add(new Image(String.valueOf(getClass().getResource("/images/guide-pics/settings-pane/High contrast view.png"))));
+
                 numImg = imageList.size();
             }
             case "Metric-Filter" -> {
