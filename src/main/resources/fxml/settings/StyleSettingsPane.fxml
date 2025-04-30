@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.StyleSettingsController">
+<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.StyleSettingsController">
 <content>
     <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
         <children>
             <VBox spacing="20.0">
                <children>
-                    <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Theme">
+                    <Label fx:id="themeTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Theme">
                      <font>
                         <Font size="20.0" />
                      </font></Label>
@@ -23,7 +23,7 @@
             </VBox>
             <VBox spacing="20.0">
                <children>
-                  <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Font">
+                  <Label fx:id="fontTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Font">
                      <font>
                         <Font size="20.0" />
                      </font>

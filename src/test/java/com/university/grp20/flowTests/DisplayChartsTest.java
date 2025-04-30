@@ -51,7 +51,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -78,7 +78,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -105,7 +105,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -132,7 +132,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -159,7 +159,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -186,7 +186,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -213,7 +213,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -240,7 +240,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -267,7 +267,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -294,7 +294,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -321,7 +321,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
+        assertEquals(6, buttonBox.getChildren().size(), "HBox should contain five buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "First button should be a Filter Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Third button should be an export CSV Button");
@@ -353,7 +353,7 @@ public class DisplayChartsTest extends ApplicationTest{
         assertTrue(chartBox.getChildren().get(1) instanceof ChartViewer, "ChartViewer should come second");
 
         HBox buttonBox = (HBox) chartBox.getChildren().get(0);
-        assertEquals(4, buttonBox.getChildren().size(), "HBox should contain three buttons and a label");
+        assertEquals(5, buttonBox.getChildren().size(), "HBox should contain four buttons and a label");
         assertTrue(buttonBox.getChildren().get(0) instanceof Button, "Second button should be an export PDF Button");
         assertTrue(buttonBox.getChildren().get(1) instanceof Button, "Third button should be an export CSV Button");
         assertTrue(buttonBox.getChildren().get(2) instanceof Button, "Fourth button should be a delete chart Button");

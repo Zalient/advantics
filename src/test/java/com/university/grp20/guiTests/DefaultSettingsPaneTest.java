@@ -75,10 +75,10 @@ public class DefaultSettingsPaneTest extends ApplicationTest {
 
     @Test
     void testThemesSettingsButtonExist() {
-        verifyThat("#themeSettingsButton", isVisible());
-        verifyThat("#themeSettingsButton", hasText("Theme"));
-        verifyThat("#themeSettingsButton", isEnabled());
-        verifyThat("#themeSettingsButton", node -> node instanceof Button);
+        verifyThat("#styleSettingsButton", isVisible());
+        verifyThat("#styleSettingsButton", hasText("Style"));
+        verifyThat("#styleSettingsButton", isEnabled());
+        verifyThat("#styleSettingsButton", node -> node instanceof Button);
     }
 
     @Test
@@ -226,27 +226,58 @@ public class DefaultSettingsPaneTest extends ApplicationTest {
     }
 
     @Test
-    void testThemeSettingsPage(){
-        clickOn("#themeSettingsButton");
+    void testThemesSettings(){
+        clickOn("#styleSettingsButton");
 
         verifyThat("#themeTitle", isNotNull());
         verifyThat("#themeTitle", hasText("Theme"));
         verifyThat("#themeTitle", isVisible());
 
         verifyThat("#themeComboBox", isVisible());
-        verifyThat("#themeComboBox", node -> node instanceof ComboBox<?> && "Choose Theme".equals(((ComboBox<?>) node).getPromptText()));
+        verifyThat("#themeComboBox", node -> node instanceof ComboBox<?> && "Select Theme".equals(((ComboBox<?>) node).getPromptText()));
         verifyThat("#themeComboBox", isEnabled());
         verifyThat("#themeComboBox", node -> node instanceof ComboBox<?>);
     }
 
     @Test
+    void testFontsSettings(){
+        clickOn("#styleSettingsButton");
+
+        verifyThat("#fontTitle", isNotNull());
+        verifyThat("#fontTitle", hasText("Font"));
+        verifyThat("#fontTitle", isVisible());
+
+        verifyThat("#fontComboBox", isVisible());
+        verifyThat("#fontComboBox", node -> node instanceof ComboBox<?> && "Select Font".equals(((ComboBox<?>) node).getPromptText()));
+        verifyThat("#fontComboBox", isEnabled());
+        verifyThat("#fontComboBox", node -> node instanceof ComboBox<?>);
+    }
+
+    @Test
     void testThemeSettingsDropDown(){
-        clickOn("#themeSettingsButton");
+        clickOn("#styleSettingsButton");
         clickOn("#themeComboBox");
 
-        verifyThat("Default Mode", isVisible());
-        verifyThat("Dark Mode", isVisible());
-        verifyThat("High Contrast Mode", isVisible());
+        verifyThat("Default", isVisible());
+        verifyThat("Dark", isVisible());
+        verifyThat("High Contrast", isVisible());
+        verifyThat("Colourblind", isVisible());
+        verifyThat("Purple", isVisible());
+    }
+
+    @Test
+    void testFontsSettingsDropDown(){
+        clickOn("#styleSettingsButton");
+        clickOn("#fontComboBox");
+
+        verifyThat("Default", isVisible());
+        verifyThat("Arial", isVisible());
+        verifyThat("Cambria", isVisible());
+        verifyThat("Roboto", isVisible());
+        verifyThat("Candara", isVisible());
+        verifyThat("Comic Sans MS", isVisible());
+        verifyThat("Calibri", isVisible());
+        verifyThat("Times New Roman", isVisible());
     }
 
     @Test

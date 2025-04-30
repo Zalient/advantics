@@ -9,6 +9,7 @@ public class MetricSettingsController {
   @FXML private RadioButton pagesViewedButton;
   @FXML private RadioButton timeSpentButton;
   @FXML private TextField bounceValField;
+  private MetricsController metricsController;
   private final CalculateMetricsService calculateMetricsService = new CalculateMetricsService(User.getSelectedCampaign());
   private ToggleGroup bounceGroup;
   @FXML private Label bounceDefLabel;
@@ -38,13 +39,6 @@ public class MetricSettingsController {
     bounceDefLabel.setText("Current Setting: " + bounceType + " : " + bounceValue);
     pagesViewedButton.setToggleGroup(bounceGroup);
     timeSpentButton.setToggleGroup(bounceGroup);
-
-    if (bounceType.equals("Pages Viewed")) {
-      pagesViewedButton.setSelected(true);
-    } else {
-      timeSpentButton.setSelected(true);
-    }
-
     initializeCheckboxes();
   }
 
@@ -112,7 +106,7 @@ public class MetricSettingsController {
       }
     }
   }
-  
+
   @FXML
   private void applyMetricVisibility() {
     operationLogger.log("Metric visibility apply button clicked");
@@ -142,10 +136,9 @@ public class MetricSettingsController {
       metricsController.updateMetricVisibility();
     }
   }
-
-    /**
+ /**
   public void init(MetricsController metricsController) {
     this.metricsController = metricsController;
   }
-   **/
+  **/
 }
