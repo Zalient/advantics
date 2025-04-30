@@ -165,6 +165,7 @@ public class SettingsFlowTest extends ApplicationTest {
 
         clickOn("#newUsernameField").write("testNewUser");
         clickOn("#newPasswordField").write("testNewPass");
+        clickOn("#newRoleMenu").clickOn("Admin");
         clickOn("#newRoleMenu").clickOn("Viewer");
         clickOn("#addUserButton");
 
