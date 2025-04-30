@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -163,10 +164,12 @@ public class SettingsFlowTest extends ApplicationTest {
         clickOn("#currentUsersMenu");
         verifyThat("testNewUser", isVisible());
 
-        clickOn("#newUsernameField").write("testNewUser");
-        clickOn("#newPasswordField").write("testNewPass");
-        clickOn("#newRoleMenu").clickOn("Admin");
-        clickOn("#newRoleMenu").clickOn("Viewer");
+        clickOn("#newUsernameField").eraseText(20).write("testNewUser");
+        clickOn("#newPasswordField").eraseText(20).write("testNewPass");
+        clickOn("#newRoleMenu");
+        sleep(500, TimeUnit.MILLISECONDS);
+        clickOn("Viewer");
+
         clickOn("#addUserButton");
 
         verifyThat(".alert", isVisible());
