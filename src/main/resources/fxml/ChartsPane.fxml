@@ -12,13 +12,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartsController">
+<AnchorPane prefHeight="735.0" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.ChartsController">
     <children>
         <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
                 <children>
                     <HBox spacing="30.0">
-                    <Button mnemonicParsing="false" fx:id = "backButton" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
+                    <Button fx:id="backButton" mnemonicParsing="false" onAction="#showFileSelection" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Back">
                         <font>
                             <Font size="24.0" />
                         </font>
@@ -35,12 +35,12 @@
                     </Region>
                     <HBox spacing="10.0">
                         <children>
-                            <Button mnemonicParsing="false" fx:id="metricsButton" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
+                            <Button fx:id="metricsButton" mnemonicParsing="false" onAction="#showMetrics" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Metrics">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
                             </Button>
-                            <Button mnemonicParsing="false" fx:id = "chartsButton" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
+                            <Button fx:id="chartsButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="140.0" styleClass="blue-button" text="Charts">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
@@ -51,9 +51,12 @@
                   <HBox.margin>
                      <Insets left="10.0" />
                   </HBox.margin>
+                  <font>
+                     <Font size="12.0" />
+                  </font>
                </Button>
                <Region prefHeight="60.0" prefWidth="163.0" />
-               <Button fx:id="helpButton" mnemonicParsing="false" styleClass="blue-button" text="Click Me!" onAction="#showHelpGuide">
+               <Button fx:id="helpButton" mnemonicParsing="false" onAction="#showHelpGuide" styleClass="blue-button" text="Click Me!">
                   <HBox.margin>
                      <Insets right="10.0" />
                   </HBox.margin>
