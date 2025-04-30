@@ -10,20 +10,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.UserSettingsController">
+<ScrollPane fx:id="userScroll" fitToWidth="true" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.UserSettingsController">
     <content>
         <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
             <children>
                   <VBox spacing="20.0">
                       <children>
-                          <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Add User">
+                          <Label fx:id="addUserTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Add User">
                               <font>
                                   <Font size="20.0" />
                               </font>
                           </Label>
                           <VBox spacing="5.0">
                               <children>
-                                  <Label style="-fx-font-size: 16;" styleClass="bold-label" text="Username:">
+                                  <Label fx:id="usernameSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="Username:">
                                       <font>
                                           <Font size="16.0" />
                                       </font>
@@ -33,7 +33,7 @@
                           </VBox>
                           <VBox spacing="5.0">
                               <children>
-                                  <Label style="-fx-font-size: 16;" styleClass="bold-label" text="Password:">
+                                  <Label fx:id="passwordSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="Password:">
                                       <font>
                                           <Font size="14.0" />
                                       </font>
@@ -47,7 +47,7 @@
                   </VBox>
                   <VBox spacing="20.0">
                       <children>
-                          <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Edit User">
+                          <Label fx:id="editUserTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Edit User">
                               <font>
                                   <Font size="20.0" />
                               </font>
@@ -55,7 +55,7 @@
                           <ComboBox fx:id="currentUsersMenu" prefWidth="170.0" promptText="Select User" styleClass="custom-combo-box" />
                           <VBox spacing="5.0">
                               <children>
-                                  <Label style="-fx-font-size: 16;" styleClass="bold-label" text="New Password:">
+                                  <Label fx:id="newPasswordSubTitle" style="-fx-font-size: 16;" styleClass="bold-label" text="New Password:">
                                       <font>
                                           <Font size="16.0" />
                                       </font>

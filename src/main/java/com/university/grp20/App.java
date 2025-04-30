@@ -4,6 +4,7 @@ import com.university.grp20.model.OperationLogger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +19,7 @@ public class App extends Application {
     operationLogger.initialize(); // Create a new log file for this session
     operationLogger.log("Application started");
 
+    stage.initStyle(StageStyle.TRANSPARENT);
     UIManager.setMainStage(stage);
     FXMLLoader loginLoader = UIManager.createFxmlLoader("/fxml/LoginPane.fxml");
     UIManager.showMainStage("AdVantics", loginLoader);

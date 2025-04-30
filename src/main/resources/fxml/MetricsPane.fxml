@@ -18,7 +18,7 @@
             <children>
             <HBox spacing="10.0">
                <children>
-                      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showFileSelection" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
+                      <Button fx:id="backButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showFileSelection" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
                           <font>
                               <Font size="20.0" />
                           </font>
@@ -34,12 +34,12 @@
                         <Insets />
                      </HBox.margin>
                   </Region>
-                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Metrics">
+                        <Button fx:id="metricsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Metrics">
                             <font>
                                 <Font size="20.0" />
                             </font>
                         </Button>
-                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showCharts" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Charts">
+                        <Button fx:id="chartsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showCharts" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Charts">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -250,7 +250,7 @@
             <children>
                 <VBox spacing="30.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Save as PDF">
+                        <Button fx:id="pdfButton" mnemonicParsing="false" onAction="#saveAsPDF" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Save as PDF">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -258,7 +258,7 @@
                                 <Insets />
                             </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Save as CSV">
+                        <Button fx:id="csvButton" mnemonicParsing="false" onAction="#saveAsCSV" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Save as CSV">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -281,8 +281,7 @@
         </HBox>
         <HBox alignment="CENTER" prefHeight="60.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-
-                <Button mnemonicParsing="false" onAction="#handleSettingsLoad" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Settings">
+                <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleSettingsLoad" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Settings">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -291,17 +290,30 @@
                     </HBox.margin>
                 </Button>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="resetDashButton" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="200.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Reset Dashboard">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Button>
+            <HBox spacing="10.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleUpdateClick" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Toggle Metrics">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="resetDashButton" mnemonicParsing="false" onAction="#handleResetClick" prefHeight="60.0" prefWidth="200.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Reset Dashboard">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
             </children>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" />
             </padding>
         </HBox>
       <HBox layoutX="991.0" layoutY="666.0" />
-
+      <Label fx:id="selectedDatabaseLabel" alignment="TOP_LEFT" style="-fx-font-size: 20;" styleClass="bold-label" text="Selected Campaign:" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="250.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

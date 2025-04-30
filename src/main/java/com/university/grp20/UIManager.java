@@ -1,8 +1,11 @@
 package com.university.grp20;
 
+import com.university.grp20.controller.ChartsController;
+import com.university.grp20.controller.MetricsController;
 import com.university.grp20.controller.Navigator;
 import com.university.grp20.controller.layout.MainLayoutController;
 import com.university.grp20.controller.layout.PopupLayoutController;
+import com.university.grp20.model.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,12 +22,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javafx.scene.layout.VBox;
 
 public class UIManager {
   private static Object controller;
   private static final Logger logger = LogManager.getLogger(UIManager.class);
   private static Stage mainStage;
-  private static final int CACHE_MAX_SIZE = 5;
+  private static final int CACHE_MAX_SIZE = 100;
   private static String currentTheme = "/styles/default-blue.css";
   private static String currentFont = "System";
 
@@ -45,14 +49,30 @@ public class UIManager {
 
   private static Parent resolveFxmlRoot(FXMLLoader childLoader, boolean useCache) {
     try {
-      String key = (useCache && childLoader.getLocation() != null)
+      /**String key = (useCache && childLoader.getLocation() != null)
               ? childLoader.getLocation().toString()
-              : null;
+              : null;*/
+      String key = null;
+      if (childLoader.getLocation()!=null) {
+        String pageName = childLoader.getLocation().toString();
+
+        // If page being loaded is a metrics page make a different one per campaign
+        if (pageName.endsWith("/MetricsPane.fxml")) {
+          String campaign = User.getSelectedCampaign();
+          key = (campaign != null) ? pageName + "#" + campaign : pageName;
+        } else {
+           key = (useCache && childLoader.getLocation() != null)
+                  ? childLoader.getLocation().toString()
+                  : null;
+        }
+      }
       if (key != null && ROOT_CACHE.containsKey(key)) {
         return ROOT_CACHE.get(key);
       }
       // If the loader has already loaded its content, reuse it
       Parent root = (childLoader.getRoot() == null) ? childLoader.load() : childLoader.getRoot();
+      Object controller = childLoader.getController();
+      root.getProperties().put("controller", controller);
       if (key != null) {
         ROOT_CACHE.put(key, root);
       }
@@ -72,10 +92,34 @@ public class UIManager {
     contentPane.getChildren().setAll(childRoot);
 
     // If the controller is a Navigator it needs to know its parent container
-    Object controller = childLoader.getController();
+    //Object controller = childLoader.getController();
+    Object controller = childRoot.getProperties().get("controller");
+
+    if (controller == null) {
+      controller = childLoader.getController();
+    }
     if (controller instanceof Navigator) {
       ((Navigator) controller).init(contentPane);
     }
+    if (controller instanceof MetricsController) {
+      System.out.println("Controller is instance of metrics controller");
+      ((MetricsController) controller).disableForViewer();
+    }
+    if (controller instanceof ChartsController) {
+      System.out.println("Controller is instance of charts controller");
+      ((ChartsController) controller).disableForViewer();
+    }
+
+    /**
+    Object myController = childRoot.getProperties().get("controller");
+    if (myController instanceof MetricsController) {
+      System.out.println("UI MANAGER: Calling disableForViewer on metrics controller");
+      ((MetricsController) myController).disableForViewer();
+    }
+    if (myController instanceof ChartsController) {
+      ((ChartsController) myController).disableForViewer();
+    }
+     */
   }
 
   public static void switchContent(Pane contentPane, FXMLLoader childLoader) {
@@ -91,7 +135,6 @@ public class UIManager {
 
     switchContent(mainLayoutContentPane, childLoader, useCache);
 
-    mainStage.initStyle(StageStyle.TRANSPARENT);
     mainStage.setTitle(title);
 
     Scene scene = new Scene(mainLayoutRoot);

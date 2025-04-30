@@ -195,6 +195,16 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
 }
+.campaign-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-text-fill: black;
+}
+.campaign-label:hover {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-text-fill: #05f6ef;
+}
 .custom-menu-button  {
     -fx-background-color: #05f6ef;
     -fx-border-color: white;
@@ -283,11 +293,22 @@
 }
 .filter-container {
     -fx-border-color: black;
-    -fx-border-width: 1px;
 }
 .successful-button {
     -fx-background-color: #40cf23;
 }
 .successful-button:hover {
     -fx-background-color: #33a31c;
+}
+.custom-check-box {
+    -fx-text-fill: white;
+}
+.custom-check-box .box {
+    -fx-border-color: white;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-background-color: white;
+}
+.custom-check-box:selected .mark {
+    -fx-background-color: #05f6ef; /* the tick */
 }

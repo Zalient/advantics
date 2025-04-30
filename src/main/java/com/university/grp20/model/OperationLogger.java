@@ -32,11 +32,14 @@ public class OperationLogger {
   }
 
   public void log(String action) {
+    if (logFileName == null) {
+      logger.info("logFileName not initialized, skipping logging.");
+      return;
+    }
     try (FileWriter fw = new FileWriter(logFileName, true);
-        PrintWriter pw = new PrintWriter(fw)) {
+         PrintWriter pw = new PrintWriter(fw)) {
 
-      String timestamp =
-          LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
       pw.println("[" + timestamp + "] " + action);
     } catch (IOException e) {
       logger.error("Error logging operation " + action + ": " + e);

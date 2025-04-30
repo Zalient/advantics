@@ -74,12 +74,14 @@ public class LoginController extends Navigator {
 
       if (role.equals("Admin") || role.equals("Editor")) {
 
-        UIManager.switchContent(parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"));
+        UIManager.switchContent(
+            parentPane, UIManager.createFxmlLoader("/fxml/FileSelectionPane.fxml"), false);
+
 
       } else if (role.equals("Viewer")) {
-        if (loginService.isDataLoaded()) {
+        if (true) { // Previous was loginService.isDataLoaded()
           UIManager.switchContent(
-              parentPane, UIManager.createFxmlLoader("/fxml/MetricsPane.fxml"), true);
+              parentPane, UIManager.createFxmlLoader("/fxml/ViewerFileSelectionPane.fxml"), false);
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -124,4 +126,9 @@ public class LoginController extends Navigator {
       logger.error("Failed to open Help Guide", e);
     }
   }
+
+  public String getLoginStatus() {
+    return loginStatus;
+  }
+
 }

@@ -27,7 +27,7 @@
         <Region GridPane.columnIndex="2" />
         <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="custom-box" GridPane.rowIndex="1" GridPane.rowSpan="2">
             <children>
-                <Button onAction="#displayStyleSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Style">
+                <Button fx:id="styleSettingsButton" onAction="#displayStyleSettings" prefHeight="40.0" prefWidth="140.0" style="-fx-font-size: 16;" styleClass="custom-button" text="Style">
                <font>
                   <Font size="14.0" />
                </font>
@@ -55,7 +55,7 @@
         <StackPane fx:id="contentPane" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2" />
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
             <children>
-                <Label styleClass="bold-label" text="Settings">
+                <Label fx:id="settingsTitle" styleClass="bold-label" text="Settings">
                     <font>
                         <Font size="40.0" />
                     </font>
@@ -64,7 +64,7 @@
         </HBox>
         <HBox alignment="CENTER" GridPane.hgrow="SOMETIMES">
             <children>
-                <Button alignment="CENTER" mnemonicParsing="false" onAction="#displayMetrics" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
+                <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" onAction="#displayMetrics" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
                     <font>
                         <Font size="20.0" />
                     </font>

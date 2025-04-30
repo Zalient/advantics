@@ -2,17 +2,21 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <ScrollPane fitToWidth="true" focusTraversable="false" prefHeight="506.0" prefWidth="1117.0" styleClass="custom-scroll-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.settings.MetricSettingsController">
    <content>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="100.0">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0">
           <children>
               <HBox spacing="50.0">
                   <children>
@@ -28,7 +32,7 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                              <HBox alignment="CENTER" spacing="30.0">
+                              <HBox alignment="CENTER_LEFT" spacing="30.0">
                                   <children>
                                       <RadioButton fx:id="pagesViewedButton" mnemonicParsing="false" onAction="#handleBounceChoice" styleClass="custom-radio-button" text="Pages Viewed" />
                                       <RadioButton fx:id="timeSpentButton" mnemonicParsing="false" onAction="#handleBounceChoice" styleClass="custom-radio-button" text="Time Spent on Page" />
@@ -57,6 +61,97 @@
                       <Insets right="400.0" />
                   </VBox.margin>
               </HBox>
+              <VBox spacing="10.0">
+                  <children>
+                      <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Metric Visibility">
+                          <font>
+                              <Font size="18.0" />
+                          </font>
+                      </Label>
+                      <GridPane hgap="30.0" vgap="15.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="466.0" minWidth="10.0" prefWidth="207.33334350585938" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="863.3333231608074" minWidth="10.0" prefWidth="765.3333231608073" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                          <children>
+                              <CheckBox fx:id="impressionsCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Impressions" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="clicksCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Clicks" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="uniquesCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Uniques" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="conversionsCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Conversions" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="bouncesCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Bounces" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="bounceRateCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Bounce Rate" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="ctrCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="CTR" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="cpaCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="CPA" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="cpmCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="CPM" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="cpcCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="CPC" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                              <CheckBox fx:id="totalCostCheckbox" mnemonicParsing="false" selected="true" style="-fx-font-size: 12;" styleClass="custom-check-box" text="Total Cost" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </CheckBox>
+                          </children>
+                          <VBox.margin>
+                              <Insets top="10.0" />
+                          </VBox.margin>
+                      </GridPane>
+                      <Button fx:id="applyVisibilityButton" mnemonicParsing="false" onAction="#applyMetricVisibility" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Apply">
+                          <font>
+                              <Font size="18.0" />
+                          </font>
+                          <VBox.margin>
+                              <Insets top="10.0" />
+                          </VBox.margin>
+                      </Button>
+                  </children>
+              </VBox>
           </children>
           <padding>
               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

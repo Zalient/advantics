@@ -88,9 +88,6 @@ public class SettingsController extends Navigator {
         contentPane, UIManager.createFxmlLoader("/fxml/settings/StyleSettingsPane.fxml"), true);
   }
 
-  @FXML
-  private void displayLanguageSettings() {}
-
   private void deleteButtons(List<Button> buttons) {
     for (Button button : buttons) {
       button.setVisible(false);

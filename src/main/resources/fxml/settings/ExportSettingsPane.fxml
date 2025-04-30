@@ -13,13 +13,13 @@
             <children>
                   <VBox spacing="20.0">
                       <children>
-                          <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Export Operations Log">
+                          <Label fx:id="exportLogTitle" style="-fx-font-size: 20;" styleClass="bold-label" text="Export Operations Log">
                               <font>
                                   <Font size="20.0" />
                               </font>
                           </Label>
-                          <Button mnemonicParsing="false" onAction="#exportOperationsPdf" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Export PDF" />
-                          <Button mnemonicParsing="false" onAction="#exportOperationsCsv" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Export CSV" />
+                          <Button fx:id="exportLogPDFButton" mnemonicParsing="false" onAction="#exportOperationsPdf" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Export PDF" />
+                          <Button fx:id="exportLogCSVButton" mnemonicParsing="false" onAction="#exportOperationsCsv" prefHeight="30.0" prefWidth="90.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Export CSV" />
                       </children>
                   </VBox>
             </children>

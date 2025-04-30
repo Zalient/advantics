@@ -17,18 +17,18 @@
         <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox alignment="CENTER_LEFT">
                 <children>
-               <HBox spacing="10.0">
-                  <children>
-                       <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showFileSelection" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
-                           <font>
-                               <Font size="20.0" />
-                           </font>
-                       </Button>
-                     <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="85.0" />
-                  </children>
-               </HBox>
+                    <HBox alignment="CENTER" spacing="10.0">
+                    <Button fx:id="backButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showFileSelection" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Back">
+                        <font>
+                            <Font size="24.0" />
+                        </font>
+                        <HBox.margin>
+                            <Insets />
+                        </HBox.margin>
+                    </Button>
+                  <Region prefWidth="85.0" />
+                    </HBox>
                     <Region HBox.hgrow="ALWAYS">
-
                               <opaqueInsets>
                             <Insets />
                         </opaqueInsets>
@@ -40,12 +40,12 @@
                            <Insets />
                         </HBox.margin>
                      </Region>
-                            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMetrics" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Metrics">
+                            <Button fx:id="metricsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMetrics" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Metrics">
                                 <font>
                                     <Font size="20.0" />
                                 </font>
                             </Button>
-                            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Charts">
+                            <Button fx:id="chartsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="52.0" prefWidth="172.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Charts">
                                 <font>
                                     <Font size="20.0" />
                                 </font>
@@ -57,7 +57,11 @@
                      </Button>
                         </children>
                     </HBox>
-               <Region HBox.hgrow="ALWAYS" />
+               <Region HBox.hgrow="ALWAYS">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+               </Region>
                <HBox alignment="CENTER" spacing="10.0">
                   <children>
                      <Button fx:id="helpButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showHelpGuide" prefWidth="85.0" style="-fx-font-size: 12;" styleClass="custom-button" text="Click Me!" />

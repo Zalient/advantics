@@ -19,9 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane fx:id="root" prefHeight="387.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
-
-
+<AnchorPane fx:id="root" prefHeight="387.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.university.grp20.controller.FilterSelectionController">
     <children>
         <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
@@ -89,9 +87,7 @@
                         </VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <children>
-
-                                <Label styleClass="bold-label" text="End Date" />
-
+                                <Label fx:id="endDateTitle" styleClass="bold-label" text="End Date" />
                                 <DatePicker fx:id="endDatePicker" styleClass="custom-date-picker" />
                             </children>
                         </VBox>
@@ -151,9 +147,7 @@
                   </HBox>
                   <VBox alignment="CENTER">
                      <children>
-
-                        <Label styleClass="bold-label" text="Start Date" />
-
+                        <Label fx:id="startDateTitle" styleClass="bold-label" text="Start Date" />
                         <DatePicker fx:id="startDatePicker" styleClass="custom-date-picker" />
                      </children>
                   </VBox>

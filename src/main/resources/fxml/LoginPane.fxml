@@ -73,7 +73,7 @@
             </VBox>
             <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
-                    <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Login">
+                    <Button mnemonicParsing="false" fx:id="loginButton" onAction="#handleLogin" prefHeight="48.0" prefWidth="144.0" style="-fx-font-size: 20;" styleClass="custom-button" text="Login">
                         <font>
                             <Font size="20.0" />
                         </font>
