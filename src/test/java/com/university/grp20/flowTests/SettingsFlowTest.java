@@ -2,7 +2,6 @@ package com.university.grp20.flowTests;
 
 import com.university.grp20.model.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -12,12 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.management.OperationsException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -300,7 +297,4 @@ public class SettingsFlowTest extends ApplicationTest {
         verifyThat(".alert .content", hasText("User not selected, please select a user to edit"));
         clickOn("OK");
     }
-
-    //test for export settings
-    //test directory/path exists when clicked
 }

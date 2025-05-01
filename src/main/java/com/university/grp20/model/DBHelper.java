@@ -1,10 +1,13 @@
 package com.university.grp20.model;
 
-import java.sql.*;
-import java.time.LocalDate;
-import java.util.List;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class DBHelper {
   private static final int BATCH_SIZE = 15000;

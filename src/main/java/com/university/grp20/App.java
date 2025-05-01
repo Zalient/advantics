@@ -16,7 +16,8 @@ public class App extends Application {
   @Override
   public void start(Stage stage) {
     logger.info("Starting application");
-    operationLogger.initialize(); // Create a new log file for this session
+    // Create new log file for this session
+    operationLogger.initialize();
     operationLogger.log("Application started");
 
     stage.initStyle(StageStyle.TRANSPARENT);

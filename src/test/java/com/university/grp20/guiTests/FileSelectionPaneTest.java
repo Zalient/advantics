@@ -2,17 +2,17 @@ package com.university.grp20.guiTests;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.model.User;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
-import static org.testfx.api.FxAssert.verifyThat;
-
-import javafx.scene.control.*;
 
 
 public class FileSelectionPaneTest extends ApplicationTest {

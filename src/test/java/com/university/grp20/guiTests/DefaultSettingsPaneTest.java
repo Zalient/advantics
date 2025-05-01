@@ -6,16 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.isEnabled;
-import static org.testfx.matcher.base.NodeMatchers.isVisible;
+import static org.testfx.matcher.base.NodeMatchers.*;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
-import static org.testfx.matcher.base.NodeMatchers.isNotNull;
 
 public class DefaultSettingsPaneTest extends ApplicationTest {
     @Override
@@ -129,7 +125,6 @@ public class DefaultSettingsPaneTest extends ApplicationTest {
             verifyThat(checkboxId, CheckBox::isSelected);
         }
 
-        // Apply button
         verifyThat("#applyVisibilityButton", isVisible());
         verifyThat("#applyVisibilityButton", hasText("Apply"));
         verifyThat("#applyVisibilityButton", isEnabled());

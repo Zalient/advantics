@@ -1,22 +1,22 @@
 package com.university.grp20.logicTests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-
 import com.university.grp20.model.CalculateMetricsService;
 import com.university.grp20.model.FileImportService;
 import com.university.grp20.model.FilterCriteriaDTO;
 import com.university.grp20.model.MetricsDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class CalculateMetricsServiceTest {
     private CalculateMetricsService calculateMetricsService;

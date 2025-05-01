@@ -3,11 +3,10 @@ package com.university.grp20.logicTests;
 import com.university.grp20.model.OperationLogger;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-
-import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 

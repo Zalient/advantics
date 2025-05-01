@@ -1,7 +1,5 @@
 package com.university.grp20.logicTests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.university.grp20.model.DBHelper;
 import com.university.grp20.model.FilterCriteriaDTO;
 import com.university.grp20.model.GenerateChartService;
@@ -11,14 +9,13 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class GenerateChartTest {
     private final FilterCriteriaDTO filterDTO = new FilterCriteriaDTO(null, null, null, "Per Week", "Male", null, null, null, null);;

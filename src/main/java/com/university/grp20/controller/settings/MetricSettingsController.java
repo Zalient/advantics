@@ -1,7 +1,10 @@
 package com.university.grp20.controller.settings;
 
 import com.university.grp20.controller.MetricsController;
-import com.university.grp20.model.*;
+import com.university.grp20.model.CalculateMetricsService;
+import com.university.grp20.model.GlobalSettingsStorage;
+import com.university.grp20.model.OperationLogger;
+import com.university.grp20.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

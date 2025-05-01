@@ -1,17 +1,17 @@
 package com.university.grp20.model;
 
-import com.university.grp20.UIManager;
 import com.university.grp20.controller.ProgressBarListener;
 import com.university.grp20.controller.ProgressLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class CalculateMetricsService {
   private final Logger logger = LogManager.getLogger(CalculateMetricsService.class);

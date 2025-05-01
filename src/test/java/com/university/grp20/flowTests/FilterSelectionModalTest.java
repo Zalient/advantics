@@ -1,30 +1,12 @@
 package com.university.grp20.flowTests;
 
 import com.university.grp20.UIManager;
-import com.university.grp20.controller.MetricsController;
-import com.university.grp20.model.DBHelper;
-import com.university.grp20.model.User;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 public class FilterSelectionModalTest extends ApplicationTest {
     @Override
@@ -39,9 +21,6 @@ public class FilterSelectionModalTest extends ApplicationTest {
         stage.setTitle("Filter Test Window");
         stage.show();
     }
-
-    //test normal choosing
-    //test all context
 
     @Test
     void testNormalFilterSelection(){

@@ -1,14 +1,15 @@
 package com.university.grp20.logicTests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.university.grp20.model.FilterCriteriaDTO;
 import com.university.grp20.model.GenerateChartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SQLFilterTest {
 

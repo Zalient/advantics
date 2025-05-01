@@ -2,7 +2,6 @@ package com.university.grp20.flowTests;
 
 import com.university.grp20.UIManager;
 import com.university.grp20.controller.LoginController;
-import com.university.grp20.model.LoginService;
 import com.university.grp20.model.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,14 +10,9 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.testfx.api.FxAssert.verifyThat;
-
-//fix
 public class LoginFlowTest extends ApplicationTest {
     private LoginController loginController;
 

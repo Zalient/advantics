@@ -1,21 +1,20 @@
 package com.university.grp20.controller;
 
 import com.university.grp20.UIManager;
-import com.university.grp20.model.FileImportService;
 import com.university.grp20.model.OperationLogger;
 import com.university.grp20.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class ViewerFileSelectionController extends Navigator {
 

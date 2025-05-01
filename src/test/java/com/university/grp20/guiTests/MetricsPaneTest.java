@@ -3,8 +3,6 @@ package com.university.grp20.guiTests;
 import com.university.grp20.UIManager;
 import com.university.grp20.model.User;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -12,9 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.*;
-import static org.testfx.matcher.control.LabeledMatchers.hasText;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static org.testfx.matcher.base.NodeMatchers.isEnabled;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
+import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 public class MetricsPaneTest extends ApplicationTest {
     @Override
