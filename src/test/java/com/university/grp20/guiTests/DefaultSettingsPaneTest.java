@@ -112,6 +112,27 @@ public class DefaultSettingsPaneTest extends ApplicationTest {
         verifyThat("#applyBounceButton", hasText("Apply"));
         verifyThat("#applyBounceButton", Node::isDisable);
         verifyThat("#applyBounceButton", node -> node instanceof Button);
+
+
+        verifyThat("#metricVisibilityLabel", isNotNull());
+        verifyThat("#metricVisibilityLabel", hasText("Metric Visibility"));
+        verifyThat("#metricVisibilityLabel", isVisible());
+
+        String[] metricCheckboxes = {
+                "#impressionsCheckbox", "#clicksCheckbox", "#uniquesCheckbox", "#conversionsCheckbox",
+                "#bouncesCheckbox", "#bounceRateCheckbox", "#ctrCheckbox", "#cpaCheckbox",
+                "#cpmCheckbox", "#cpcCheckbox", "#totalCostCheckbox"
+        };
+
+        for (String checkboxId : metricCheckboxes) {
+            verifyThat(checkboxId, isVisible());
+            verifyThat(checkboxId, CheckBox::isSelected);
+        }
+
+        // Apply button
+        verifyThat("#applyVisibilityButton", isVisible());
+        verifyThat("#applyVisibilityButton", hasText("Apply"));
+        verifyThat("#applyVisibilityButton", isEnabled());
     }
 
     @Test

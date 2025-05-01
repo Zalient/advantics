@@ -63,7 +63,7 @@
               </HBox>
               <VBox spacing="10.0">
                   <children>
-                      <Label style="-fx-font-size: 20;" styleClass="bold-label" text="Metric Visibility">
+                      <Label fx:id = "metricVisibilityLabel" style="-fx-font-size: 20;" styleClass="bold-label" text="Metric Visibility">
                           <font>
                               <Font size="18.0" />
                           </font>
